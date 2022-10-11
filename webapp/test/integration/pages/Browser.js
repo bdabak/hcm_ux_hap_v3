@@ -1,5 +1,5 @@
 sap.ui.define(
-  ["sap/ui/test/Opa5", "hcm/ux/hapv2.1/test/integration/pages/Common"],
+  ["sap/ui/test/Opa5", "hcm/ux/hapv2_1/test/integration/pages/Common"],
   function (Opa5, Common) {
     "use strict";
 

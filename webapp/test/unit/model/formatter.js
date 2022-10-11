@@ -1,4 +1,4 @@
-sap.ui.define(["hcm/ux/hapv2.1/model/formatter"], function (formatter) {
+sap.ui.define(["hcm/ux/hapv2_1/model/formatter"], function (formatter) {
   "use strict";
 
   QUnit.module("Number unit");

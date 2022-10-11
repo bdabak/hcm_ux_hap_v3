@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "hcm/ux/hapv2.1/model/models",
+    "hcm/ux/hapv2_1/model/models",
     "sap/ui/thirdparty/sinon",
     "sap/ui/thirdparty/sinon-qunit",
   ],

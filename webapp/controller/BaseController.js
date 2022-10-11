@@ -3,13 +3,13 @@ sap.ui.define(
   [
     "sap/ui/core/mvc/Controller",
     "sap/m/Dialog",
-    "hcm/ux/hapv2.1/utils/UIHelper",
+    "hcm/ux/hapv2_1/utils/UIHelper",
     "sap/m/MessageBox",
   ],
   function (Controller, Dialog, UIHelper, MessageBox) {
     "use strict";
 
-    return Controller.extend("hcm.ux.hapv2.1.controller.BaseController", {
+    return Controller.extend("hcm.ux.hapv2_1.controller.BaseController", {
       onInit: function () {},
       /**
        * Convenience method for accessing the router.
@@ -88,11 +88,11 @@ sap.ui.define(
       _getBusyFragment: function () {
         if (!this.oBusyDialog) {
           this.oBusyDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.GenericBusyDialog",
+            "hcm.ux.hapv2_1.fragment.GenericBusyDialog",
             this
           );
           var sImagePath = jQuery.sap.getModulePath(
-            "hcm.ux.hapv2.1",
+            "hcm.ux.hapv2_1",
             "/images/barchart_loading.gif"
           );
 

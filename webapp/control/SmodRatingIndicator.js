@@ -3,7 +3,7 @@ sap.ui.define(
   function (Control, SmodRatingItem) {
     "use strict";
 
-    return Control.extend("hcm.ux.hapv2.1.control.SmodRatingIndicator", {
+    return Control.extend("hcm.ux.hapv2_1.control.SmodRatingIndicator", {
       metadata: {
         properties: {
           selectedValue: { type: "string", bindable: true },
@@ -14,7 +14,7 @@ sap.ui.define(
         },
         aggregations: {
           ratingItems: {
-            type: "hcm.ux.hapv2.1.control.SmodRatingItem",
+            type: "hcm.ux.hapv2_1.control.SmodRatingItem",
             multiple: true,
             singularName: "ratingItem",
           },
@@ -26,7 +26,7 @@ sap.ui.define(
       },
       init: function () {
         //initialisation code, in this case, ensure css is imported
-        var sLibraryPath = jQuery.sap.getModulePath("hcm.ux.hapv2.1"); //get the server location of the ui library
+        var sLibraryPath = jQuery.sap.getModulePath("hcm.ux.hapv2_1"); //get the server location of the ui library
         jQuery.sap.includeStyleSheet(
           sLibraryPath + "/control/SmodRatingIndicator.css"
         );

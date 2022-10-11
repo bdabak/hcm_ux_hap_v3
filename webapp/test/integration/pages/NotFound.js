@@ -2,7 +2,7 @@ sap.ui.require(
   [
     "sap/ui/test/Opa5",
     "sap/ui/test/actions/Press",
-    "hcm/ux/hapv2.1/test/integration/pages/Common",
+    "hcm/ux/hapv2_1/test/integration/pages/Common",
   ],
   function (Opa5, Press, Common) {
     "use strict";

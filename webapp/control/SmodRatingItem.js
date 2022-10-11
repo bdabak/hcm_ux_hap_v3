@@ -1,7 +1,7 @@
 sap.ui.define(["sap/ui/core/Control"], function (Control) {
   "use strict";
 
-  return Control.extend("hcm.ux.hapv2.1.control.SmodRatingItem", {
+  return Control.extend("hcm.ux.hapv2_1.control.SmodRatingItem", {
     metadata: {
       properties: {
         value: { type: "string", bindable: true },

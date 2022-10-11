@@ -2,7 +2,7 @@
   "_version": "1.2.0",
   "sap.app": {
     "_version": "1.2.0",
-    "id": "hcm.ux.hapv2.1",
+    "id": "hcm.ux.hapv2_1",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -48,7 +48,7 @@
   "sap.ui5": {
     "_version": "1.2.0",
     "rootView": {
-      "viewName": "hcm.ux.hapv2.1.view.App",
+      "viewName": "hcm.ux.hapv2_1.view.App",
       "type": "XML",
       "id": "app"
     },
@@ -83,7 +83,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "hcm.ux.hapv2.1.i18n.i18n"
+          "bundleName": "hcm.ux.hapv2_1.i18n.i18n"
         }
       },
       "": {
@@ -117,7 +117,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "hcm.ux.hapv2.1.view",
+        "viewPath": "hcm.ux.hapv2_1.view",
         "controlId": "app",
         "controlAggregation": "pages",
         "bypassed": {

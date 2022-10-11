@@ -1,9 +1,9 @@
 sap.ui.define(
-  ["hcm/ux/hapv2.1/controller/BaseController", "sap/ui/model/json/JSONModel"],
+  ["hcm/ux/hapv2_1/controller/BaseController", "sap/ui/model/json/JSONModel"],
   function (BaseController, JSONModel) {
     "use strict";
 
-    return BaseController.extend("hcm.ux.hapv2.1.controller.App", {
+    return BaseController.extend("hcm.ux.hapv2_1.controller.App", {
       onInit: function () {
         var oViewModel,
           fnSetAppNotBusy,

@@ -8,13 +8,13 @@ sap.ui.define(
   [
     "sap/ui/core/UIComponent",
     "sap/ui/Device",
-    "hcm/ux/hapv2.1/model/models",
-    "hcm/ux/hapv2.1/controller/ErrorHandler",
+    "hcm/ux/hapv2_1/model/models",
+    "hcm/ux/hapv2_1/controller/ErrorHandler",
   ],
   function (UIComponent, Device, models, ErrorHandler) {
     "use strict";
 
-    return UIComponent.extend("hcm.ux.hapv2.1.Component", {
+    return UIComponent.extend("hcm.ux.hapv2_1.Component", {
       metadata: {
         manifest: "json",
       },

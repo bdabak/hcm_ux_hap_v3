@@ -1,10 +1,10 @@
 sap.ui.define(
   [
     "sap/ui/core/Control",
-    "hcm/ux/hapv2.1/control/SmodCalibrationGridBlock",
-    "hcm/ux/hapv2.1/control/SmodCalibrationGridHeader",
-    "hcm/ux/hapv2.1/control/SmodCalibrationGridFilter",
-    "hcm/ux/hapv2.1/control/SmodCalibrationGridFilterBlock",
+    "hcm/ux/hapv2_1/control/SmodCalibrationGridBlock",
+    "hcm/ux/hapv2_1/control/SmodCalibrationGridHeader",
+    "hcm/ux/hapv2_1/control/SmodCalibrationGridFilter",
+    "hcm/ux/hapv2_1/control/SmodCalibrationGridFilterBlock",
     "sap/ui/core/dnd/DragDropInfo",
   ],
   function (
@@ -16,7 +16,7 @@ sap.ui.define(
     DragDropInfo
   ) {
     "use strict";
-    var E = Control.extend("hcm.ux.hapv2.1.control.SmodCalibrationGrid", {
+    var E = Control.extend("hcm.ux.hapv2_1.control.SmodCalibrationGrid", {
       metadata: {
         properties: {
           gridTitle: {
@@ -26,12 +26,12 @@ sap.ui.define(
         },
         aggregations: {
           blockList: {
-            type: "hcm.ux.hapv2.1.control.SmodCalibrationGridBlock",
+            type: "hcm.ux.hapv2_1.control.SmodCalibrationGridBlock",
             multiple: true,
             singularName: "block",
           },
           filterBar: {
-            type: "hcm.ux.hapv2.1.control.SmodCalibrationGridFilter",
+            type: "hcm.ux.hapv2_1.control.SmodCalibrationGridFilter",
             multiple: false,
           },
           graph: {
@@ -57,7 +57,7 @@ sap.ui.define(
         },
       },
       init: function () {
-        var libraryPath = jQuery.sap.getModulePath("hcm.ux.hapv2.1"); //get the server location of the ui library
+        var libraryPath = jQuery.sap.getModulePath("hcm.ux.hapv2_1"); //get the server location of the ui library
         jQuery.sap.includeStyleSheet(
           libraryPath + "/control/SmodCalibrationGrid.css"
         );

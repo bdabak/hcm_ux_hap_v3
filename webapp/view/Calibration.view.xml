@@ -1,9 +1,9 @@
-<mvc:View controllerName="hcm.ux.hapv2.1.controller.Calibration"
+<mvc:View controllerName="hcm.ux.hapv2_1.controller.Calibration"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:semantic="sap.f.semantic"
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
-	xmlns:smod="hcm.ux.hapv2.1.control"
+	xmlns:smod="hcm.ux.hapv2_1.control"
 	xmlns:smod_controls="smod.ui5.controls.src.controls">
 	<Page showHeader="false" floatingFooter="false" title="" id="idCalibrationMainPage">
 		<content>

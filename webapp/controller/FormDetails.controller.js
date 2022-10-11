@@ -10,10 +10,10 @@
 /*global _*/
 sap.ui.define(
   [
-    "hcm/ux/hapv2.1/controller/BaseController",
+    "hcm/ux/hapv2_1/controller/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/routing/History",
-    "hcm/ux/hapv2.1/model/formatter",
+    "hcm/ux/hapv2_1/model/formatter",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/m/MessagePopover",
@@ -30,7 +30,7 @@ sap.ui.define(
     "sap/viz/ui5/controls/common/feeds/FeedItem",
     "sap/viz/ui5/format/ChartFormatter",
     "sap/viz/ui5/api/env/Format",
-    "hcm/ux/hapv2.1/utils/CustomChartFormatter",
+    "hcm/ux/hapv2_1/utils/CustomChartFormatter",
     "sap/ui/core/format/DateFormat",
     "sap/ui/core/Fragment",
     "../control/SmodRatingIndicator",
@@ -64,7 +64,7 @@ sap.ui.define(
   ) {
     "use strict";
 
-    return BaseController.extend("hcm.ux.hapv2.1.controller.FormDetails", {
+    return BaseController.extend("hcm.ux.hapv2_1.controller.FormDetails", {
       formatter: formatter,
       hasChanges: false,
 
@@ -223,7 +223,7 @@ sap.ui.define(
       _handleCallUserGuide: function () {
         var that = this;
         Fragment.load({
-          name: "hcm.ux.hapv2.1.fragment.UserGuideViewer",
+          name: "hcm.ux.hapv2_1.fragment.UserGuideViewer",
           controller: that,
         }).then(function (oDialog) {
           that._oGuideViewer = oDialog;
@@ -3951,7 +3951,7 @@ sap.ui.define(
         if (aValueDesc.length > 0) {
           if (!that._oValDescPopover) {
             that._oValDescPopover = sap.ui.xmlfragment(
-              "hcm.ux.hapv2.1.fragment.ValueDescription",
+              "hcm.ux.hapv2_1.fragment.ValueDescription",
               this
             );
             // connect dialog to view (models, lifecycle)
@@ -5070,7 +5070,7 @@ sap.ui.define(
         if (!this._oSurveyDialog) {
           // create dialog via fragment factory
           this._oSurveyDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.ElementSurvey",
+            "hcm.ux.hapv2_1.fragment.ElementSurvey",
             this
           );
           this._oSurveyDialog.setEscapeHandler(this.onEscapeDialog);
@@ -6287,7 +6287,7 @@ sap.ui.define(
         if (!this._oListAttachmentDialog) {
           // create dialog via fragment factory
           this._oListAttachmentDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.AttachmentList",
+            "hcm.ux.hapv2_1.fragment.AttachmentList",
             this
           );
           // connect dialog to view (models, lifecycle)
@@ -7350,7 +7350,7 @@ sap.ui.define(
         if (!this._oAddNewElementFreeDialog) {
           // create dialog via fragment factory
           this._oAddNewElementFreeDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.AddNewElementFree",
+            "hcm.ux.hapv2_1.fragment.AddNewElementFree",
             this
           );
           // connect dialog to view (models, lifecycle)
@@ -7368,7 +7368,7 @@ sap.ui.define(
         if (!this._oAddNewElementFreeFormDialog) {
           // create dialog via fragment factory
           this._oAddNewElementFreeFormDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.AddNewElementFreeForm",
+            "hcm.ux.hapv2_1.fragment.AddNewElementFreeForm",
             this
           );
           //escape handler
@@ -7398,7 +7398,7 @@ sap.ui.define(
         if (!this._oAddNewElementObjectiveDialog) {
           // create dialog via fragment factory
           this._oAddNewElementObjectiveDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.AddNewElementObjective",
+            "hcm.ux.hapv2_1.fragment.AddNewElementObjective",
             this
           );
           //escape handler
@@ -7416,7 +7416,7 @@ sap.ui.define(
         if (!this._oAddNewElementCatalogDialog) {
           // create dialog via fragment factory
           this._oAddNewElementCatalogDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.AddNewElementCatalog",
+            "hcm.ux.hapv2_1.fragment.AddNewElementCatalog",
             this
           );
           // connect dialog to view (models, lifecycle)
@@ -7713,7 +7713,7 @@ sap.ui.define(
         if (!this._oUploadAttachmentDialog) {
           // create dialog via fragment factory
           this._oUploadAttachmentDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.UploadAttachments",
+            "hcm.ux.hapv2_1.fragment.UploadAttachments",
             this
           );
           // connect dialog to view (models, lifecycle)
@@ -7847,7 +7847,7 @@ sap.ui.define(
         if (!this._oDevTrainingsDialog) {
           // create dialog via fragment factory
           this._oDevTrainingsDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2.1.fragment.DevelopmentTrainings",
+            "hcm.ux.hapv2_1.fragment.DevelopmentTrainings",
             this
           );
           // connect dialog to view (models, lifecycle)

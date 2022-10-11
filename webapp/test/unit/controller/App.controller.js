@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "hcm/ux/hapv2.1/controller/App.controller",
+    "hcm/ux/hapv2_1/controller/App.controller",
     "sap/ui/core/Control",
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",

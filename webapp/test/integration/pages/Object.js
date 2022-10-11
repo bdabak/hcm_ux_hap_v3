@@ -3,8 +3,8 @@ sap.ui.define(
     "sap/ui/test/Opa5",
     "sap/ui/test/actions/Press",
     "sap/ui/test/matchers/PropertyStrictEquals",
-    "hcm/ux/hapv2.1/test/integration/pages/Common",
-    "hcm/ux/hapv2.1/test/integration/pages/shareOptions",
+    "hcm/ux/hapv2_1/test/integration/pages/Common",
+    "hcm/ux/hapv2_1/test/integration/pages/shareOptions",
   ],
   function (Opa5, Press, PropertyStrictEquals, Common, shareOptions) {
     "use strict";

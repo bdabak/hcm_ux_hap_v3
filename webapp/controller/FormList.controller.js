@@ -1,10 +1,10 @@
 /*global introJs,_*/
 sap.ui.define(
   [
-    "hcm/ux/hapv2.1/controller/BaseController",
+    "hcm/ux/hapv2_1/controller/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/routing/History",
-    "hcm/ux/hapv2.1/model/formatter",
+    "hcm/ux/hapv2_1/model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
@@ -22,7 +22,7 @@ sap.ui.define(
   ) {
     "use strict";
 
-    return BaseController.extend("hcm.ux.hapv2.1.controller.FormList", {
+    return BaseController.extend("hcm.ux.hapv2_1.controller.FormList", {
       formatter: formatter,
 
       /* =========================================================== */
@@ -198,7 +198,7 @@ sap.ui.define(
       onCallUserGuide: function () {
         var that = this;
         Fragment.load({
-          name: "hcm.ux.hapv2.1.fragment.UserGuideViewer",
+          name: "hcm.ux.hapv2_1.fragment.UserGuideViewer",
           controller: that,
         }).then(function (oDialog) {
           that._oGuideViewer = oDialog;

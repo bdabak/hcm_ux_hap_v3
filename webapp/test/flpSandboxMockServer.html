@@ -1,10 +1,11 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <!-- Copyright (c) 2015 SAP AG, All Rights Reserved -->
+
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{{appTitle}}</title>
 
 	<!-- Bootstrap the unified shell in sandbox mode for standalone usage.
@@ -46,7 +47,7 @@
 				"DeğerlendirmeFormları-display": {
 					title: "Performans Değerlendirme Yönetimi",
 					description: "",
-					additionalInformation: "SAPUI5.Component=hcm.ux.hapv2.1",
+					additionalInformation: "SAPUI5.Component=hcm.ux.hapv2_1",
 					applicationType: "URL",
 					url: "../"
 				}
@@ -57,22 +58,16 @@
 	<script src="../test-resources/sap/ushell/bootstrap/sandbox.js" id="sap-ushell-bootstrap"></script>
 
 	<!-- Bootstrap the UI5 core library -->
-	<script id="sap-ui-bootstrap"
-			src="../resources/sap-ui-core.js"
-			data-sap-ui-libs="sap.f, sap.m, sap.ui.comp, sap.ui.core, sap.ui.generic.app, sap.ui.table, sap.ushell, sap.ui.layout, sap.uxap, sap.collaboration"
-			data-sap-ui-async="true"
-			data-sap-ui-preload="async"
-			data-sap-ui-theme="sap_fiori_3"
-			data-sap-ui-compatVersion="edge"
-			data-sap-ui-language="en"
-			data-sap-ui-resourceroots='{"hcm.ux.hapv2.1": "../", "hcm.ux.hapv2.1.test": "./"}'
-			data-sap-ui-frameOptions="allow"> // NON-SECURE setting for testing environment
-	</script>
-	<script id="locate-reuse-libs" src="../utils/locate-reuse-libs.js"
-			data-sap-ui-manifest-uri="../manifest.json"
-			data-sap-ui-componentName="hcm.ux.hapv2.1"
-			data-sap-ui-use-mockserver="true">
-	</script>
+	<script id="sap-ui-bootstrap" src="../resources/sap-ui-core.js"
+		data-sap-ui-libs="sap.f, sap.m, sap.ui.comp, sap.ui.core, sap.ui.generic.app, sap.ui.table, sap.ushell, sap.ui.layout, sap.uxap, sap.collaboration"
+		data-sap-ui-async="true" data-sap-ui-preload="async" data-sap-ui-theme="sap_fiori_3"
+		data-sap-ui-compatVersion="edge" data-sap-ui-language="en"
+		data-sap-ui-resourceroots='{"hcm.ux.hapv2_1": "../", "hcm.ux.hapv2_1.test": "./"}'
+		data-sap-ui-frameOptions="allow"> // NON-SECURE setting for testing environment
+		</script>
+	<script id="locate-reuse-libs" src="../utils/locate-reuse-libs.js" data-sap-ui-manifest-uri="../manifest.json"
+		data-sap-ui-componentName="hcm.ux.hapv2_1" data-sap-ui-use-mockserver="true">
+		</script>
 </head>
 
 <!-- UI Content -->

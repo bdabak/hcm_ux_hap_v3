@@ -1,9 +1,9 @@
 sap.ui.define(
-  ["hcm/ux/hapv2.1/controller/BaseController"],
+  ["hcm/ux/hapv2_1/controller/BaseController"],
   function (BaseController) {
     "use strict";
 
-    return BaseController.extend("hcm.ux.hapv2.1.controller.NotFound", {
+    return BaseController.extend("hcm.ux.hapv2_1.controller.NotFound", {
       /**
        * Navigates to the worklist when the link is pressed
        * @public
