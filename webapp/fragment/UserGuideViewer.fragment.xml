@@ -1,0 +1,23 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:t="sap.ui.table"
+	xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog showHeader="true" afterClose=".onAfterUserGuideClose" contentHeight="93%" contentWidth="70%">
+		<customHeader>
+			<Toolbar>
+				<Title text="{i18n>userGuide}" class="sapUiTinyMarginBegin"/>
+				<ToolbarSpacer/>
+				<Button icon="sap-icon://sys-cancel-2" press=".onCloseUserGuide" class="sapUiTinyMarginEnd"/>
+			</Toolbar>
+		</customHeader>
+		<content>
+			<FlexBox direction="Row" renderType="Div" height="100%" width="97%" alignItems="Center" class="sapUiSmallMargin">
+				<PDFViewer
+					source="/sap/opu/odata/sap/ZHCM_GENERIC_SRV/MimeInfoSet('{= encodeURIComponent(${formListModel>/userGuidePath}) }')/$value"
+					height="82vh" showDownloadButton="false">
+					<layoutData>
+						<FlexItemData growFactor="1"/>
+					</layoutData>
+				</PDFViewer>
+			</FlexBox>
+		</content>
+	</Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,33 @@
+<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
+	xmlns="sap.m" xmlns:u="sap.ui.unified">
+	<Dialog title="{i18n>uploadAttachmentDialog}" showHeader="true" stretch="{device>/system/phone}" id="idUploadAttachmentDialog"
+		contentWidth="600px">
+		<content>
+			<f:Form id="idUploadAttachmentForm" editable="true">
+				<f:layout>
+					<f:ResponsiveGridLayout labelSpanXL="2" labelSpanL="2" labelSpanM="2" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="1" emptySpanL="1"
+						emptySpanM="1" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false"/>
+				</f:layout>
+				<f:formContainers>
+					<f:FormContainer>
+						<f:formElements>
+							<f:FormElement >
+								<f:fields>
+									<u:FileUploader id="idAttachmentFileUploader" name="hapFileUploader" uploadUrl="" uploadComplete="onAttachmentUploadComplete"
+										change="onAttachmentFileChange" typeMissmatch="onFileTypeMissmatch" style="Emphasized" fileType="pdf,xls,xlsx,doc,docx,tiff,jpg,png,zip,rar"
+										maximumFileSize="5" fileSizeExceed="onFileSizeExceed" placeholder="{i18n>labelUploadPlaceHolder}" sendXHR="true" useMultipart="false"
+										class="hapFileUploader"></u:FileUploader>
+								</f:fields>
+							</f:FormElement>
+						</f:formElements>
+					</f:FormContainer>
+				</f:formContainers>
+			</f:Form>
+		</content>
+		<buttons>
+			<Button text="{i18n>labelCancel}" icon="sap-icon://sys-cancel-2" press="onCloseUploadFormDialog"/>
+			<Button text="{i18n>labelUploadFile}" icon="sap-icon://upload-to-cloud" type="Accept" press="onAttachmentUploadPress"
+				id="idUploadInterviewForm"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

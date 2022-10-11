@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Popover title="Değerler" class="sapUiContentPadding" placement="Auto" showHeader="false">
+		<Table inset="false" items="{ path: 'formDetailsModel>/currentCellValueDescription'}" fixedLayout="true" width="400px" showSeparators="None">
+			<columns>
+				<!--<Column width="2rem">-->
+				<!--	<Text text="Değer"/>-->
+				<!--</Column>-->
+				<!--<Column width="4rem">-->
+				<!--	<Text text="Metin"/>-->
+				<!--</Column>-->
+				<Column>
+					<Text text="Açıklama" visible="false"/>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem>
+					<cells>
+						<!--<ObjectIdentifier title="{formDetailsModel>ValueIid}"/>-->
+						<!--<Text text="{formDetailsModel>ValueText}"/>-->
+						<Text text="{formDetailsModel>Description}"/>
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</Popover>
+</core:FragmentDefinition>

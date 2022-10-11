@@ -1,0 +1,6 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" controllerName="hcm.ux.hapv2.1.controller.App" displayBlock="true"
+	xmlns="sap.m">
+
+	<App id="app" busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}"/>
+
+</mvc:View>

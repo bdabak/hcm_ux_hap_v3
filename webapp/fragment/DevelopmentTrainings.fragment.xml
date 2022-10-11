@@ -1,0 +1,15 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<Dialog afterClose="onTrainingDialogClose" title="Eğitim Tarihçesi" stretch="{device>/system/phone}">
+		<content>
+			<List id="idDevTrainingsList"
+				items="{ path: '/DevTrainingsSet', sorter: { path: 'Trayr', descending: true, group: true }, groupHeaderFactory: '.onGetTrainingGroupHeader' }"
+				headerText="Eğitimler" growing="true" growingThreshold="15" growingScrollToLoad="false" noDataText="Eğitim bulunamadı..."
+				busyIndicatorDelay="0">
+				<StandardListItem title="{Tratx}"/>
+			</List>
+		</content>
+		<buttons>
+			<Button text="{i18n>labelOK}" press="onTrainingDialogClose" type="Accept"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

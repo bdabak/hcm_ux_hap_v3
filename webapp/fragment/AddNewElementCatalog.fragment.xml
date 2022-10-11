@@ -1,0 +1,51 @@
+<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
+	xmlns="sap.m" xmlns:table="sap.ui.table" xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog title="{i18n>addNewElementCatalogHeader}" showHeader="true" stretch="{device>/system/phone}" id="idAddNewElementCatalogDialog"
+		contentWidth="850px" contentHeight="500px" resizable="true" draggable="true">
+		<content>
+			<table:TreeTable rows="{path:'enhanceModel>/Hierarchy', parameters: {arrayNames:['Children']}}" selectionMode="None" enableSelectAll="false">
+				<table:toolbar>
+					<Toolbar>
+						<Title text="{i18n>catalogHeader}"/>
+					</Toolbar>
+				</table:toolbar>
+				<table:columns>
+					<table:Column width="15rem">
+						<Label text="Nesne" class="hapDialogLabel"/>
+						<table:template>
+							<Text text="{enhanceModel>Stext}" wrapping="false" tooltip="{enhanceModel>Otype} {enhanceModel>Objid}"/>
+						</table:template>
+					</table:Column>
+					<table:Column width="15rem">
+						<Label text="Etkinlik İçeriği" textAlign="Center" class="hapDialogLabel"/>
+						<table:template>
+							<TextArea value="{enhanceModel>Description1}" rows="3" editable="false" class="hapDialogDescription"
+								visible="{= ${enhanceModel>Selectable} &amp;&amp; ${enhanceModel>Description1} !== null }" width="100%" wrapping="Hard"/>
+						</table:template>
+					</table:Column>
+					<table:Column width="15rem">
+						<Label text="Geliştirilmesi Amaçlanan Yetkinlikler" textAlign="Center" class="hapDialogLabel"/>
+						<table:template>
+							<TextArea value="{enhanceModel>Description2}" rows="3" editable="false" class="hapDialogDescription"
+								visible="{= ${enhanceModel>Selectable} &amp;&amp; ${enhanceModel>Description2} !== null }" width="100%" wrapping="Hard"/>
+						</table:template>
+					</table:Column>
+					<table:Column hAlign="Center">
+						<Label text="Seçim" class="hapDialogLabel"/>
+						<table:template>
+							<HBox alignContent="Center" justifyContent="Center">
+								<Text visible="{enhanceModel>AlreadySelected}" text="Eklendi" class="hapAlreadySelected"/>
+								<CheckBox visible="{= ${enhanceModel>Selectable} &amp;&amp; !${enhanceModel>AlreadySelected} }" selected="{enhanceModel>Selected}"
+									cd:referenceObjectType="{enhanceModel>Otype}" cd:referenceObjectId="{enhanceModel>Objid}"/>
+							</HBox>
+						</table:template>
+					</table:Column>
+				</table:columns>
+			</table:TreeTable>
+		</content>
+		<buttons>
+			<Button text="{i18n>labelAddElement}" icon="sap-icon://add" type="Accept" press="onApplyAddElementCatalog"/>
+			<Button text="{i18n>labelCancel}" icon="sap-icon://sys-cancel-2" press="onCloseAddElementCatalog" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

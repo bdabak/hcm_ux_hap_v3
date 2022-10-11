@@ -1,0 +1,110 @@
+<mvc:View xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.m.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core" controllerName="hcm.ux.hapv2.1.controller.FormList"
+	xmlns:unical="sap.ui.unified.calendar">
+	<semantic:FullscreenPage id="idFormListPage" semanticRuleSet="Optimized" title="{i18n>formListViewTitle}" showNavButton="true" navButtonPress="onNavHome" showFooter="false" busy="{formListModel>/viewBusy}" busyIndicatorDelay="0">
+		<semantic:content>
+			<VBox>
+				<f:Form id="idFormSelection" editable="true" ariaLabelledBy="idFormSelectionTitle">
+					<f:toolbar>
+						<Toolbar id="idFormSelectionToolbar">
+							<Title id="idFormSelectionTitle" text="{i18n>formSelectionTitle}" level="H4" titleStyle="H4"/>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://sys-help-2" press=".onStartIntro" visible="false"/>
+							<Button icon="sap-icon://learning-assistant" press=".onCallUserGuide" visible="{formListModel>/userGuideVisible}" text="{i18n>userGuideButton}" type="Accept"/>
+							<Button icon="{formListModel>/selectionToggle}" press=".onFormShowHide" id="idToggleSelectionButton"/>
+						</Toolbar>
+					</f:toolbar>
+					<f:layout>
+						<f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false"/>
+					</f:layout>
+					<f:formContainers>
+						<f:FormContainer id="idFormSelectionContainer">
+							<f:formElements>
+								<f:FormElement label="{i18n>appraisalPeriod}">
+									<f:fields>
+										<MultiComboBox selectedKeys="{path: 'formListModel>/selectedDates'}" items="{ path: 'formListModel>/dateSelection' }" class="hapYearSelectCombo">
+											<core:Item key="{formListModel>Year}" text="{formListModel>Year}"/>
+											<layoutData>
+												<l:GridData span="XL4 L4 M4 S12"/>
+											</layoutData>
+										</MultiComboBox>
+									</f:fields>
+								</f:FormElement>
+								<f:FormElement>
+									<f:fields>
+										<Button id="idButtonGetForms" icon="sap-icon://menu" text="{i18n>getFormListButton}" press="onRefreshFormList" type="Accept">
+											<layoutData>
+												<l:GridData span="XL4 L4 M4 S12" indentXL="4" indentL="4" indentM="4"/>
+											</layoutData>
+										</Button>
+									</f:fields>
+								</f:FormElement>
+							</f:formElements>
+						</f:FormContainer>
+					</f:formContainers>
+				</f:Form>
+				<IconTabBar id="idFormListTabs" select="onRoleSelect" selectedKey="{formListModel>/selectedTabKey}">
+					<items>
+						<IconTabFilter id="idFormListFilterME" icon="sap-icon://my-view" iconColor="Positive" text="Formlarım" key="ME" visible="{formListModel>/filterVisibleME}" count="{formListModel>/formCountME}"/>
+						<IconTabSeparator visible="{= ${formListModel>/filterVisibleMA} || ${formListModel>/filterVisibleMB} ? true : false }"/>
+						<IconTabFilter id="idFormListFilterMA" icon="sap-icon://manager" iconColor="Critical" text="1. Yönetici" key="MA" visible="{formListModel>/filterVisibleMA}" count="{formListModel>/formCountMA}"/>
+						<IconTabFilter id="idFormListFilterMB" icon="sap-icon://manager-insight" iconColor="Negative" text="2. Yönetici" key="MB" visible="{formListModel>/filterVisibleMB}" count="{formListModel>/formCountMB}"/>
+					</items>
+					<!-- sap.m.IconTab -->
+					<content>
+						<Table id="idFormListTable" width="auto" items="{ path: 'formListModel>/currentFormList', sorter: { path: 'ApStartDate', descending: true } }" noDataText="{formListModel>/tableNoDataText}" busyIndicatorDelay="{formListModel>/tableBusyDelay}" growing="true" growingScrollToLoad="true" updateFinished="onUpdateFinished">
+							<headerToolbar>
+								<Toolbar>
+									<Title id="idFormTableHeader" text="{formListModel>/formListTableTitle}"/>
+									<ToolbarSpacer/>
+									<SearchField id="idSearchField" tooltip="{i18n>formListSearchTooltip}" search="onSearch" width="50%"/>
+								</Toolbar>
+							</headerToolbar>
+							<columns>
+								<Column id="idColumnAppraisalFormName">
+									<Title text="{i18n>tableAppraisalNameColumnTitle}"/>
+								</Column>
+								<Column id="idColumnAppraiseeName" visible="{= ${formListModel>/selectedTabKey} !== 'ME' }" demandPopin="true" minScreenWidth="Tablet">
+									<Title text="{i18n>tableAppraiseeNameColumnTitle}"/>
+								</Column>
+								<Column id="idColumnAppraiserName" demandPopin="true" minScreenWidth="Tablet">
+									<Title text="{i18n>tableAppraiserNameColumnTitle}"/>
+								</Column>
+								<Column id="idColumnAppraisalStatusName" demandPopin="true" hAlign="Center" minScreenWidth="Tablet">
+									<Title text="{i18n>tableAppraisalStatusColumnTitle}"/>
+								</Column>
+								<Column id="idColumnAppraisalStartDate" demandPopin="true" popinDisplay="WithoutHeader" hAlign="Center" minScreenWidth="Tablet">
+									<Title text="{i18n>tableAppraisalStartDateColumnTitle}"/>
+								</Column>
+								<Column id="idColumnAppraisalEndDate" demandPopin="true" popinDisplay="WithoutHeader" hAlign="Center" minScreenWidth="Tablet">
+									<Title text="{i18n>tableAppraisalEndDateColumnTitle}"/>
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem type="Navigation" press="onFormPress">
+									<cells>
+										<ObjectIdentifier title="{formListModel>AppraisalName}"/>
+										<Text text="{formListModel>AppraiseeName}"/>
+										<Text text="{formListModel>AppraiserName}"/>
+										<Text text="{= ${formListModel>ApStatusSubName} !== '' ? ${formListModel>ApStatusName} + ' - ' + ${formListModel>ApStatusSubName} : ${formListModel>ApStatusName} }"/>
+										<Text text="{path:'formListModel>ApStartDate', type : 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"/>
+										<Text text="{path:'formListModel>ApEndDate', type : 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"/>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+						<Link id="idCalibrationLinkMB" text="{i18n>linkCalibrationText}" press="handleLinkCalibrationMB" visible="false"/>
+						<Link id="idCalibrationLinkMC" text="{i18n>linkCalibrationText}" press="handleLinkCalibrationMC" visible="false"/>
+					</content>
+					<!-- sap.ui.core.Control -->
+				</IconTabBar>
+				<!--<Image src="{path: '', formatter:'.formatter.getImagePath'}" width="0" height="0"/>-->
+			</VBox>
+		</semantic:content>
+	</semantic:FullscreenPage>
+</mvc:View>

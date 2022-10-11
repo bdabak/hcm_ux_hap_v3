@@ -1,0 +1,18 @@
+<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
+	xmlns="sap.m">
+	<Dialog title="{formDetailsModel>/newElement/ParentName}" showHeader="true" stretch="{device>/system/phone}" id="idAddNewElementFreeDialog">
+		<content>
+			<f:SimpleForm editable="true" id="i" layout="ResponsiveGridLayout" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0"
+				adjustLabelSpan="false" columnsL="12" columnsM="12">
+				<f:content>
+					<Label text="{formDetailsModel>/newElement/PlaceHolder}" id="idLabelOffboardingDocUploader" design="Bold"/>
+					<Input placeholder="{formDetailsModel>/newElement/PlaceHolder}" value="{formDetailsModel>/newElement/Value}"/>
+				</f:content>
+			</f:SimpleForm>
+		</content>
+		<buttons>
+			<Button text="{i18n>labelAddElement}" icon="sap-icon://add" type="Accept" press="onApplyAddElementFree"/>
+			<Button text="{i18n>labelCancel}" icon="sap-icon://sys-cancel-2" press="onCloseAddElementFree" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

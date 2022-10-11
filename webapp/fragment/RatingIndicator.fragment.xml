@@ -1,0 +1,10 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core"
+	xmlns:form="sap.ui.layout.form">
+	<form:SimpleForm maxContainerCols="2" editable="false" layout="ResponsiveGridLayout" labelSpanXL="-1"
+		emptySpanXL="-1" columnsXL="-1" labelSpanL="4" emptySpanL="3" columnsL="2" labelSpanM="4" emptySpanM="2" columnsM="2" labelSpanS="12"
+		emptySpanS="0" adjustLabelSpan="false" singleContainerFullSize="false">
+		<form:content>
+			<RatingIndicator maxValue="4" value="5"/>
+		</form:content>
+	</form:SimpleForm>
+</core:FragmentDefinition>

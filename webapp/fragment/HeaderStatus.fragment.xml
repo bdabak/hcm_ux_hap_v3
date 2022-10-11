@@ -1,0 +1,32 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<FlexBox class="hapRoleCardNew">
+		<html:Table>
+			<html:tr>
+				<html:td>
+					<FlexBox direction="Column">
+						<items>
+							<Text id="idLabelApStartDate" text="{i18n>labelApStartDate}" class="hapHeaderLabel"/>
+							<Text id="idLabelApEndDate" text="{i18n>labelApEndDate}" class="hapHeaderLabel"/>
+							<Text id="idLabelApStatus" text="{i18n>labelApStatus}" class="hapHeaderLabel"/>
+							<Text id="idLabelApStatusSub" text="{i18n>labelApStatusSub}" class="hapHeaderLabel"/>
+						</items>
+					</FlexBox>
+				</html:td>
+				<html:td>
+					<FlexBox direction="Column">
+						<items>
+							<Text id="idDataApStartDate"
+								text="{path:'formDetailsModel>/formData/HeaderDates/ApStartDate',type : 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"
+								class="hapHeaderData"/>
+							<Text id="idDataApEndDate"
+								text="{path: 'formDetailsModel>/formData/HeaderDates/ApEndDate', type : 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"
+								class="hapHeaderData"/>
+							<Text id="idDataApStatus" text="{formDetailsModel>/formData/HeaderStatus/ApStatusName}" class="hapHeaderData"/>
+							<Text id="idDataApStatusSub" text="{formDetailsModel>/formData/HeaderStatus/ApStatusSubName}" class="hapHeaderData"/>
+						</items>
+					</FlexBox>
+				</html:td>
+			</html:tr>
+		</html:Table>
+	</FlexBox>
+</core:FragmentDefinition>

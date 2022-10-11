@@ -1,0 +1,30 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<FlexBox class="hapRoleCardNew">
+		<Image src="/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/EmployeeInfoSet('{formDetailsModel>/formData/HeaderOthers/0/Id}')/$value"
+			class="sapUxAPObjectPageHeaderContentImageContainer sapUxAPObjectPageHeaderObjectImage-Circle sapMImg sapMImgFocusable sapUxAPObjectPageHeaderObjectImage hapPhotoBorder"></Image>
+		<html:Table>
+			<html:tr>
+				<html:td>
+					<FlexBox direction="Column">
+						<items>
+							<Text id="idLabelOthersPernr" text="{i18n>labelPernr}" class="hapHeaderLabel"/>
+							<Text id="idLabelOthersEname" text="{i18n>labelEname}" class="hapHeaderLabel"/>
+							<Text id="idLabelOthersOrgUnit" text="{i18n>labelOrgUnit}" class="hapHeaderLabel"/>
+							<Text id="idLabelOthersPosition" text="{i18n>labelPosition}" class="hapHeaderLabel"/>
+						</items>
+					</FlexBox>
+				</html:td>
+				<html:td>
+					<FlexBox direction="Column">
+						<items>
+							<Text id="idDataOthersPernr" text="{formDetailsModel>/formData/HeaderOthers/0/Id}" class="hapHeaderData"/>
+							<Text id="idDataOthersEname" text="{formDetailsModel>/formData/HeaderOthers/0/Name}" class="hapHeaderData"/>
+							<Text id="idDataOthersOrgUnit" text="{formDetailsModel>/formData/HeaderOthers/0/Orgtx}" class="hapHeaderData"/>
+							<Text id="idDataOthersPosition" text="{formDetailsModel>/formData/HeaderOthers/0/Plstx}" class="hapHeaderData"/>
+						</items>
+					</FlexBox>
+				</html:td>
+			</html:tr>
+		</html:Table>
+	</FlexBox>
+</core:FragmentDefinition>

@@ -1,0 +1,30 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<FlexBox id="idHeaderAppraiserContainer" class="hapRoleCardNew">
+		<Image src="/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/EmployeeInfoSet('{formDetailsModel>/formData/HeaderAppraiser/0/Id}')/$value"
+			class="sapUxAPObjectPageHeaderContentImageContainer sapUxAPObjectPageHeaderObjectImage-Circle sapMImg sapMImgFocusable sapUxAPObjectPageHeaderObjectImage hapPhotoBorder"></Image>
+		<html:Table>
+			<html:tr>
+				<html:td>
+					<FlexBox direction="Column">
+						<items>
+							<Text id="idLabelApperPernr" text="{i18n>labelPernr}" class="hapHeaderLabel"/>
+							<Text id="idLabelApperEname" text="{i18n>labelEname}" class="hapHeaderLabel"/>
+							<Text id="idLabelApperOrgUnit" text="{i18n>labelOrgUnit}" class="hapHeaderLabel"/>
+							<Text id="idLabelApperPosition" text="{i18n>labelPosition}" class="hapHeaderLabel"/>
+						</items>
+					</FlexBox>
+				</html:td>
+				<html:td>
+					<FlexBox direction="Column">
+						<items>
+							<Text id="idDataApperPernr" text="{formDetailsModel>/formData/HeaderAppraiser/0/Id}" class="hapHeaderData"/>
+							<Text id="idDataApperEname" text="{formDetailsModel>/formData/HeaderAppraiser/0/Name}" class="hapHeaderData"/>
+							<Text id="idDataApperOrgUnit" text="{formDetailsModel>/formData/HeaderAppraiser/0/Orgtx}" class="hapHeaderData"/>
+							<Text id="idDataApperPosition" text="{formDetailsModel>/formData/HeaderAppraiser/0/Plstx}" class="hapHeaderData"/>
+						</items>
+					</FlexBox>
+				</html:td>
+			</html:tr>
+		</html:Table>
+	</FlexBox>
+</core:FragmentDefinition>

@@ -1,0 +1,50 @@
+<mvc:View controllerName="hcm.ux.hapv2.1.controller.Calibration"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.f.semantic"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:smod="hcm.ux.hapv2.1.control"
+	xmlns:smod_controls="smod.ui5.controls.src.controls">
+	<Page showHeader="false" floatingFooter="false" title="" id="idCalibrationMainPage">
+		<content>
+			<smod:SmodCalibrationGrid blockList="{calibrationModel>/calibrationData/blockList}" gridTitle="{i18n>CALIBRATION_VIEW_TITLE}" busy="{calibrationModel>/busy}" busyIndicatorDelay="0" dragdrop="onBlockItemDragDrop">
+				<smod:blockList>
+					<smod:SmodCalibrationGridBlock itemList="{ path:'calibrationModel>itemList', templateShareable:false}" blockNumber="{calibrationModel>blockNumber}" blockKey="{calibrationModel>blockKey}" headerText="{calibrationModel>headerText}">
+						<smod:itemList>
+							<smod:SmodCalibrationGridBlockItem itemSelected="onCalibrationItemSelected" itemData="{calibrationModel>}"/>
+						</smod:itemList>
+					</smod:SmodCalibrationGridBlock>
+				</smod:blockList>
+				<smod:filterBar>
+					<smod:SmodCalibrationGridFilter filterBlocks="{calibrationModel>/calibrationData/filterBlocks}">
+						<smod:filterBlocks>
+							<smod:SmodCalibrationGridFilterBlock filterData="{calibrationModel>}" filterItem="{calibrationModel>}">
+								<smod:filterItem>
+									<FlexBox direction="Column" items="{path:'calibrationModel>filterValues', templateShareable:false}" class="scg-grid-filter-block-content">
+										<items>
+											<CheckBox class="scg-grid-filter-block-cb" selected="{calibrationModel>Selected}" text="{calibrationModel>Text} - ({calibrationModel>Count})" select="onFilterItemChanged"/>
+											<Text text="test"></Text>
+										</items>
+									</FlexBox>
+								</smod:filterItem>
+							</smod:SmodCalibrationGridFilterBlock>
+						</smod:filterBlocks>
+					</smod:SmodCalibrationGridFilter>
+				</smod:filterBar>
+				<smod:graph>
+					<smod_controls:LineChartJS id="idCalibrationChart" datasets="{calibrationModel>/chartData/datasets}" scales="{calibrationModel>/chartData/scales}" labels="{calibrationModel>/chartData/labels}" titleDisplay="true" titleText="Performans Değerlendirme Not Dağılımı" tooltipEnabled="true" legendDisplay="true" legendPosition="bottom" showLines="true" spanGaps="true" responsive="true" maintainAspectRatio="false" width="100%" height="100%"></smod_controls:LineChartJS>
+				</smod:graph>
+			</smod:SmodCalibrationGrid>
+		</content>
+		<footer>
+			<Toolbar width="100%" id="__toolbar0">
+				<content>
+					<ToolbarSpacer/>
+					<Button id="idCalibrationSaveBtn" tooltip="{i18n>btnSave}" text="{i18n>btnSave}" icon="sap-icon://save" app:action="SAVE" press="handleButtonAction" type="Accept" visible="{= ${calibrationModel>/showFooter} &amp;&amp; ${calibrationModel>/showSaveButton} }"/>
+					<Button id="idCalibrationApproveBtn" tooltip="{i18n>btnApprove}" text="{i18n>btnApprove}" icon="sap-icon://accept" app:action="APPROVE" press="handleButtonAction" type="Accept" visible="{= ${calibrationModel>/showFooter} &amp;&amp; ${calibrationModel>/showApproveButton} }"/>
+					<Button id="idCalibrationRejectBtn" tooltip="{i18n>btnReject}" text="{i18n>btnReject}" icon="sap-icon://decline" app:action="REJECT" press="handleButtonAction" type="Reject" visible="{= ${calibrationModel>/showFooter} &amp;&amp; ${calibrationModel>/showRejectButton} }"/>
+				</content>
+			</Toolbar>
+		</footer>
+	</Page>
+</mvc:View>

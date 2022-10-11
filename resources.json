@@ -1,0 +1,256 @@
+{
+    "resources": [
+        {
+            "name": "i18n/i18n.properties",
+            "raw": "i18n/i18n.properties"
+        },
+        {
+            "name": "Component.js"
+        },
+        {
+            "name": "neo-app.json"
+        },
+        {
+            "name": "control/SmodCalibrationGridFilter.js"
+        },
+        {
+            "name": "control/SmodCalibrationGridHeader.js"
+        },
+        {
+            "name": "control/SmodCalibrationGridBlockItem.js"
+        },
+        {
+            "name": "control/SmodCalibrationGridBlock.js"
+        },
+        {
+            "name": "control/SmodCalibrationGridFilterBlock.js"
+        },
+        {
+            "name": "control/SmodCalibrationGrid.css"
+        },
+        {
+            "name": "control/SmodCalibrationGrid.js"
+        },
+        {
+            "name": "css/introjs.css"
+        },
+        {
+            "name": "css/style.css"
+        },
+        {
+            "name": "images/barchart_loading.gif"
+        },
+        {
+            "name": "controller/App.controller.js"
+        },
+        {
+            "name": "controller/NotFound.controller.js"
+        },
+        {
+            "name": "controller/Calibration.controller.js"
+        },
+        {
+            "name": "controller/FormDetails.controller.js"
+        },
+        {
+            "name": "controller/FormList.controller.js"
+        },
+        {
+            "name": "controller/ErrorHandler.js"
+        },
+        {
+            "name": "controller/BaseController.js"
+        },
+        {
+            "name": ".user.project.json"
+        },
+        {
+            "name": ".project.json"
+        },
+        {
+            "name": "test/flpSandboxMockServer.html"
+        },
+        {
+            "name": "test/unit/controller/App.controller.js"
+        },
+        {
+            "name": "test/unit/controller/Worklist.controller.js"
+        },
+        {
+            "name": "test/unit/unitTests.qunit.html"
+        },
+        {
+            "name": "test/unit/model/formatter-dbg-dbg.js"
+        },
+        {
+            "name": "test/unit/model/models-dbg-dbg.js"
+        },
+        {
+            "name": "test/unit/model/formatter-dbg.js"
+        },
+        {
+            "name": "test/unit/model/models.js"
+        },
+        {
+            "name": "test/unit/model/formatter.js"
+        },
+        {
+            "name": "test/unit/model/models-dbg.js"
+        },
+        {
+            "name": "test/unit/allTests.js"
+        },
+        {
+            "name": "test/unit/helper/FakeI18nModel.js"
+        },
+        {
+            "name": "test/integration/WorklistJourney.js"
+        },
+        {
+            "name": "test/integration/AllJourneys.js"
+        },
+        {
+            "name": "test/integration/opaTests.qunit.html"
+        },
+        {
+            "name": "test/integration/pages/shareOptions.js"
+        },
+        {
+            "name": "test/integration/pages/Object.js"
+        },
+        {
+            "name": "test/integration/pages/Browser.js"
+        },
+        {
+            "name": "test/integration/pages/App.js"
+        },
+        {
+            "name": "test/integration/pages/Worklist.js"
+        },
+        {
+            "name": "test/integration/pages/NotFound.js"
+        },
+        {
+            "name": "test/integration/pages/Common.js"
+        },
+        {
+            "name": "test/integration/FLPIntegrationJourney.js"
+        },
+        {
+            "name": "test/integration/NotFoundJourney.js"
+        },
+        {
+            "name": "test/integration/NavigationJourney.js"
+        },
+        {
+            "name": "test/integration/ObjectJourney.js"
+        },
+        {
+            "name": "test/flpSandbox.html"
+        },
+        {
+            "name": "test/testsuite.qunit.html"
+        },
+        {
+            "name": "fragment/HeaderAppraiser.fragment.xml"
+        },
+        {
+            "name": "fragment/HeaderOthers.fragment.xml"
+        },
+        {
+            "name": "fragment/AddNewElementFreeForm.fragment.xml"
+        },
+        {
+            "name": "fragment/DevelopmentTrainings.fragment.xml"
+        },
+        {
+            "name": "fragment/AttachmentList.fragment.xml"
+        },
+        {
+            "name": "fragment/HeaderStatus.fragment.xml"
+        },
+        {
+            "name": "fragment/UserGuideViewer.fragment.xml"
+        },
+        {
+            "name": "fragment/ElementSurvey.fragment.xml"
+        },
+        {
+            "name": "fragment/AddNewElementObjective.fragment.xml"
+        },
+        {
+            "name": "fragment/AddNewElementFree.fragment.xml"
+        },
+        {
+            "name": "fragment/GenericBusyDialog.fragment.xml"
+        },
+        {
+            "name": "fragment/ValueDescription.fragment.xml"
+        },
+        {
+            "name": "fragment/AddNewElementCatalog.fragment.xml"
+        },
+        {
+            "name": "fragment/HeaderAppraisee.fragment.xml"
+        },
+        {
+            "name": "fragment/RatingIndicator.fragment.xml"
+        },
+        {
+            "name": "fragment/UploadAttachments.fragment.xml"
+        },
+        {
+            "name": "manifest.json"
+        },
+        {
+            "name": "view/App.view.xml"
+        },
+        {
+            "name": "view/Calibration.view.xml"
+        },
+        {
+            "name": "view/ObjectNotFound.view.xml"
+        },
+        {
+            "name": "view/FormDetails.view.xml"
+        },
+        {
+            "name": "view/FormList.view.xml"
+        },
+        {
+            "name": "view/NotFound.view.xml"
+        },
+        {
+            "name": "localService/mockserver.js"
+        },
+        {
+            "name": "localService/metadata.xml"
+        },
+        {
+            "name": "utils/intro.js"
+        },
+        {
+            "name": "utils/lodash.js"
+        },
+        {
+            "name": "utils/UIHelper.js"
+        },
+        {
+            "name": "utils/CustomChartFormatter.js"
+        },
+        {
+            "name": "model/models.js"
+        },
+        {
+            "name": "model/formatter.js"
+        },
+        {
+            "name": "resources.json",
+            "merged": true
+        },
+        {
+            "name": "Component-preload.js",
+            "merged": true
+        }
+    ]
+}

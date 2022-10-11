@@ -1,0 +1,362 @@
+<edmx:Edmx
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZHCM_UX_HAP_SRV" xml:lang="en" sap:schema-version="1">
+            <EntityType Name="DocumentList" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                    <PropertyRef Name="PartApId"/>
+                </Key>
+                <Property Name="Counter" Type="Edm.Int32" sap:label="Number"/>
+                <Property Name="PlanVersion" Type="Edm.String" MaxLength="2" sap:label="Plan Version"/>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="PartApId" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Part Appraisal ID"/>
+                <Property Name="AppraisalName" Type="Edm.String" MaxLength="80" sap:label="App.Document Name"/>
+                <Property Name="AppraisalTypeText" Type="Edm.String" MaxLength="40" sap:label="App.Document Type"/>
+                <Property Name="AppraiserId" Type="Edm.String" MaxLength="45" sap:label="Appraiser ID"/>
+                <Property Name="AppraiserType" Type="Edm.String" MaxLength="2" sap:label="Appraiser Type"/>
+                <Property Name="AppraiserTypeText" Type="Edm.String" MaxLength="25" sap:label="Appraiser Type"/>
+                <Property Name="AppraiserName" Type="Edm.String" MaxLength="40" sap:label="Appraiser Name"/>
+                <Property Name="AppraiserShort" Type="Edm.String" MaxLength="12" sap:label="Appraiser Short Name"/>
+                <Property Name="AppraiseeId" Type="Edm.String" MaxLength="45" sap:label="Extended AppraiseeID"/>
+                <Property Name="AppraiseeType" Type="Edm.String" MaxLength="2" sap:label="Appraisee Type"/>
+                <Property Name="AppraiseeTypeText" Type="Edm.String" MaxLength="25" sap:label="Appraisee Type"/>
+                <Property Name="AppraiseeName" Type="Edm.String" MaxLength="40" sap:label="Appraisee Name"/>
+                <Property Name="AppraiseeShort" Type="Edm.String" MaxLength="12" sap:label="Appraisee Short Name"/>
+                <Property Name="ApStatus" Type="Edm.String" MaxLength="1" sap:label="Appraisal Status"/>
+                <Property Name="ApStatusName" Type="Edm.String" MaxLength="40" sap:label="Appraisal Status"/>
+                <Property Name="ApStatusSub" Type="Edm.String" MaxLength="1" sap:label="Substatus"/>
+                <Property Name="ApStatusSubName" Type="Edm.String" MaxLength="40" sap:label="Substatus"/>
+                <Property Name="ApStartDate" Type="Edm.DateTime" Precision="7" sap:label="Period"/>
+                <Property Name="ApEndDate" Type="Edm.DateTime" Precision="7" sap:label="To"/>
+                <Property Name="ObjDateSet" Type="Edm.DateTime" Precision="7" sap:label="Obj. Setting Date"/>
+                <Property Name="ReviewDateSet" Type="Edm.DateTime" Precision="7" sap:label="Review Date"/>
+                <Property Name="ApDateSet" Type="Edm.DateTime" Precision="7" sap:label="Appraisal Date"/>
+                <Property Name="ChangeDate" Type="Edm.DateTime" Precision="7" sap:label="Last Changed"/>
+                <Property Name="ChangeTime" Type="Edm.Time" Precision="0" sap:label="Last Change Time"/>
+                <Property Name="ChangeUser" Type="Edm.String" MaxLength="12" sap:label="Last Changed by"/>
+                <Property Name="TemplateId" Type="Edm.String" MaxLength="8" sap:label="Appraisal Template"/>
+                <Property Name="PartRoleId" Type="Edm.String" MaxLength="2" sap:label="Part Apper Role ID"/>
+            </EntityType>
+            <EntityType Name="DocProcessing" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="Mode" Type="Edm.String" MaxLength="1" sap:label="Single-Character Indicator"/>
+                <Property Name="UiMode" Type="Edm.String" MaxLength="1" sap:label="User Interface Mode"/>
+                <Property Name="DocumentMode" Type="Edm.String" MaxLength="1" sap:label="Output Mode"/>
+                <Property Name="ButtonMode" Type="Edm.String" MaxLength="1" sap:label="Single-Character Indicator"/>
+                <Property Name="Administrator" Type="Edm.Boolean" sap:label="Administrator"/>
+                <Property Name="AddOnApplication" Type="Edm.String" MaxLength="4" sap:label="Add-On Application"/>
+                <Property Name="CompleteDocument" Type="Edm.String" MaxLength="1" sap:label="Single-Character Indicator"/>
+                <Property Name="TemplateMode" Type="Edm.String" MaxLength="1" sap:label="Template Mode"/>
+                <Property Name="OnlyOneAllowed" Type="Edm.String" MaxLength="1" sap:label="Create App. Document"/>
+                <Property Name="NoSelfappraisal" Type="Edm.Boolean" sap:label="No Self Appraisal"/>
+                <Property Name="NoObjectivePhase" Type="Edm.Boolean" sap:label="No Objective Period"/>
+                <Property Name="NoReviewPhase" Type="Edm.Boolean" sap:label="No Review Phase"/>
+                <Property Name="NoAppraisalPhase" Type="Edm.String" MaxLength="1" sap:label="Single-Character Indicator"/>
+                <Property Name="NoDateCheck" Type="Edm.Boolean" sap:label="Do Not Check Date"/>
+                <Property Name="WorkflowActive" Type="Edm.Boolean" sap:label="Approval Activated"/>
+                <Property Name="AttachmentAllow" Type="Edm.Boolean" sap:label="Attachment Allowed"/>
+                <Property Name="MultiAppraisers" Type="Edm.Boolean" sap:label="Multiple Appraisers"/>
+                <Property Name="MultiAppraisees" Type="Edm.Boolean" sap:label="Multiple Appraisees"/>
+                <Property Name="ActionlogActive" Type="Edm.String" MaxLength="1" sap:label="Action Log"/>
+                <Property Name="ArchivedProcess" Type="Edm.String" MaxLength="1" sap:label="Proc.Arch.App.Docs"/>
+                <Property Name="NoAppersAuth" Type="Edm.Boolean" sap:label="No AuthorizationChk"/>
+                <Property Name="DynamicTemplate" Type="Edm.Boolean" sap:label="Dynamic Template"/>
+                <Property Name="DocEnqueue" Type="Edm.String" MaxLength="1" sap:label="Appraisal Enqueue"/>
+                <Property Name="NumberOfPartAppers" Type="Edm.String" MaxLength="2" sap:label="Max. Part Appraisers"/>
+                <Property Name="Real360" Type="Edm.String" MaxLength="1" sap:label="Single-Character Indicator"/>
+                <Property Name="DynamicEvent" Type="Edm.Boolean" sap:label="Dynamic Event"/>
+                <Property Name="AttachmentMode" Type="Edm.String" MaxLength="1" sap:label="Attachment(s) Mode"/>
+                <Property Name="DraftNotesAllowed" Type="Edm.String" MaxLength="1" sap:label="Option"/>
+                <Property Name="OfflineDequeue" Type="Edm.Guid" sap:label="Offline ID"/>
+            </EntityType>
+            <EntityType Name="HeaderAppraiser" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="PlanVersion" Type="Edm.String" MaxLength="2" sap:label="Plan Version"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="2" sap:label="Appraiser Type"/>
+                <Property Name="Id" Type="Edm.String" MaxLength="45" sap:label="Extended obj.ID"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="40" sap:label="Appraiser Name"/>
+                <Property Name="Short" Type="Edm.String" MaxLength="12" sap:label="Appraiser Short Name"/>
+            </EntityType>
+            <EntityType Name="HeaderText" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="AppraisalTxt" Type="Edm.String" MaxLength="40"/>
+                <Property Name="AppraisalName" Type="Edm.String" MaxLength="80" sap:label="App.Document Name"/>
+                <Property Name="StatusTxt" Type="Edm.String" MaxLength="40" sap:label="Status Text"/>
+                <Property Name="ApperTypeTxt" Type="Edm.String" MaxLength="40" sap:label="Appraiser Text"/>
+                <Property Name="ApperTypeTxtM" Type="Edm.String" MaxLength="40" sap:label="Appraiser Type Text"/>
+                <Property Name="AppeeTypeTxt" Type="Edm.String" MaxLength="40" sap:label="Appraisee Text"/>
+                <Property Name="AppeeTypeTxtM" Type="Edm.String" MaxLength="40" sap:label="Appraisee Type Text"/>
+                <Property Name="PApperTypeTxt" Type="Edm.String" MaxLength="40" sap:label="Part Appraiser"/>
+                <Property Name="PApperTypeM" Type="Edm.String" MaxLength="40" sap:label="Part Appraiser Type"/>
+                <Property Name="OtherTypeTxt" Type="Edm.String" MaxLength="40" sap:label="Further Participants"/>
+                <Property Name="ValPeriodTxt" Type="Edm.String" MaxLength="40" sap:label="Validity Period"/>
+                <Property Name="ExePeriodTxt" Type="Edm.String" MaxLength="40" sap:label="Execution Period"/>
+                <Property Name="ObjDateTxt" Type="Edm.String" MaxLength="40" sap:label="Objective Set Date"/>
+                <Property Name="RevDateTxt" Type="Edm.String" MaxLength="40" sap:label="Text for Review Date"/>
+                <Property Name="AppDateTxt" Type="Edm.String" MaxLength="40" sap:label="Appraisal Date Text"/>
+            </EntityType>
+            <EntityType Name="HeaderAppraisee" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="PlanVersion" Type="Edm.String" MaxLength="2" sap:label="Plan Version"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="2" sap:label="Appraisee Type"/>
+                <Property Name="Id" Type="Edm.String" MaxLength="45" sap:label="Extended obj.ID"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="40" sap:label="Appraisee Name"/>
+                <Property Name="Short" Type="Edm.String" MaxLength="12" sap:label="Appraisee Short Name"/>
+            </EntityType>
+            <EntityType Name="HeaderOthers" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="PlanVersion" Type="Edm.String" MaxLength="2" sap:label="Plan Version"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="2" sap:label="Further Part.Type"/>
+                <Property Name="Id" Type="Edm.String" MaxLength="45" sap:label="Extended obj.ID"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="40" sap:label="Further Participants"/>
+                <Property Name="Short" Type="Edm.String" MaxLength="12" sap:label="Furth. P. Short Name"/>
+                <Property Name="RoleId" Type="Edm.String" MaxLength="2" sap:label="Appraisal Role"/>
+            </EntityType>
+            <EntityType Name="HeaderStatus" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="ApStatus" Type="Edm.String" MaxLength="1" sap:label="Appraisal Status"/>
+                <Property Name="ApStatusName" Type="Edm.String" MaxLength="40" sap:label="Appraisal Status"/>
+                <Property Name="ApStatusSub" Type="Edm.String" MaxLength="1" sap:label="Substatus"/>
+                <Property Name="ApStatusSubName" Type="Edm.String" MaxLength="40" sap:label="Substatus"/>
+            </EntityType>
+            <EntityType Name="HeaderDates" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="ApStartDate" Type="Edm.DateTime" Precision="7" sap:label="Period"/>
+                <Property Name="ApEndDate" Type="Edm.DateTime" Precision="7" sap:label="To"/>
+                <Property Name="ApDateEarliest" Type="Edm.DateTime" Precision="7" sap:label="Earliest Appr. Date"/>
+                <Property Name="ApDateLatest" Type="Edm.DateTime" Precision="7" sap:label="Latest Appr. Date"/>
+                <Property Name="ObjDateSet" Type="Edm.DateTime" Precision="7" sap:label="Obj. Setting Date"/>
+                <Property Name="ReviewDateSet" Type="Edm.DateTime" Precision="7" sap:label="Review Date"/>
+                <Property Name="ApDateSet" Type="Edm.DateTime" Precision="7" sap:label="Appraisal Date"/>
+            </EntityType>
+            <EntityType Name="HeaderAddData" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="Fieldname" Type="Edm.String" MaxLength="30" sap:label="Field Name"/>
+                <Property Name="Fieldlabel" Type="Edm.String" MaxLength="55" sap:label="Field Label"/>
+                <Property Name="Fieldvalue" Type="Edm.String" MaxLength="132" sap:label="Field Value"/>
+                <Property Name="Fieldtext" Type="Edm.String" MaxLength="255" sap:label="Field Text"/>
+                <Property Name="Assignment" Type="Edm.String" MaxLength="1" sap:label="Assignment"/>
+                <Property Name="Row" Type="Edm.String" MaxLength="3"/>
+                <Property Name="Position" Type="Edm.String" MaxLength="3"/>
+            </EntityType>
+            <EntityType Name="HeaderDisplay" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StatusSub" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Appraiser" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MultiAppraiser" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Appraisee" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MultiAppraisee" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PartAppraisers" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Others" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ValidityPeriod" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ExecutionPeriod" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ObjectiveSettingDate" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ReviewDate" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="AppraisalDate" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="AddHeaderData" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Output Mode" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Buttons" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="Id" Type="Edm.String" MaxLength="15" sap:label="Pushbutton"/>
+                <Property Name="Text" Type="Edm.String" MaxLength="40" sap:label="Pushbutton Text"/>
+                <Property Name="Icon" Type="Edm.String" MaxLength="4"/>
+                <Property Name="Availability" Type="Edm.String" MaxLength="1" sap:label="PButton Availability"/>
+                <Property Name="StatusRelevant" Type="Edm.Boolean"/>
+            </EntityType>
+            <EntityType Name="BodyColumns" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="ColumnIid" Type="Edm.String" MaxLength="4" sap:label="Column ID"/>
+                <Property Name="ColumnId" Type="Edm.String" MaxLength="4" sap:label="Column ID"/>
+                <Property Name="PartApId" Type="Edm.String" MaxLength="4" sap:label="Part Appraisal ID"/>
+                <Property Name="ColumnName" Type="Edm.String" MaxLength="40" sap:label="Column"/>
+                <Property Name="Availability" Type="Edm.String" MaxLength="1" sap:label="Column Availability"/>
+                <Property Name="Owner" Type="Edm.String" MaxLength="1" sap:label="Single-Character Indicator"/>
+            </EntityType>
+            <EntityType Name="BodyElements" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="RowIid" Type="Edm.String" MaxLength="4" sap:label="Internal Row ID"/>
+                <Property Name="Parent" Type="Edm.String" MaxLength="4" sap:label="Internal Row ID"/>
+                <Property Name="Child" Type="Edm.String" MaxLength="4" sap:label="Internal Row ID"/>
+                <Property Name="Brother" Type="Edm.String" MaxLength="4" sap:label="Internal Row ID"/>
+                <Property Name="ApLevel" Type="Edm.String" MaxLength="2" sap:label="Level"/>
+                <Property Name="RowSort" Type="Edm.String" MaxLength="4" sap:label="Sort"/>
+                <Property Name="ElementType" Type="Edm.String" MaxLength="2" sap:label="Element Type ID"/>
+                <Property Name="ElementId" Type="Edm.String" MaxLength="8" sap:label="Element ID"/>
+                <Property Name="ForeignType" Type="Edm.String" MaxLength="2" sap:label="External Type"/>
+                <Property Name="ForeignId" Type="Edm.String" MaxLength="45" sap:label="External ID"/>
+                <Property Name="Numbering" Type="Edm.String" MaxLength="40" sap:label="Numbering"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="80" sap:label="Element Name"/>
+                <Property Name="FreeInput" Type="Edm.Boolean" sap:label="Free Input"/>
+                <Property Name="LayoutText" Type="Edm.String" MaxLength="1" sap:label="Text Layout"/>
+                <Property Name="LayoutValues" Type="Edm.String" MaxLength="1" sap:label="Layout of Values"/>
+                <Property Name="LayoutNoteLine" Type="Edm.String" MaxLength="1" sap:label="Lines Res. for Note"/>
+                <Property Name="LayoutMaxChar" Type="Edm.String" MaxLength="3" sap:label="Maximum Char in Note"/>
+                <Property Name="ExitAddFix" Type="Edm.String" MaxLength="30" sap:label="Fixed Enhancement"/>
+                <Property Name="ExitAddFree" Type="Edm.String" MaxLength="30" sap:label="Free Enhancement"/>
+                <Property Name="ExitDelete" Type="Edm.String" MaxLength="30" sap:label="Element Deletion"/>
+                <Property Name="UsedColumns" Type="Edm.String" MaxLength="2" sap:label="Two-digit no."/>
+                <Property Name="Availability" Type="Edm.String" MaxLength="1"/>
+            </EntityType>
+            <EntityType Name="BodyElementButtons" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RowIid" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Internal Row ID" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="15" sap:label="Pushbutton" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Text" Type="Edm.String" Nullable="false" MaxLength="40" sap:label="Pushbutton Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Icon" Type="Edm.String" Nullable="false" MaxLength="4" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Availability" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="PButton Availability" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StatusRelevant" Type="Edm.Boolean" Nullable="false" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="BodyCells" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="RowIid" Type="Edm.String" MaxLength="4" sap:label="Internal Row ID"/>
+                <Property Name="ColumnIid" Type="Edm.String" MaxLength="4" sap:label="Column ID"/>
+                <Property Name="CellValueAvailability" Type="Edm.String" MaxLength="1" sap:label="Value Availability"/>
+                <Property Name="ValueTextAvailable" Type="Edm.String" MaxLength="1" sap:label="Value Text Available"/>
+                <Property Name="CellNoteAvailability" Type="Edm.String" MaxLength="1" sap:label="Note Availability"/>
+                <Property Name="CellNoteLength" Type="Edm.String" MaxLength="3" sap:label="Length"/>
+                <Property Name="CellInputNote5022" Type="Edm.String" MaxLength="1" sap:label="Note"/>
+                <Property Name="ValueTxt" Type="Edm.String" MaxLength="20" sap:label="Value"/>
+                <Property Name="ValueNum" Type="Edm.Decimal" Precision="15" Scale="3" sap:label="Numeric Value"/>
+                <Property Name="ValueNnv" Type="Edm.String" MaxLength="15" sap:label="Non-Numeric Value"/>
+                <Property Name="NoValue" Type="Edm.Boolean" sap:label="No Value"/>
+                <Property Name="ValueText" Type="Edm.String" MaxLength="60" sap:label="Value Text"/>
+                <Property Name="CellValueClass" Type="Edm.String" MaxLength="2" sap:label="Value Class"/>
+                <Property Name="CellValueType" Type="Edm.String" MaxLength="32" sap:label="Value List"/>
+                <Property Name="CellValueExit" Type="Edm.String" MaxLength="30" sap:label="Value Determination"/>
+                <Property Name="ValDetOccur" Type="Edm.String" MaxLength="1" sap:label="Value Determination"/>
+                <Property Name="CellEventExit" Type="Edm.String" MaxLength="30" sap:label="Dynamic Event"/>
+                <Property Name="DynEvtOccur" Type="Edm.String" MaxLength="1" sap:label="Event"/>
+            </EntityType>
+            <EntityType Name="BodyCellNotes" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="AppraisalId"/>
+                </Key>
+                <Property Name="AppraisalId" Type="Edm.Guid" Nullable="false" sap:label="Appraisal Doc. ID"/>
+                <Property Name="RowIid" Type="Edm.String" MaxLength="4" sap:label="Internal Row ID"/>
+                <Property Name="ColumnIid" Type="Edm.String" MaxLength="4" sap:label="Column ID"/>
+                <Property Name="Tabseqnr" Type="Edm.String" MaxLength="6" sap:label="Sequence number"/>
+                <Property Name="Tdformat" Type="Edm.String" MaxLength="2" sap:label="Tag column"/>
+                <Property Name="Tdline" Type="Edm.String" MaxLength="132"/>
+                <Property Name="LineStatus" Type="Edm.String" MaxLength="1" sap:label="Note Status"/>
+            </EntityType>
+            <EntityContainer Name="ZHCM_UX_HAP_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="DocumentListSet" EntityType="ZHCM_UX_HAP_SRV.DocumentList" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="DocProcessingSet" EntityType="ZHCM_UX_HAP_SRV.DocProcessing" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HeaderAppraiserSet" EntityType="ZHCM_UX_HAP_SRV.HeaderAppraiser" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HeaderTextSet" EntityType="ZHCM_UX_HAP_SRV.HeaderText" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HeaderAppraiseeSet" EntityType="ZHCM_UX_HAP_SRV.HeaderAppraisee" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HeaderOthersSet" EntityType="ZHCM_UX_HAP_SRV.HeaderOthers" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HeaderStatusSet" EntityType="ZHCM_UX_HAP_SRV.HeaderStatus" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HeaderDatesSet" EntityType="ZHCM_UX_HAP_SRV.HeaderDates" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HeaderAddDataSet" EntityType="ZHCM_UX_HAP_SRV.HeaderAddData" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="HeaderDisplaySet" EntityType="ZHCM_UX_HAP_SRV.HeaderDisplay" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="ButtonsSet" EntityType="ZHCM_UX_HAP_SRV.Buttons" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="BodyColumnsSet" EntityType="ZHCM_UX_HAP_SRV.BodyColumns" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="BodyElementsSet" EntityType="ZHCM_UX_HAP_SRV.BodyElements" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="BodyElementButtonsSet" EntityType="ZHCM_UX_HAP_SRV.BodyElementButtons" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="BodyCellsSet" EntityType="ZHCM_UX_HAP_SRV.BodyCells" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="BodyCellNotesSet" EntityType="ZHCM_UX_HAP_SRV.BodyCellNotes" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <FunctionImport Name="GetDocumentList" ReturnType="Collection(ZHCM_UX_HAP_SRV.DocumentList)" EntitySet="DocumentListSet" m:HttpMethod="GET">
+                    <Parameter Name="EndDate" Type="Edm.DateTime" Mode="In" Precision="7"/>
+                    <Parameter Name="StartDate" Type="Edm.DateTime" Mode="In" Precision="7"/>
+                    <Parameter Name="RoleId" Type="Edm.String" Mode="In" MaxLength="2"/>
+                </FunctionImport>
+                <FunctionImport Name="GetBodyCellNotes" ReturnType="Collection(ZHCM_UX_HAP_SRV.BodyCellNotes)" EntitySet="BodyCellNotesSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetBodyCells" ReturnType="Collection(ZHCM_UX_HAP_SRV.BodyCells)" EntitySet="BodyCellsSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetBodyColumns" ReturnType="Collection(ZHCM_UX_HAP_SRV.BodyColumns)" EntitySet="BodyColumnsSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetBodyElementButtons" ReturnType="Collection(ZHCM_UX_HAP_SRV.BodyElementButtons)" EntitySet="BodyElementButtonsSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetBodyElements" ReturnType="Collection(ZHCM_UX_HAP_SRV.BodyElements)" EntitySet="BodyElementsSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetButtons" ReturnType="Collection(ZHCM_UX_HAP_SRV.Buttons)" EntitySet="ButtonsSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetDocProcessing" ReturnType="Collection(ZHCM_UX_HAP_SRV.DocProcessing)" EntitySet="DocProcessingSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetHeaderAddData" ReturnType="Collection(ZHCM_UX_HAP_SRV.HeaderAddData)" EntitySet="HeaderAddDataSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetHeaderAppraisee" ReturnType="Collection(ZHCM_UX_HAP_SRV.HeaderAppraisee)" EntitySet="HeaderAppraiseeSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetHeaderAppraiser" ReturnType="Collection(ZHCM_UX_HAP_SRV.HeaderAppraiser)" EntitySet="HeaderAppraiserSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetHeaderDisplay" ReturnType="Collection(ZHCM_UX_HAP_SRV.HeaderDisplay)" EntitySet="HeaderDisplaySet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetHeaderDates" ReturnType="Collection(ZHCM_UX_HAP_SRV.HeaderDates)" EntitySet="HeaderDatesSet" m:HttpMethod="GET"/>
+                <FunctionImport Name="GetHeaderOthers" ReturnType="Collection(ZHCM_UX_HAP_SRV.HeaderOthers)" EntitySet="HeaderOthersSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetHeaderStatus" ReturnType="Collection(ZHCM_UX_HAP_SRV.HeaderStatus)" EntitySet="HeaderStatusSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="GetHeaderText" ReturnType="Collection(ZHCM_UX_HAP_SRV.HeaderText)" EntitySet="HeaderTextSet" m:HttpMethod="GET">
+                    <Parameter Name="AppraisalId" Type="Edm.Guid" Mode="In"/>
+                </FunctionImport>
+            </EntityContainer>
+            <atom:link
+                xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="./sap/ZHCM_UX_HAP_SRV/$metadata"/>
+                <atom:link
+                    xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="./sap/ZHCM_UX_HAP_SRV/$metadata"/>
+                </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>

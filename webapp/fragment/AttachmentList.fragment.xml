@@ -1,0 +1,23 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Popover title="{i18n>attachmentFiles}" class="sapUiPopupWithPadding" placement="Auto" initialFocus="idAttachmentPopoverCloseButton"
+		contentWidth="{= ${device>/system/phone} ? '100%' : '500px' }">
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button id="idAttachmentPopoverCloseButton" text="{i18n>closeDialog}" press="onCloseAttachmentPopover"/>
+			</Toolbar>
+		</footer>
+		<VBox>
+			<Table id="idAttachmentList" inset="false" noDataText="{i18n>noAttachmentFile}">
+				<columns>
+					<Column>
+						<Text text="{i18n>attachmentFileName}"/>
+					</Column>
+					<Column hAlign="Center">
+						<Text text="{i18n>elementDelete}"/>
+					</Column>
+				</columns>
+			</Table>
+		</VBox>
+	</Popover>
+</core:FragmentDefinition>

@@ -1,0 +1,38 @@
+<mvc:View controllerName="hcm.ux.hapv2.1.controller.FormDetails"
+	xmlns="sap.m"
+	xmlns:custom="hcm.ux.hapv2.1.control"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:smod="smod.ui5.controls.src.controls">
+	<!--<custom:CustomSideBar id="idCustomSideBar" navItemSelected="onNavItemSelected" navData="{formDetailsModel>/navigationData}"-->
+	<!-- appraiseeInfo="{formDetailsModel>/formData/HeaderAppraisee/0}" appraiser1stInfo="{formDetailsModel>/formData/HeaderAppraiser/0}"-->
+	<!-- appraiser2ndInfo="{formDetailsModel>/formData/HeaderOthers/0}" formStatusInfo="{formDetailsModel>/formData/HeaderStatus}"-->
+	<!-- formDatesInfo="{formDetailsModel>/formData/HeaderDates}">-->
+	<!--	<custom:content>-->
+	<!--		<NavContainer id="idPageNavigationContainer"></NavContainer>-->
+	<!--	</custom:content>-->
+	<!--</custom:CustomSideBar>-->
+	<smod:CustomSideBar id="idCustomSideBar" navItemSelected="onNavItemSelected" navData="{formDetailsModel>/navigationData}" visible="{formDetailsModel>/sidebarData/visible}">
+		<smod:content>
+			<NavContainer id="idPageNavigationContainer"></NavContainer>
+		</smod:content>
+		<smod:brandImageExpanded>
+			<!--<Image src="/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/MimeInfoSet('%2FSAP%2FPublic%2FCustomImages%2Fbrand_logo.png')/$value" height="30px"/>-->
+			<Image src="/sap/opu/odata/sap/ZHCM_GENERIC_SRV/MimeInfoSet('%2FSAP%2FPublic%2FCustom_Images%2Fbrand_logo.png')/$value" height="30px"/>
+		</smod:brandImageExpanded>
+		<smod:brandImageCollapsed>
+			<Image src="/sap/opu/odata/sap/ZHCM_GENERIC_SRV/MimeInfoSet('%2FSAP%2FPublic%2FCustom_Images%2Fbrand_emblem.png')/$value" height="25px"/>
+		</smod:brandImageCollapsed>
+		<smod:mainProfileInfo>
+			<smod:CustomSideBarProfile profileData="{formDetailsModel>/sidebarData/appeeInfo}"></smod:CustomSideBarProfile>
+		</smod:mainProfileInfo>
+		<smod:infoTabs>
+			<smod:CustomSideBarProfile profileData="{formDetailsModel>/sidebarData/apper1stInfo}" tabTitle="I. Yönetici" tabCount="1"></smod:CustomSideBarProfile>
+			<smod:CustomSideBarProfile profileData="{formDetailsModel>/sidebarData/apper2ndInfo}" tabTitle="II. Yönetici" tabCount="2" visible="{= ${formDetailsModel>/sidebarData/apper2ndInfo/Id} ? true : false }"></smod:CustomSideBarProfile>
+			<smod:CustomSideBarProfile profileData="{formDetailsModel>/sidebarData/apper3rdInfo}" tabTitle="Matris Yönetici" tabCount="3" visible="{= ${formDetailsModel>/sidebarData/apper3rdInfo/Id} ? true : false }"></smod:CustomSideBarProfile>
+			<smod:CustomSideBarStatus statusData="{formDetailsModel>/sidebarData/statusInfo}" tabTitle="Durum" tabCount="4"></smod:CustomSideBarStatus>
+		</smod:infoTabs>
+		<smod:footer>
+			<smod:ComparisonTable dataContent="{formDetailsModel>/sidebarData/footerData}"></smod:ComparisonTable>
+		</smod:footer>
+	</smod:CustomSideBar>
+</mvc:View>
