@@ -1119,8 +1119,23 @@ sap.ui.define(
               {
                 path: "formDetailsModel>StatusRelevant",
               },
+              {
+                path: "formDetailsModel>Id",
+              },
+              {
+                path: "formDetailsModel>/saveAndKeepButtonVisibility",
+              },
             ],
-            formatter: function (sAvailability, sStatusRelevant) {
+            formatter: function (
+              sAvailability,
+              sStatusRelevant,
+              sId,
+              sEnabled
+            ) {
+              if (sId === "SAVE&KEEP" || sId === "NEXT&KEEP") {
+                return sEnabled;
+              }
+
               if (sAvailability === "" || sAvailability === "B") {
                 if (sStatusRelevant) {
                   return true;
@@ -1147,9 +1162,14 @@ sap.ui.define(
             formatter: function (sId, sStatusRelevant, sIcon) {
               if (sStatusRelevant === true) {
                 return "Emphasized";
+                next;
               }
 
-              if (sId === "SAVE") {
+              if (
+                sId === "SAVE" ||
+                sId === "SAVE&KEEP" ||
+                sId === "NEXT&KEEP"
+              ) {
                 return "Emphasized";
               }
 
@@ -1201,6 +1221,10 @@ sap.ui.define(
               switch (sId) {
                 case "SAVE":
                   return "sap-icon://save";
+                case "SAVE&KEEP":
+                  return "sap-icon://open-command-field";
+                case "NEXT&KEEP":
+                  return "sap-icon://feeder-arrow";
                 case "CANCEL":
                   return "sap-icon://sys-cancel-2";
                 case "PRINT":
@@ -1277,24 +1301,27 @@ sap.ui.define(
               template: that._getToolbarTemplateNew(),
             });
 
-            var oButton = new sap.m.Button({
-              icon: "sap-icon://open-command-field",
-              text: "Kaydet ve Devam Et",
-              type: "Emphasized",
-              enabled: "{formDetailsModel>/saveAndKeepButtonVisibility}",
-              press: that._handleActionButtonPressed.bind(that),
-            });
-
-            var oButtonId = new sap.ui.core.CustomData({
-              key: "ButtonId",
-              value: "SAVE&KEEP",
-              writeToDom: true,
-            });
-            oButton.addCustomData(oButtonId);
-
             var oToolbar = new sap.m.OverflowToolbar({
-              content: [new sap.m.ToolbarSpacer(), oButtonRow, oButton],
+              content: [new sap.m.ToolbarSpacer(), oButtonRow],
             }).addStyleClass("hapPageFooter");
+            // var oButton = new sap.m.Button({
+            //   icon: "sap-icon://open-command-field",
+            //   text: "Kaydet ve Devam Et",
+            //   type: "Emphasized",
+            //   enabled: "{formDetailsModel>/saveAndKeepButtonVisibility}",
+            //   press: that._handleActionButtonPressed.bind(that),
+            // });
+
+            // var oButtonId = new sap.ui.core.CustomData({
+            //   key: "ButtonId",
+            //   value: "SAVE&KEEP",
+            //   writeToDom: true,
+            // });
+            // oButton.addCustomData(oButtonId);
+
+            // var oToolbar = new sap.m.OverflowToolbar({
+            //   content: [new sap.m.ToolbarSpacer(), oButtonRow, oButton],
+            // }).addStyleClass("hapPageFooter");
 
             var oPage = new sap.m.Page({
               title:
@@ -5809,6 +5836,9 @@ sap.ui.define(
           case "SAVE&KEEP":
             this._handleSaveAndContinue();
             break;
+          case "NEXT&KEEP":
+            this._navigateToNextTab();
+            break;
           default:
             this._handleButtonAction(oButton);
         }
@@ -5818,13 +5848,8 @@ sap.ui.define(
         this.onNavBack();
       },
 
-      _handleSaveAndContinue: function () {
+      _navigateToNextTab: function () {
         var oViewModel = this.getModel("formDetailsModel");
-        var oModel = this.getModel();
-        var aFormProp = oViewModel.getProperty("/aFormProp");
-        var that = this;
-        var sHasErrors = false;
-
         var aNavigationData = oViewModel.getProperty("/navigationData");
 
         var iIndex = aNavigationData
@@ -5833,11 +5858,52 @@ sap.ui.define(
           })
           .indexOf(oViewModel.getProperty("/navigationFormId"));
         iIndex++;
-
         if (aNavigationData.length - 1 === iIndex) {
           oViewModel.setProperty("/saveAndKeepButtonVisibility", false);
         }
         var sPageId = aNavigationData[iIndex].Page.getId();
+
+        this._oNavContainer.to(sPageId);
+        this._oNavContainer.setAutoFocus(true);
+        this.getModel("formDetailsModel").setProperty(
+          "/navigationFormId",
+          aNavigationData[iIndex].ElementId
+        );
+
+        var $items = $(".bd-side-nav-item-link");
+
+        $items.each(function () {
+          if (
+            $(this).attr("data-element-row-id") ===
+            aNavigationData[iIndex].RowIid
+          ) {
+            $(this).addClass("bd-side-nav-item-link-active");
+          } else {
+            $(this).removeClass("bd-side-nav-item-link-active");
+          }
+        });
+      },
+
+      _handleSaveAndContinue: function () {
+        var oViewModel = this.getModel("formDetailsModel");
+        var oModel = this.getModel();
+        var aFormProp = oViewModel.getProperty("/aFormProp");
+        var that = this;
+        var sHasErrors = false;
+
+        // var aNavigationData = oViewModel.getProperty("/navigationData");
+
+        // var iIndex = aNavigationData
+        //   .map(function (e) {
+        //     return e.ElementId;
+        //   })
+        //   .indexOf(oViewModel.getProperty("/navigationFormId"));
+        // iIndex++;
+
+        // if (aNavigationData.length - 1 === iIndex) {
+        //   oViewModel.setProperty("/saveAndKeepButtonVisibility", false);
+        // }
+        // var sPageId = aNavigationData[iIndex].Page.getId();
 
         this._convertUIData();
 
@@ -5877,27 +5943,28 @@ sap.ui.define(
 
             if (sHasErrors === false) {
               that._setChangeListeners(false);
-              that._oNavContainer.to(sPageId);
-              that._oNavContainer.setAutoFocus(true);
-              that
-                .getModel("formDetailsModel")
-                .setProperty(
-                  "/navigationFormId",
-                  aNavigationData[iIndex].ElementId
-                );
+              that._navigateToNextTab();
+              // that._oNavContainer.to(sPageId);
+              // that._oNavContainer.setAutoFocus(true);
+              // that
+              //   .getModel("formDetailsModel")
+              //   .setProperty(
+              //     "/navigationFormId",
+              //     aNavigationData[iIndex].ElementId
+              //   );
 
-              var $items = $(".bd-side-nav-item-link");
+              // var $items = $(".bd-side-nav-item-link");
 
-              $items.each(function () {
-                if (
-                  $(this).attr("data-element-row-id") ===
-                  aNavigationData[iIndex].RowIid
-                ) {
-                  $(this).addClass("bd-side-nav-item-link-active");
-                } else {
-                  $(this).removeClass("bd-side-nav-item-link-active");
-                }
-              });
+              // $items.each(function () {
+              //   if (
+              //     $(this).attr("data-element-row-id") ===
+              //     aNavigationData[iIndex].RowIid
+              //   ) {
+              //     $(this).addClass("bd-side-nav-item-link-active");
+              //   } else {
+              //     $(this).removeClass("bd-side-nav-item-link-active");
+              //   }
+              // });
             }
           },
           error: function (oError) {

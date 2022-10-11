@@ -74,9 +74,9 @@
   position: absolute;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.1s ease-in-out;
+  transition: opacity 0.75s ease-in-out;
   z-index: 2;
-  background-color: rgba(66, 67, 88, 0.75);
+  background-color: rgba(43, 44, 62, 0.849);
   border-radius: 5px;
   padding: 10px 5px;
   position: absolute;
@@ -105,7 +105,7 @@
   margin-top: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent rgba(66, 67, 88, 0.75) transparent transparent;
+  border-color: transparent rgba(43, 44, 62, 0.849) transparent transparent;
 }
 
 .disabled .smod-rating-item-icon {
