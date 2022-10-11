@@ -30,7 +30,8 @@ sap.ui.define(
         jQuery.sap.includeStyleSheet(
           sLibraryPath + "/control/SmodRatingIndicator.css"
         );
-        var vRadioName = crypto.randomUUID();
+        // var vRadioName = crypto.randomUUID();
+        var vRadioName = _.uniqueId("RIRG_") + new Date().getTime();
         this.setProperty("radioName", vRadioName, true);
       },
       renderer: function (oRM, oControl) {
