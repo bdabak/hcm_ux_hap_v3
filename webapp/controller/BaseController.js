@@ -58,7 +58,7 @@ sap.ui.define(
         return this.getOwnerComponent().getModel("i18n").getResourceBundle();
       },
 
-      getText: function (sText, aParam) {
+      getText: function (sText, aParam = []) {
         return this.getResourceBundle().getText(sText, aParam);
       },
 
@@ -91,12 +91,7 @@ sap.ui.define(
             "hcm.ux.hapv2_1.fragment.GenericBusyDialog",
             this
           );
-          var sImagePath = jQuery.sap.getModulePath(
-            "hcm.ux.hapv2_1",
-            "/images/barchart_loading.gif"
-          );
 
-          this.oBusyDialog.setCustomIcon(sImagePath);
           this.getView().addDependent(this.oBusyDialog);
         } else {
           this.oBusyDialog.close();

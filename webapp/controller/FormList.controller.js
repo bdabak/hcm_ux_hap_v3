@@ -369,6 +369,7 @@ sap.ui.define(
             oThis.onRefreshTable();
           },
           error: function (oErr) {
+            oThis._closeBusyFragment();
             jQuery.sap.log.error(oErr);
           },
         });

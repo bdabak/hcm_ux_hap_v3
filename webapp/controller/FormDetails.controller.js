@@ -17,8 +17,8 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/m/MessagePopover",
-    //"sap/m/MessageItem",
-    "sap/m/MessagePopoverItem",
+    "sap/m/MessageItem",
+    //"sap/m/MessagePopoverItem",
     "smod/ui5/controls/src/controls/HapIndicatorPanel",
     "smod/ui5/controls/src/controls/HapMessageStrip",
     "sap/ui/model/Filter",
@@ -28,8 +28,8 @@ sap.ui.define(
     "sap/viz/ui5/data/DimensionDefinition",
     "sap/viz/ui5/data/MeasureDefinition",
     "sap/viz/ui5/controls/common/feeds/FeedItem",
-    "sap/viz/ui5/format/ChartFormatter",
-    "sap/viz/ui5/api/env/Format",
+    // "sap/viz/ui5/format/ChartFormatter",
+    // "sap/viz/ui5/api/env/Format",
     "hcm/ux/hapv2_1/utils/CustomChartFormatter",
     "sap/ui/core/format/DateFormat",
     "sap/ui/core/Fragment",
@@ -54,8 +54,8 @@ sap.ui.define(
     DimensionDefinition,
     MeasureDefinition,
     FeedItem,
-    ChartFormatter,
-    Format,
+    // ChartFormatter,
+    // Format,
     CustomChartFormatter,
     DateFormat,
     Fragment,
@@ -206,9 +206,6 @@ sap.ui.define(
             }),
           });
           this._oMessagePopover.setModel(oViewModel);
-          // this._oMessagePopover.attachAfterClose(null, function () {
-          // 	that._removeAllMessages();
-          // }, this);
         }
         if (oEvent) {
           this._oMessagePopover.openBy(oEvent.getSource());
@@ -242,7 +239,7 @@ sap.ui.define(
       _generateConfirmDialog: function (
         sConfirmHeaderi18n,
         sConfirmTexti18n,
-        sConfirmTextParams,
+        aConfirmTextParams,
         sButtonText,
         sButtonType,
         sButtonIcon,
@@ -254,7 +251,7 @@ sap.ui.define(
         oEndCallBack
       ) {
         var sConfirmHeader = this.getText(sConfirmHeaderi18n);
-        var sConfirmText = this.getText(sConfirmTexti18n, sConfirmTextParams);
+        var sConfirmText = this.getText(sConfirmTexti18n, aConfirmTextParams);
         var that = this;
         var oEndButtonProp = null;
 
@@ -982,7 +979,7 @@ sap.ui.define(
         });
       },
 
-      _setChangeListeners: function (sSet) {
+      _setChangeListeners: function (bSet) {
         var that = this;
         var oViewModel = this.getModel("formDetailsModel");
         var oCellsModel = new sap.ui.model.Binding(
@@ -995,7 +992,7 @@ sap.ui.define(
           "/",
           oViewModel.getContext("/bodyElements")
         );
-        if (sSet) {
+        if (bSet) {
           oCellsModel.attachChange(function (oEvent) {
             if (!that._compareClonedObjects()) {
               that.hasChanges = true;
@@ -2415,6 +2412,8 @@ sap.ui.define(
                   } else {
                     return true;
                   }
+
+                  /* TODO */
                   if (sCellValue === null || sCellValue === undefined) {
                     return true;
                   } else {

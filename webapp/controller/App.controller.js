@@ -12,6 +12,10 @@ sap.ui.define(
         oViewModel = new JSONModel({
           busy: true,
           delay: 0,
+          busyImageSource: jQuery.sap.getModulePath(
+            "hcm.ux.hapv2_1",
+            "/images/loading.svg"
+          ),
         });
         this.setModel(oViewModel, "appView");
 
