@@ -14,7 +14,7 @@ sap.ui.define(
           delay: 0,
           busyImageSource: jQuery.sap.getModulePath(
             "hcm.ux.hapv2_1",
-            "/images/loading.svg"
+            "/images/loading_rudder.svg"
           ),
         });
         this.setModel(oViewModel, "appView");

@@ -1,0 +1,199 @@
+<svg xml:space="preserve" viewBox="0 0 100 100" y="0" x="0"
+  xmlns="http://www.w3.org/2000/svg" id="圖層_1" version="1.1" style="height: 100%; width: 100%; background: transparent;" width="60px" height="60px">
+
+  <defs>
+    <style type="text/css"><![CDATA[
+     
+@keyframes slide-ltr {
+  0% {
+    animation-timing-function: cubic-bezier(0.4652, 0.1051, 0.774, 0.6426);
+    transform: translate(0px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+  22.5% {
+    animation-timing-function: cubic-bezier(0.4142, 0.3131, 0.7623, 0.6513);
+    transform: translate(47.8px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+  45% {
+    animation-timing-function: cubic-bezier(0.3615, 0.331, 0.9646, 1.3461);
+    transform: translate(147.8px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+  47.5% {
+    animation-timing-function: cubic-bezier(0.7006, 0.3332, 0.6667, 0.6667);
+    transform: translate(165.6px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 0;
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.1604, 0.3176, -0.0218, 0.6965);
+    transform: translate(-200px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 0;
+  }
+  51% {
+    animation-timing-function: cubic-bezier(0.1983, 0.3529, 0.5263, 0.6945);
+    transform: translate(-179.8px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 0;
+  }
+  80.4% {
+    animation-timing-function: cubic-bezier(0.2342, 0.3708, 0.5422, 0.9065);
+    transform: translate(-38.4px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes slide-ltr {
+  0% {
+    animation-timing-function: cubic-bezier(0.4652, 0.1051, 0.774, 0.6426);
+    transform: translate(0px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+  22.5% {
+    animation-timing-function: cubic-bezier(0.4142, 0.3131, 0.7623, 0.6513);
+    transform: translate(47.8px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+  45% {
+    animation-timing-function: cubic-bezier(0.3615, 0.331, 0.9646, 1.3461);
+    transform: translate(147.8px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+  47.5% {
+    animation-timing-function: cubic-bezier(0.7006, 0.3332, 0.6667, 0.6667);
+    transform: translate(165.6px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 0;
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.1604, 0.3176, -0.0218, 0.6965);
+    transform: translate(-200px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 0;
+  }
+  51% {
+    animation-timing-function: cubic-bezier(0.1983, 0.3529, 0.5263, 0.6945);
+    transform: translate(-179.8px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 0;
+  }
+  80.4% {
+    animation-timing-function: cubic-bezier(0.2342, 0.3708, 0.5422, 0.9065);
+    transform: translate(-38.4px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg) scale(1, 1) skewX(0deg)
+      skewY(0deg);
+    opacity: 1;
+  }
+}
+
+    ]]>    </style>
+  </defs>
+  <g class="ldl-scale" style="transform-origin: 50% 50%;">
+    <g class="ldl-ani" style="transform-origin: 50px 50px; animation: 1s linear infinite normal forwards slide-ltr;">
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path d="M35.8 40.5V27" stroke-miterlimit="10" stroke-linecap="round" stroke-width="2" stroke="#666" fill="none" style="stroke: rgb(114, 185, 221);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path d="M40.4 40.5v-7.7" stroke-miterlimit="10" stroke-linecap="round" stroke-width="2" stroke="#666" fill="none" style="stroke: rgb(114, 185, 221);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#ccc" d="M52.6 50.7H28.3l2.1-9.1c.4-1.9 2.1-3.3 4.1-3.3H45c1.8 0 3.3 1.1 3.9 2.7l3.7 9.7z" style="fill: rgb(206, 81, 81);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#ccc" d="M72.9 59.1H18.3l2.7-9.4c.6-2.1 2.6-3.6 4.8-3.6h33.7c1.5 0 2.9.6 3.8 1.8l9.6 11.2z" style="fill: rgb(206, 81, 81);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#e0e0e0" d="M71.8 73h-53c-2.5 0-4.7-1.4-5.8-3.6L7.7 58.5c-.7-1.4.3-3.1 2-3.1h81.2c1.5 0 2.2 1.9 1.1 2.8L77.2 71c-1.5 1.3-3.4 2-5.4 2z" style="fill: rgb(44, 38, 35);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#333" d="M24 64.3c-1.2 0-2.2-1-2.2-2.2 0-1.2 1-2.2 2.2-2.2 1.2 0 2.2 1 2.2 2.2 0 1.2-1 2.2-2.2 2.2z" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#333" d="M30.3 64.3c-1.2 0-2.2-1-2.2-2.2 0-1.2 1-2.2 2.2-2.2 1.2 0 2.2 1 2.2 2.2 0 1.2-1 2.2-2.2 2.2z" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#333" d="M36.6 64.3c-1.2 0-2.2-1-2.2-2.2 0-1.2 1-2.2 2.2-2.2 1.2 0 2.2 1 2.2 2.2 0 1.2-1 2.2-2.2 2.2z" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#333" d="M43 64.3c-1.2 0-2.2-1-2.2-2.2 0-1.2 1-2.2 2.2-2.2 1.2 0 2.2 1 2.2 2.2-.1 1.2-1.1 2.2-2.2 2.2z" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#333" d="M49.3 64.3c-1.2 0-2.2-1-2.2-2.2 0-1.2 1-2.2 2.2-2.2 1.2 0 2.2 1 2.2 2.2-.1 1.2-1.1 2.2-2.2 2.2z" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path fill="#333" d="M55.6 64.3c-1.2 0-2.2-1-2.2-2.2 0-1.2 1-2.2 2.2-2.2 1.2 0 2.2 1 2.2 2.2-.1 1.2-1 2.2-2.2 2.2z" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path d="M25.8 48.7H29v4.6h-3.2z" fill="#333" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path d="M31.3 48.7h3.2v4.6h-3.2z" fill="#333" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path d="M36.8 48.7H40v4.6h-3.2z" fill="#333" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path d="M42.3 48.7h3.2v4.6h-3.2z" fill="#333" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path d="M47.8 48.7H51v4.6h-3.2z" fill="#333" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani">
+          <path d="M53.3 48.7h3.2v4.6h-3.2z" fill="#333" style="fill: rgb(241, 237, 240);"></path>
+        </g>
+      </g>
+
+    </g>
+  </g>
+</svg>
