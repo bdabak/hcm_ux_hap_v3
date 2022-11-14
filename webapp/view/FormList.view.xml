@@ -14,7 +14,6 @@
 						<Toolbar id="idFormSelectionToolbar">
 							<Title id="idFormSelectionTitle" text="{i18n>formSelectionTitle}" level="H4" titleStyle="H4"/>
 							<ToolbarSpacer/>
-							<Button icon="sap-icon://sys-help-2" press=".onStartIntro" visible="false"/>
 							<Button icon="sap-icon://learning-assistant" press=".onCallUserGuide" visible="{formListModel>/userGuideVisible}" text="{i18n>userGuideButton}" type="Accept"/>
 							<Button icon="{formListModel>/selectionToggle}" press=".onFormShowHide" id="idToggleSelectionButton"/>
 						</Toolbar>

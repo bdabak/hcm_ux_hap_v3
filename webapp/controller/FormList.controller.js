@@ -81,7 +81,7 @@ sap.ui.define(
           selectedTabKey: "ME", //Initially me,
           dateSelection: oThis._initiateYears(),
           selectedDates: (function () {
-            return [new Date().getFullYear()];
+            return [new Date().getFullYear(), new Date().getFullYear() + 1];
           })(),
           viewBusy: false,
           userGuideVisible: false,
@@ -144,34 +144,6 @@ sap.ui.define(
           "/formListTableTitle",
           sTitle
         );
-      },
-      onStartIntro: function () {
-        var intro = introJs();
-        var oThis = this;
-        intro.setOptions({
-          steps: [
-            {
-              element: "#" + oThis.byId("idPeriodBeginDate").getId(),
-              intro: "Başlangıç dönemi girilir",
-            },
-            {
-              element: "#" + oThis.byId("idPeriodEndDate").getId(),
-              intro: "Bitiş dönemi girilir",
-            },
-            {
-              element: "#" + oThis.byId("idButtonGetForms").getId(),
-              intro: "Formları listele düğmesine basılır",
-            },
-            {
-              element: "#" + oThis.byId("idFormListTable").getId(),
-              intro: "Bulunan değerlendirme formları bu alanda listelenir",
-            },
-          ],
-          showProgress: true,
-          overlayOpacity: 0.5,
-        });
-
-        intro.start();
       },
 
       /**
@@ -273,8 +245,8 @@ sap.ui.define(
         //sEndYear = sBeginYear;
         //	this.byId("idPeriodEndDate").setSelectedKey(sBeginYear);
         //}
-
-        var _getDate = function (sYear) {
+        //s4hanahdvapp.sedef.com:8000/sap/bc/webdynpro/sap/hap_configuration?WDCONFIGURATIONID=HAP_AC_TAB_CONF
+        http: var _getDate = function (sYear) {
           var oDate = _.find(aDates, ["Year", parseInt(sYear, 10)]);
           if (oDate) {
             return [oDate.Begda, oDate.Endda];
@@ -429,25 +401,15 @@ sap.ui.define(
       onFormPress: function (oEvent) {
         var oViewModel = this.getModel("formListModel");
         var sPath = oEvent.getSource().getBindingContextPath();
-        var oForm = oViewModel.getProperty(sPath);
-        if (
-          oViewModel.oData.selectedTabKey == "MB" &&
-          oForm.ApStatus == "4" &&
-          oForm.ApStatusSub == "9"
-        ) {
-          MessageBox.warning(
-            "Bu statüde forma tüm değerlendirmeler tamamlandıktan sonra kalibrasyon ekranından ulaşabilirsiniz"
-          );
-        } else {
-          //Set selected form to the shared model
-          this.getUIHelper().setCurrentForm(oViewModel.getProperty(sPath));
 
-          this.getUIHelper().setListViewBusy(true);
+        //Set selected form to the shared model
+        this.getUIHelper().setCurrentForm(oViewModel.getProperty(sPath));
 
-          this.getRouter().navTo("formdetail", {
-            appraisalId: oViewModel.getProperty(sPath + "/AppraisalId"),
-          });
-        }
+        this.getUIHelper().setListViewBusy(true);
+
+        this.getRouter().navTo("formdetail", {
+          appraisalId: oViewModel.getProperty(sPath + "/AppraisalId"),
+        });
       },
       onSearch: function (oEvent) {
         if (oEvent.getParameters().refreshButtonPressed) {
@@ -554,7 +516,7 @@ sap.ui.define(
 
       _initiateYears: function () {
         //var oViewModel = this.getModel("formListModel");
-        var sToday = new Date().getFullYear();
+        var sToday = new Date().getFullYear() + 1;
         var aDates = [];
         while (sToday > 2013) {
           var oDate = {

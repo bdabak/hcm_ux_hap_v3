@@ -10,7 +10,7 @@
         "runtimeExecutable": "npx.cmd"
       },
       "runtimeArgs": ["fiori", "run"],
-      "args": ["--open", "test/flpSandbox.html#DeğerlendirmeFormları-display"],
+      "args": ["--open", "test/flpSandbox.html#appraisal-forms-display"],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
       "outputCapture": "std",
@@ -32,7 +32,7 @@
       "runtimeArgs": ["fiori", "run"],
       "args": [
         "--open",
-        "test/flpSandboxMockServer.html#DeğerlendirmeFormları-display"
+        "test/flpSandboxMockServer.html#appraisal-forms-display"
       ],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
@@ -56,7 +56,7 @@
         "--config",
         "./ui5-local.yaml",
         "--open",
-        "test/flpSandbox.html#DeğerlendirmeFormları-display"
+        "test/flpSandbox.html#appraisal-forms-display"
       ],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",

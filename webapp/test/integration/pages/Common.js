@@ -7,10 +7,10 @@ sap.ui.define(["sap/ui/test/Opa5"], function (Opa5) {
 
     if (sHash) {
       sHash =
-        "#DeğerlendirmeFormları-display&/" +
+        "#appraisal-forms-display&/" +
         (sHash.indexOf("/") === 0 ? sHash.substring(1) : sHash);
     } else {
-      sHash = "#DeğerlendirmeFormları-display";
+      sHash = "#appraisal-forms-display";
     }
 
     return sUrl + sUrlParameters + sHash;

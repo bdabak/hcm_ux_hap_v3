@@ -1,23 +1,33 @@
-<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
+<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout"
 	xmlns="sap.m">
-	<Dialog title="{formDetailsModel>/newElement/ParentName}" showHeader="true" stretch="{device>/system/phone}" id="idAddNewElementFreeDialog"
-		contentWidth="30%">
+	<Dialog title="{formDetailsModel>/newElement/ParentName}" showHeader="true" stretch="{device>/system/phone}" id="idAddNewElementFreeDialog" contentWidth="70%">
 		<content>
 			<!--<f:SimpleForm id="idNewElementFreeForm" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="4"-->
-			<!--	labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2"-->
-			<!--	singleContainerFullSize="false">-->
+			<!-- labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="2"-->
+			<!-- singleContainerFullSize="false">-->
 			<!--	<core:Title text=""/>-->
 			<!--</f:SimpleForm>-->
-			<f:Form id="idNewElementFreeForm" editable="true">
+			<!-- <f:Form id="idNewElementFreeForm" editable="true">
 				<f:layout>
-					<f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0"
-						emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="6" columnsL="6" columnsM="1" singleContainerFullSize="false"/>
+					<f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="6" columnsL="6" columnsM="1" singleContainerFullSize="false"/>
 				</f:layout>
-			</f:Form>
+			</f:Form> -->
+
+			<l:Grid id="idNewElementFreeGrid" defaultSpan="XL3 L4 M6 S12" containerQuery="true" class="sapUiMediumMargin hapResponsiveGrid">
+				<l:content>
+				</l:content>
+			</l:Grid>
+
+
+
+
 		</content>
 		<buttons>
-			<Button text="{i18n>labelAddElement}" icon="sap-icon://add" type="Accept" press="onApplyAddElementFree"/>
-			<Button text="{i18n>labelCancel}" icon="sap-icon://sys-cancel-2" press="onCloseAddElementFree" type="Reject"/>
+			<Button text="{i18n>labelAddElement}" icon="sap-icon://add" type="Accept" press=".onApplyAddElementFree"/>
+			<Button text="{i18n>labelCancel}" icon="sap-icon://sys-cancel-2" press=".onCloseAddElementFree" type="Reject"/>
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

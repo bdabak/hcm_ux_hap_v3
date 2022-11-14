@@ -48,5 +48,8 @@ sap.ui.define([], function () {
         return sValue;
       }
     },
+    convertFloatToString: function (fVal) {
+      return fVal.toLocaleString().replaceAll(",", "").replaceAll(".", ",");
+    },
   };
 });

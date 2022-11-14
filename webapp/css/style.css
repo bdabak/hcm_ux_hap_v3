@@ -11,6 +11,16 @@
   font-size: 12px !important;
 }
 
+.hapResponsiveGrid
+  > div[class*="sapUiRespGridSpan"]:not(.sapUiRespGridSpanXL12) {
+  min-height: 133px !important;
+}
+
+.hapPage,
+.hapPage * {
+  outline: none !important;
+}
+
 .hapPage
   .sapUxAPAnchorBarButton.sapUxAPAnchorBarButtonSelected
   .sapMBtnContent {
@@ -22,6 +32,10 @@
   background: #dedede !important;
 }
 
+.hapPage .sapUxAPBlockContainer {
+  padding: 0.2rem !important;
+}
+
 .hapPage .sapMIBar.sapMHeader-CTX {
   color: #2b2a2a !important;
   background-color: #f1f1f1 !important;
@@ -29,6 +43,8 @@
 
 .hapPage .sapUxAPObjectPageSectionHeader {
   visibility: hidden !important;
+  height: 0;
+  line-height: 0;
 }
 
 .hapPage .sapUxAPBlockContainerDesktop,
@@ -140,6 +156,19 @@
 
 .hapRowPanel .sapMPanelExpandableIcon {
   color: #333131 !important;
+  outline: none !important;
+  width: 1.5rem !important;
+}
+
+.hapRowPanel .sapMPanelExpandableIcon:hover {
+  background-color: #dbe3e6 !important;
+  border: none !important;
+}
+
+.hapRowPanel .sapMPanelExpandableIcon:active,
+.hapRowPanel .sapMPanelExpandableIcon:focus {
+  background-color: #a2a7a9 !important;
+  border: none !important;
 }
 
 .hapRowPanelLast .sapMPanelExpandableIcon {

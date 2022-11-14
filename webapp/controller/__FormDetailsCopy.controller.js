@@ -52,7 +52,7 @@ sap.ui.define(
   ) {
     "use strict";
 
-    return BaseController.extend("hcm.ux.hapv2_1.controller.FormDetails", {
+    return BaseController.extend("hcm.ux.hapv2_1.controller.FormDetailsCopy", {
       formatter: formatter,
       hasChanges: false,
 
@@ -109,7 +109,7 @@ sap.ui.define(
           footerButtons: [],
           formSections: [],
           allSectionsClicked: false,
-          navigationElementId: "",
+          navigationFormId: "",
           saveAndKeepButtonVisibility: true,
         });
 
@@ -591,7 +591,203 @@ sap.ui.define(
         oSideBarData.footerData = this._refreshSidebarFooterData();
         /* Footer data */
 
+        // /*Footer Data*/
+        // var aResults = _.filter(aResultsTable, function (oResultLine) {
+        //   if (oResultLine.Sort === "099") {
+        //     return false;
+        //   }
+        //   if (oResultLine.Sort.includes) {
+        //     return !oResultLine.Sort.includes(".");
+        //   } else {
+        //     if (oResultLine.Sort.indexOf(".") !== -1) {
+        //       return false;
+        //     } else {
+        //       return true;
+        //     }
+        //   }
+        // });
+        // var aCaption = _.uniqBy(aResults, "RowName");
+        // var aColumns = _.uniqBy(aResults, "ColIid");
+        // var aFinalRow = _.filter(aResultsTable, ["Sort", "099"]);
+        // var sRowIndex = 0;
+        // var sColIndex = 0;
+
+        // oSideBarData.footerData = {
+        //   TableData: [],
+        //   FooterData: [],
+        // };
+        // //SUMMARY_WEIGHT_SHOW
+
+        // var oHeaderLeft;
+
+        // if (oViewData.formParameters["NO_DISPLAY_HEADER"] === "X") {
+        //   oHeaderLeft = {};
+        // } else {
+        //   oHeaderLeft = {
+        //     Value: oViewData.formParameters["SUMMARY_HEADER_TITLE"], //SUMMARY_HEADER_TITLE
+        //     Type: "HeaderEmpty",
+        //     ColumnIndex: sColIndex,
+        //     RowIndex: sRowIndex,
+        //   };
+        // }
+        // //Form captions
+        // if (aCaption.length > 0) {
+        //   oSideBarData.footerData.TableData[sColIndex] = {
+        //     Type: "Caption",
+        //     ColumnIndex: sColIndex,
+        //     Data: [oHeaderLeft],
+        //   };
+        // }
+
+        // $.each(aCaption, function (sIndex, oCaption) {
+        //   sRowIndex++;
+        //   var sColValue = "";
+        //   if (oViewData.formParameters["SUMMARY_WEIGHT_SHOW"] === "X") {
+        //     try {
+        //       var oCell =
+        //         oViewData.bodyCells[oCaption.RowIid][that._sWeightColumn]; //Weight column
+        //       sColValue =
+        //         oCaption.RowName +
+        //         " (" +
+        //         oCell.ValueTxt +
+        //         "" +
+        //         oCell.ValueText +
+        //         ")";
+        //     } catch (oEx) {
+        //       sColValue = oCaption.RowName;
+        //     }
+        //   } else {
+        //     sColValue = oCaption.RowName;
+        //   }
+        //   oSideBarData.footerData.TableData[0].Data.push({
+        //     Value: sColValue,
+        //     Type: "RowLabel",
+        //     ColumnIndex: sColIndex,
+        //     RowIndex: sRowIndex,
+        //   });
+        // });
+
+        // if (oViewData.formParameters["NO_DISPLAY_HEADER"] === "X") {
+        //   $.each(aColumns, function (sIndex, oColumn) {
+        //     sColIndex++;
+        //     sRowIndex = 0;
+        //     oSideBarData.footerData.TableData[sColIndex] = {
+        //       Type: "Column",
+        //       ColumnIndex: sColIndex,
+        //       Data: [{}],
+        //     };
+        //     var aCellVal = _.filter(aResults, ["ColIid", oColumn.ColIid]);
+        //     $.each(aCellVal, function (sIndex, oCell) {
+        //       sRowIndex++;
+        //       oSideBarData.footerData.TableData[sColIndex].Data.push({
+        //         Value: oCell.Value,
+        //         Type: "RowValue",
+        //         ColumnIndex: sColIndex,
+        //         RowIndex: sRowIndex,
+        //       });
+        //     });
+        //   });
+        // } else {
+        //   $.each(aColumns, function (sIndex, oColumn) {
+        //     sColIndex++;
+        //     sRowIndex = 0;
+        //     oSideBarData.footerData.TableData[sColIndex] = {
+        //       Type: "Column",
+        //       ColumnIndex: sColIndex,
+        //       Data: [
+        //         {
+        //           Value: oColumn.ColName,
+        //           Type: "Header",
+        //           ColumnIndex: sColIndex,
+        //           RowIndex: sRowIndex,
+        //         },
+        //       ],
+        //     };
+        //     var aCellVal = _.filter(aResults, ["ColIid", oColumn.ColIid]);
+        //     $.each(aCellVal, function (sIndex, oCell) {
+        //       sRowIndex++;
+        //       oSideBarData.footerData.TableData[sColIndex].Data.push({
+        //         Value: oCell.Value,
+        //         Type: "RowValue",
+        //         ColumnIndex: sColIndex,
+        //         RowIndex: sRowIndex,
+        //       });
+        //     });
+        //   });
+        // }
+        // /*Footer of Footer Begin*/
+        // if (aFinalRow[0]) {
+        //   var sFooterRowColSpan = aFinalRow.length === 1 ? 2 : 1;
+        //   oSideBarData.footerData.FooterData[0] = {
+        //     Type: "Footer",
+        //     Data: [
+        //       {
+        //         Value: aFinalRow[0].RowName,
+        //         Type: "FooterLabel",
+        //         ColSpan: sFooterRowColSpan,
+        //       },
+        //     ],
+        //   };
+
+        //   if (aColumns.length === 0) {
+        //     oSideBarData.footerData.FooterData[0].Data.push({
+        //       Value: aFinalRow[0].Value,
+        //       Type: "FooterValue",
+        //       ColSpan: sFooterRowColSpan,
+        //     });
+        //   }
+
+        //   $.each(aColumns, function (sIndex, oColumn) {
+        //     var aCellVal = _.filter(aFinalRow, ["ColIid", oColumn.ColIid]);
+        //     $.each(aCellVal, function (sIndex, oCell) {
+        //       oSideBarData.footerData.FooterData[0].Data.push({
+        //         Value: oCell.Value,
+        //         Type: "FooterValue",
+        //         ColSpan: sFooterRowColSpan,
+        //       });
+        //     });
+        //   });
+
+        //   if (oViewData.formParameters["FINAL_NOTE_AFTER_CALIB"]) {
+        //     oSideBarData.footerData.FooterData.push({
+        //       Type: "FooterFinal",
+        //       Data: [
+        //         {
+        //           Value: "KALİBRASYON SONUCU",
+        //           Type: "FooterLabel",
+        //           ColSpan: aFinalRow.length === 1 ? 2 : 1,
+        //         },
+        //         {
+        //           Value: oViewData.formParameters["FINAL_NOTE_AFTER_CALIB"],
+        //           Type: "FooterValue",
+        //           ColSpan: aFinalRow.length === 1 ? 2 : 3,
+        //         },
+        //       ],
+        //     });
+        //   }
+
+        //   if (oViewData.formParameters["FINAL_TEXT_AFTER_CALIB"]) {
+        //     oSideBarData.footerData.FooterData.push({
+        //       Type: "FooterNote",
+        //       Data: [
+        //         {
+        //           Value: oViewData.formParameters["FINAL_TEXT_AFTER_CALIB"],
+        //           Type: "FooterValue",
+        //           ColSpan: 3,
+        //         },
+        //       ],
+        //     });
+        //   }
+
+        //   //FINAL_NOTE_AFTER_CALIB
+        //   //FINAL_TEXT_AFTER_CALIB
+        // }
+
+        // /*Footer of Footer End*/
+        // /*Footer Data*/
+
         oViewModel.setProperty("/sidebarData", oSideBarData);
+        //console.log(oSideBarData);
       },
       _initializeViewModel: function () {
         var oViewModel = this.getModel("formDetailsModel");
@@ -643,9 +839,14 @@ sap.ui.define(
         });
         oViewModel.setProperty("/beforeAddFreeFormData", {});
 
+        oViewModel;
+
         this.hasChanges = false;
 
         this._removeAllMessages();
+
+        this._oIntro = null;
+        this._sIntro = false;
       },
       _onPatternMatched: function (oEvent) {
         if (sap.ushell.Container) {
@@ -656,7 +857,7 @@ sap.ui.define(
         this._initializeViewModel();
 
         /*Close busy dialog*/
-        this.getUIHelper()?.setListViewBusy(false);
+        this.getUIHelper().setListViewBusy(false);
 
         var sAppraisalId = oEvent.getParameter("arguments").appraisalId;
         var oViewModel = this.getModel("formDetailsModel");
@@ -709,7 +910,7 @@ sap.ui.define(
         );
 
         this._openBusyFragment("formDetailPrepared", []);
-
+        //this._addFormActions();
         oModel.read(sQuery, {
           urlParameters: {
             $expand: sExpand,
@@ -743,6 +944,12 @@ sap.ui.define(
 
             that._refreshAttachmentList();
 
+            /*if (that.getUIHelper().getShowHint()) {
+						var oCurrentFormData = that.getUIHelper().getCurrentForm();
+						if (oCurrentFormData.ShowIntro) {
+							that.onShowIntro();
+						}
+					}*/
             if (oData.Return !== null) {
               if (oData.Return.hasOwnProperty("results")) {
                 sHasErrors = that._processReturnMessagesNew(
@@ -849,7 +1056,7 @@ sap.ui.define(
             !_.isEqual(this._oNavContainer.getCurrentPage(), oElement.Page)
           ) {
             this._oNavContainer.to(oElement.Page.getId());
-            oViewModel.setProperty("/navigationElementId", oElement.ElementId);
+            oViewModel.setProperty("/navigationFormId", oElement.ElementId);
             if (oViewData.formParameters["LAST_ROW"] === oElement.ElementId) {
               oViewModel.setProperty("/saveAndKeepButtonVisibility", false);
             } else {
@@ -939,7 +1146,8 @@ sap.ui.define(
             ],
             formatter: function (sId, sStatusRelevant, sIcon) {
               if (sStatusRelevant === true) {
-                return "Accept";
+                return "Emphasized";
+                next;
               }
 
               if (
@@ -1046,6 +1254,12 @@ sap.ui.define(
         });
         oActionButton.addCustomData(oTargetSection);
 
+        /*var oToolbar = new sap.m.Toolbar();
+			oToolbar.bindAggregation("content", {
+				path: "formDetailsModel>/footerButtons",
+				template: oActionButton
+			});*/
+
         return oActionButton;
       },
       _buildUINew: function () {
@@ -1096,10 +1310,9 @@ sap.ui.define(
             if (oCell[0].ValueString !== "") {
               sName =
                 oElement.Name +
-                " (%" +
-                formatter.convertFloatToString(
-                  parseFloat(oCell[0].ValueString).toFixed(2)
-                ) +
+                " (" +
+                oCell[0].ValueString +
+                oCell[0].ValueText +
                 ")";
             } else {
               sName = oElement.Name;
@@ -1114,33 +1327,12 @@ sap.ui.define(
               Page: oPage,
             });
 
-            //Set current selected element as index
-            if (aNavigationData.length === 1) {
-              oViewModel.setProperty("/navigationElementId", oTab.ElementId);
-            }
-
-            var sElementEditable =
-              "{= ${formDetailsModel>/bodyElements/" +
-              oElement.RowIid +
-              "/Availability} === 'X' ? true : false }";
-
-            var aElementButtons = that._getElementButtons(
-              oElement,
-              sElementEditable
-            );
-
-            var oPageHeader = new sap.uxap.ObjectPageHeader({
-              objectTitle:
-                "{formDetailsModel>/bodyElements/" + oTab.RowIid + "/Name}",
-            });
-
-            $.each(aElementButtons, function (i, oButton) {
-              oPageHeader.addAction(oButton.Button);
-            });
-
             var oPageLayout = new sap.uxap.ObjectPageLayout({
               enableLazyLoading: true,
-              headerTitle: oPageHeader,
+              headerTitle: new sap.uxap.ObjectPageHeader({
+                objectTitle:
+                  "{formDetailsModel>/bodyElements/" + oTab.RowIid + "/Name}",
+              }),
             });
 
             that._buildObjectPageLayoutContent(
@@ -1150,8 +1342,6 @@ sap.ui.define(
             );
 
             oPage.addContent(oPageLayout);
-
-            that._addUIElement(oTab.RowIid, "PageLayout", null, oPageLayout);
 
             that._oNavContainer.addPage(oPage);
 
@@ -1178,26 +1368,19 @@ sap.ui.define(
         );
         var that = this;
 
-        $.each(aChildren, function (i, oChild) {
-          that._addSection(oViewData, oPageLayout, oChild.RowIid);
+        $.each(aChildren, function (sIndex, oChild) {
+          var oSection = new sap.uxap.ObjectPageSection({
+            title:
+              "{formDetailsModel>/bodyElements/" + oChild.RowIid + "/Name}",
+            showTitle: false,
+            titleUppercase: false,
+          }).addStyleClass("sapUiNoContentPadding");
+
+          that._addSubSections(oSection, oViewData, oChild.RowIid);
+
+          oPageLayout.addSection(oSection);
         });
       },
-
-      _addSection: function (oViewData, oPageLayout, sRowIid) {
-        var that = this;
-        var oSection = new sap.uxap.ObjectPageSection({
-          title: "{formDetailsModel>/bodyElements/" + sRowIid + "/Name}",
-          showTitle: true,
-          titleUppercase: false,
-        }).addStyleClass("sapUiNoContentPadding");
-
-        that._addSubSections(oSection, oViewData, sRowIid);
-
-        oPageLayout.addSection(oSection);
-
-        that._addUIElement(sRowIid, "Section", null, oSection);
-      },
-
       /**
        * Add root section in case of there ise no doc tab config
        * @function
@@ -1207,72 +1390,909 @@ sap.ui.define(
         var oViewModel = this.getModel("formDetailsModel");
         var aFormUIElements = oViewModel.getProperty("/formUIElements");
         var oElemRow = {
-          Id: _.uniqueId(`${sUIType}_`) + new Date().valueOf(),
           RowIid: sRowIid,
           UIType: sUIType,
           ColumnIid: sColumnIid,
-          UIElementId: oElem.getId(),
+          UIElement: oElem,
         };
 
         aFormUIElements.push(oElemRow);
 
         oViewModel.setProperty("/formUIElements", aFormUIElements);
       },
+      _addRootSection: function (oViewData) {
+        var sRowIid = this._getValueUsingAttribute(
+          oViewData,
+          "BodyElements",
+          "ElementType",
+          "VA",
+          "RowIid"
+        );
+        var sElemName = this._getValueUsingAttribute(
+          oViewData,
+          "BodyElements",
+          "ElementType",
+          "VA",
+          "Name"
+        );
 
+        var oSection = new sap.uxap.ObjectPageSection({
+          title: sElemName,
+          titleUppercase: false,
+        });
+
+        this._addUIElement(sRowIid, "Section", null, oSection);
+
+        this._addSubSections(oSection, oViewData, sRowIid);
+
+        this._oPageLayout.addSection(oSection);
+      },
       /**
-       * Find UI element from model
+       * Add sections according to the doc tab
        * @function
        * @private
        */
-      _findUIElement: function (sRowIid, sUIType, sColumnIid, bLog) {
+      _addSections: function (oViewData) {
+        var that = this;
         var oViewModel = this.getModel("formDetailsModel");
-        var aFormUIElements = oViewModel.getProperty("/formUIElements");
-        var oFormUIElement = _.find(aFormUIElements, {
-          RowIid: sRowIid,
-          UIType: sUIType,
-          ColumnIid: sColumnIid,
+        var aSections = [];
+        var sRowFeedBack;
+        var sRowDevStatu;
+        var sRowPerResult;
+
+        sRowFeedBack = oViewData.formParameters["FORM_VB_ROW_FEEDBACK"];
+        sRowDevStatu = oViewData.formParameters["FORM_VB_DP_DEVSTATU"];
+        sRowPerResult = oViewData.formParameters["FORM_VB_ROW_PER_RESULT"];
+
+        $.each(oViewData.formData.DocTab, function (sIndex, oDocTab) {
+          if (oViewData.bodyElements.hasOwnProperty(oDocTab.RowIid)) {
+            if (
+              oDocTab.Tab === "X" &&
+              oDocTab.ElementType !== "VA" &&
+              oViewData.bodyElements[oDocTab.RowIid].Availability !== "H" &&
+              oDocTab.ElementId !== sRowFeedBack
+            ) {
+              /*Hide feedback tab*/
+              var sElemName = oViewData.bodyElements[oDocTab.RowIid].Name;
+              var sElemId = oViewData.bodyElements[oDocTab.RowIid].ElementId;
+
+              var oSection = new sap.uxap.ObjectPageSection({
+                title: sElemName,
+                titleUppercase: false,
+              })
+                .addStyleClass("sapUiNoContentPadding")
+                .addStyleClass("hapSection");
+              aSections.push({
+                element: oSection,
+                clicked: false,
+              });
+              that._addUIElement(oDocTab.RowIid, "Section", null, oSection);
+              if (sElemId === sRowDevStatu) {
+                that._addResultSubSection(oSection, oViewData, oDocTab.RowIid);
+              } else if (sElemId === sRowPerResult) {
+                that._addPerformanceReportSection(
+                  oSection,
+                  oViewData,
+                  oDocTab.RowIid
+                );
+              } else {
+                that._addSubSections(oSection, oViewData, oDocTab.RowIid);
+              }
+
+              that._oPageLayout.addSection(oSection);
+            }
+          } else {
+            jQuery.sap.log.error(
+              "Bulunamayan satır: " + oDocTab.RowIid + "-" + oDocTab.Name
+            );
+          }
         });
-        var oUIElement;
-        if (oFormUIElement && oFormUIElement.UIElementId) {
-          oUIElement =
-            this.byId(oFormUIElement.UIElementId) ||
-            sap.ui.getCore().byId(oFormUIElement.UIElementId);
-        }
-        if (oUIElement) {
-          return oUIElement;
-        }
-        if (bLog) {
-          console.log(
-            `Element ${sUIType} for row: ${sRowIid} and column ${sColumnIid} not found!`
+
+        try {
+          this._oPageLayout.setSelectedSection(
+            this._oPageLayout.getSections()[0].getId()
           );
+
+          aSections[0].clicked = true;
+          oViewModel.setProperty("/formSections", aSections);
+
+          this._adjustButtons();
+        } catch (err) {
+          MessageBox.warning("Formda görüntülenecek öğe bulunamadı!");
         }
-        return null;
+      },
+      onSectionNavigate: function (oEvent) {
+        this._markSectionAsClicked(oEvent.getParameter("section").getId());
+        this._adjustButtons();
+      },
+
+      _navigateToSection: function (sSection) {
+        this._oPageLayout.setSelectedSection(sSection);
+        this._markSectionAsClicked(sSection);
+        this._adjustButtons();
+      },
+      _markSectionAsClicked: function (sSection) {
+        var oViewModel = this.getModel("formDetailsModel");
+        var aSections = oViewModel.getProperty("/formSections");
+        var sAllClicked = true;
+
+        $.each(aSections, function (sKey, oSection) {
+          if (oSection.element.getId() === sSection) {
+            oSection.clicked = true;
+          }
+          if (!oSection.clicked) {
+            sAllClicked = false;
+          }
+        });
+
+        oViewModel.setProperty("/allSectionsClicked", sAllClicked);
+
+        oViewModel.setProperty("/formSections", aSections);
+      },
+
+      _checkAllSectionsRendered: function () {
+        var q = $.Deferred();
+        var aSections = this._oPageLayout.getSections();
+        var that = this;
+        try {
+          document.body.addEventListener(
+            "DOMNodeInserted",
+            function (event) {
+              try {
+                if (event.hasOwnProperty("path")) {
+                  if (
+                    event.path.indexOf(
+                      $("section[id*='idDetailObjectPageLayout-anchorBar'")[0]
+                    ) !== -1
+                  ) {
+                    setTimeout(function () {
+                      q.resolve();
+                    }, 1000);
+                    document.body.removeEventListener("DOMNodeInserted", that);
+                  }
+                } else if (event.hasOwnProperty("currentTarget")) {
+                  if (
+                    event.currentTarget.id ==
+                    $("section[id*='idDetailObjectPageLayout-anchorBar'")[0]
+                  ) {
+                    setTimeout(function () {
+                      q.resolve();
+                    }, 1000);
+                    document.body.removeEventListener("DOMNodeInserted", that);
+                  }
+                } else {
+                  setTimeout(function () {
+                    q.resolve();
+                  }, 3000);
+                  document.body.removeEventListener("DOMNodeInserted", that);
+                }
+              } catch (oErr) {
+                setTimeout(function () {
+                  q.resolve();
+                }, 3000);
+                document.body.removeEventListener("DOMNodeInserted", that);
+              }
+            },
+            false
+          );
+        } catch (oErr) {
+          setTimeout(function () {
+            q.resolve();
+          }, 3000);
+          document.body.removeEventListener("DOMNodeInserted", that);
+        }
+
+        return q.promise();
+      },
+      onShowIntro: function (oEvent) {
+        var oViewModel = this.getModel("formDetailsModel");
+        var aUIElements = oViewModel.getProperty("/formUIElements");
+        var aSteps = oViewModel.getProperty("/introSteps");
+        var that = this;
+
+        var _doShowIntro = function () {
+          that._oPageLayout.setSelectedSection(
+            that._oPageLayout.getSections()[0].getId()
+          );
+          that._adjustButtons();
+          that._sIntro = true;
+          if (aSteps.length === 0) {
+            that._oIntro = introJs();
+            for (var i = 0; i < aUIElements.length; i++) {
+              if (aUIElements[i].UIType === "Section") {
+                that._addIntro(aUIElements[i].UIElement, aUIElements[i].RowIid);
+              }
+            }
+
+            //that._addGenericIntro();
+
+            aSteps = oViewModel.getProperty("/introSteps");
+            that._oIntro.setOptions({
+              steps: aSteps,
+              showProgress: true,
+              tooltipPosition: "bottom",
+              positionPrecedence: ["bottom", "top", "right", "left"],
+            });
+
+            that._oIntro.oncomplete(function () {
+              that.getUIHelper().setShowHint(false);
+              that._oPageLayout.setSelectedSection(
+                that._oPageLayout.getSections()[0].getId()
+              );
+            });
+            that._oIntro.onbeforechange(function () {
+              return [that._oPageLayout, true];
+            });
+            that._oIntro.onexit(function () {
+              that._oPageLayout.setSelectedSection(
+                that._oPageLayout.getSections()[0].getId()
+              );
+            });
+          }
+
+          if (aSteps.length > 0) {
+            that._oIntro.start();
+          } else {
+            MessageToast.show("Dokümantasyon bulunamadı");
+          }
+        };
+        if (oEvent) {
+          if (that._oPageLayout.getSections().length > 0) {
+            _doShowIntro();
+          }
+        } else {
+          var y = $.when(this._checkAllSectionsRendered());
+          y.done(function (a) {
+            if (that._oPageLayout.getSections().length > 0) {
+              _doShowIntro();
+            }
+          });
+        }
+      },
+      _addGenericIntro: function (oSection, sRowIid) {
+        var oViewModel = this.getModel("formDetailsModel");
+        var aSteps = oViewModel.getProperty("/introSteps");
+        var aHapButtons = oViewModel.getProperty("/formData/Buttons");
+        var sAppVisible = false;
+
+        /*Check whether APPROVE button visible*/
+        for (var i = 0; i < aHapButtons.length; i++) {
+          if (aHapButtons[i].Id === "APPROVE") {
+            if (
+              aHapButtons[i].Availability === "" ||
+              aHapButtons[i].Availability === "B"
+            ) {
+              sAppVisible = true;
+            }
+            break;
+          }
+        }
+
+        if (sAppVisible) {
+          aSteps.push({
+            //element: "#" + $("button[data-buttonid='APPROVE']").attr("id"),
+            intro:
+              "Gelişim planı içeriğinde yer alan tüm bölümler gözden geçirildiğinde, 'Onayla' seçeneği aktif hale gelir.",
+          });
+
+          oViewModel.setProperty("/introSteps", aSteps);
+        }
+      },
+      _addIntro: function (oSection, sRowIid) {
+        var oViewModel = this.getModel("formDetailsModel");
+        var aSteps = oViewModel.getProperty("/introSteps");
+        var sDetail = oViewModel.getProperty(
+          "/bodyElements/" + sRowIid + "/Description"
+        );
+        var sHeader =
+          "<p style='font-size:1rem'><b>" +
+          oViewModel.getProperty("/bodyElements/" + sRowIid + "/Name") +
+          "</b></p>";
+        sDetail = sHeader + sDetail;
+
+        if (sap.ui.Device.system.phone) {
+          aSteps.push({
+            intro: sDetail,
+          });
+        } else {
+          aSteps.push({
+            element: "#" + $("span[id*='" + oSection.getId() + "']")[1].id,
+            intro: sDetail,
+          });
+        }
+      },
+      /**
+       * Add performance report subsection as dashboard
+       * @function
+       * @private
+       */
+      _handlePerformanceReportNav: function (oEvent) {
+        var oNavCon = this.byId("idPerformanceReportNavCon");
+        var oSource = oEvent.getSource();
+        var sTarget = oSource.data("target");
+        var that = this;
+
+        if (sTarget) {
+          var sRowIid = oSource.data("elementRowIid");
+          var sName = oSource.data("elementName");
+          var sStyle = oSource.data("elementStyle");
+          var oViewModel = this.getModel("formDetailsModel");
+          var sHeader = oSource.getHeader();
+
+          var aBodyElements = oViewModel.getProperty("/formData/BodyElements");
+          var oBodyCells = oViewModel.getProperty("/bodyCells");
+          var oBodyElements = oViewModel.getProperty("/bodyElements");
+          var oFormParameters = oViewModel.getProperty("/formParameters");
+          var aData = [];
+          var aPopData = [];
+          var sPopIndex = 0;
+          var sRowPerResult = oFormParameters["FORM_VB_ROW_PER_RESULT"];
+
+          $.each(aBodyElements, function (sIndex, oElement) {
+            if (oElement.Parent === sRowIid) {
+              aData.push({
+                Name: oElement.Name,
+                Value:
+                  oBodyCells[oElement.RowIid][that._sFinAppColumn].ValueNum,
+              });
+
+              /*GENEL DEĞERLENDİRME İSE PUAN ÇIKARMAYA GEREK YOK*/
+              if (oBodyElements[sRowIid].ElementId !== sRowPerResult) {
+                if (
+                  oBodyCells[oElement.RowIid].hasOwnProperty(
+                    that._sObjMeaColumn
+                  )
+                ) {
+                  var sChildValueExp = formatter.convertToIntegerDecimal(
+                    oBodyCells[oElement.RowIid][that._sExpValColumn].ValueNum
+                  );
+                  var sChildValueRea = formatter.convertToIntegerDecimal(
+                    oBodyCells[oElement.RowIid][that._sReaValColumn].ValueNum
+                  );
+                  aPopData.push({
+                    Index: sPopIndex,
+                    ElementName: oElement.Name,
+                    ExpectedValue:
+                      (oBodyCells[oElement.RowIid][that._sObjMeaColumn]
+                        .ValueText === "Eşit"
+                        ? ""
+                        : oBodyCells[oElement.RowIid][that._sObjMeaColumn]
+                            .ValueText + " ") +
+                      sChildValueExp +
+                      " " +
+                      oBodyCells[oElement.RowIid][that._sObjUniColumn]
+                        .ValueText,
+                    RealizedValue: sChildValueRea,
+                  });
+                  sPopIndex++;
+                } else {
+                  var oChildPopData = {};
+                  oChildPopData.Index = sPopIndex;
+                  oChildPopData.Values = [];
+                  $.each(aBodyElements, function (sChild, oChildElement) {
+                    if (oChildElement.Parent === oElement.RowIid) {
+                      oChildPopData.Values.push({
+                        ElementName: oChildElement.Name,
+                        FinalAppraisal:
+                          oBodyCells[oChildElement.RowIid][that._sFinAppColumn]
+                            .ValueTxt,
+                      });
+                    }
+                  });
+                  if (oChildPopData.Values.length > 0) {
+                    aPopData.push(oChildPopData);
+                  }
+                  sPopIndex++;
+                }
+              }
+            }
+          });
+
+          /*First calculate graph data*/
+          var oGraphModel = new JSONModel({
+            PerfData: aData,
+          });
+
+          this._oPerfReportPage2Title.setText(sHeader);
+
+          var oVizProp = this._oPerfGraph.getVizProperties();
+
+          oVizProp.plotArea.colorPalette = [$(sStyle).css("backgroundColor")];
+
+          this._oPerfGraph.setVizProperties(oVizProp);
+          this._oPerfGraph.data("PopData", aPopData);
+          //console.log(aPopData);
+
+          this._oPerfGraph.setModel(oGraphModel);
+          /*First calculate graph data*/
+          if (this._oPopOver) {
+            this._oPopOver.destroy();
+          }
+          this._oPerfReportNavCon.to(this._oPerfReportPage2.getId());
+
+          if (aPopData.length > 0) {
+            var _showGraphNotice = function () {
+              MessageToast.show("Detaylar için grafiğe tıklayınız...", {
+                duration: 5000, // default
+                width: "300px", // default
+                my: "center center", // default
+                at: "center center", // default
+              });
+            };
+            jQuery.sap.delayedCall(500, this, _showGraphNotice, []);
+          }
+        } else {
+          this._oPerfReportNavCon.back();
+        }
+      },
+      _addPerformanceReportSection: function (oSection, oViewData, sRowIid) {
+        var that = this;
+        var oSubSection = new sap.uxap.ObjectPageSubSection({
+          title: oSection.getTitle(),
+          titleUppercase: false,
+        }).addStyleClass("sapUiNoContentPadding");
+        this._addUIElement(sRowIid, "SubSection", null, oSubSection);
+
+        var oNavCon = new sap.m.NavContainer({
+          defaultTransitionName: "flip",
+          width: "98%",
+          height: "450px",
+        });
+
+        this._oPerfReportNavCon = oNavCon;
+
+        var oPage1 = new sap.m.Page({
+          showFooter: false,
+          showHeader: false,
+        });
+
+        this._oPerfReportPage1 = oPage1;
+
+        var oMainBox = new sap.m.FlexBox({
+          direction: "Column",
+          alignItems: "Center",
+          justifyContent: "Center",
+        });
+
+        var oBoxLine1 = new sap.m.FlexBox({
+          alignItems: "Center",
+          justifyContent: "Center",
+        });
+
+        var oBoxLine2 = new sap.m.FlexBox({
+          alignItems: "Center",
+          justifyContent: "Center",
+        }).addStyleClass("sapUiMediumMarginTop");
+
+        oMainBox.addItem(oBoxLine1);
+        oMainBox.addItem(oBoxLine2);
+
+        oMainBox.addStyleClass("sapUiMediumMarginTop");
+
+        //var oMainGrid = new sap.ui.layout.Grid();
+
+        var _addTile = function (oEl, oBox, sSecond) {
+          var sRowPerResult =
+            oViewData.formParameters["FORM_VB_ROW_PER_RESULT"];
+          var oTile = new sap.m.GenericTile({
+            header:
+              "{= ${formDetailsModel>/bodyElements/" +
+              oEl.RowIid +
+              "/ElementId} === '" +
+              sRowPerResult +
+              "' ? 'GENEL DEĞERLENDİRME PUANI' : '" +
+              oEl.Name +
+              "' }",
+            press: [that._handlePerformanceReportNav, that],
+            tooltip: "{i18n>clickForDetails}",
+          }).addStyleClass("hapPerfResultTile");
+
+          oTile.addStyleClass("sapUiLargeMarginEnd");
+          oTile.addStyleClass("hapPerfResultTileLevel" + oEl.ApLevel);
+
+          oTile.data("target", "PerformanceReportPage2");
+          oTile.data("elementRowIid", oEl.RowIid);
+          oTile.data("elementName", oEl.Name);
+          oTile.data("elementStyle", ".hapPerfResultTileLevel" + oEl.ApLevel);
+
+          var oTileContent = new sap.m.TileContent();
+
+          var oNumericContent = new sap.m.NumericContent({
+            value:
+              "{formDetailsModel>/bodyCells/" +
+              oEl.RowIid +
+              "/" +
+              that._sFinAppColumn +
+              "/ValueNum}",
+            valueColor:
+              "{= ${formDetailsModel>/bodyCells/" +
+              oEl.RowIid +
+              "/" +
+              that._sFinAppColumn +
+              "/ValueNum} < 3 ? 'Error' : 'Good' }",
+          });
+
+          oTileContent.setContent(oNumericContent);
+
+          oTile.addTileContent(oTileContent);
+
+          oBox.addItem(oTile);
+        };
+
+        $.each(oViewData.bodyElements, function (sIndex, oElement) {
+          if (oElement.RowIid === sRowIid) {
+            _addTile(oElement, oBoxLine1, false);
+          }
+
+          if (oElement.Parent === sRowIid) {
+            _addTile(oElement, oBoxLine2, true);
+          }
+        });
+
+        oPage1.addContent(oMainBox);
+
+        var oPage2 = new sap.m.Page({
+          showHeader: true,
+          showFooter: false,
+        }).addStyleClass("hapPerfResultPageGraph");
+
+        var oPage2Title = new sap.m.Title();
+        var oBar = new sap.m.Bar({
+          contentLeft: [
+            new sap.m.Button({
+              icon: "sap-icon://close-command-field",
+              text: "{i18n>returnTo}",
+              press: [that._handlePerformanceReportNav, that],
+            }).addStyleClass("hapButtonWhite"),
+          ],
+          contentMiddle: [oPage2Title],
+        });
+
+        oPage2.setCustomHeader(oBar);
+
+        this._oPerfReportPage2 = oPage2;
+        this._oPerfReportPage2Title = oPage2Title;
+
+        /*Set graph properties*/
+        var oPerfGraph = new VizFrame({
+          height: "80%",
+          width: "100%",
+          vizType: "column",
+          uiConfig: {
+            applicationSet: "fiori",
+            showErrorMessage: true,
+          },
+          selectData: that._onSelectGraphData.bind(that),
+        }).addStyleClass("sapUiMediumMarginTop");
+
+        var oGraphModel = new JSONModel({
+          PerfData: [],
+        });
+
+        oPerfGraph.setModel(oGraphModel);
+
+        oPerfGraph.setVizProperties({
+          plotArea: {
+            dataLabel: {
+              visible: true,
+              formatString: CustomChartFormatter.HAP_NUM_FORMATTER,
+            },
+            primaryScale: {
+              minValue: 0,
+              maxValue: 5,
+              fixedRange: true,
+            },
+          },
+          valueAxis: {
+            // label: {
+            // 	formatString: formatPattern.SHORTFLOAT
+            // },
+            title: {
+              visible: true,
+              text: "Puan",
+            },
+          },
+          categoryAxis: {
+            title: {
+              visible: false,
+            },
+          },
+          legend: {
+            visible: false,
+          },
+          title: {
+            visible: false,
+          },
+        });
+
+        var oDataSet = new FlattenedDataset({
+          data: "{/PerfData}",
+        });
+
+        oDataSet.addDimension(
+          new DimensionDefinition({
+            name: "Name",
+            value: "{Name}",
+          })
+        );
+
+        oDataSet.addMeasure(
+          new MeasureDefinition({
+            name: "Value",
+            value: "{Value}",
+          })
+        );
+
+        oPerfGraph.addFeed(
+          new FeedItem({
+            uid: "valueAxis",
+            type: "Measure",
+            values: ["Value"],
+          })
+        );
+
+        oPerfGraph.addFeed(
+          new FeedItem({
+            uid: "categoryAxis",
+            type: "Dimension",
+            values: ["Name"],
+          })
+        );
+
+        oPerfGraph.setDataset(oDataSet);
+
+        this._oPerfGraph = oPerfGraph;
+
+        // var oClickNotice = new sap.m.MessageStrip({
+        // 	type: "Warning",
+        // 	text: "Detaylar için grafiğe tıklayınız...",
+        // 	showIcon: true
+        // }).addStyleClass("sapUiSmallMarginTop");
+        // oPage2.addContent(oClickNotice);
+        oPage2.addContent(oPerfGraph);
+
+        oNavCon.addPage(oPage1);
+        oNavCon.addPage(oPage2);
+
+        oSubSection.addBlock(oNavCon);
+
+        //Add subsection to section
+        oSection.addSubSection(oSubSection);
+      },
+      _onSelectGraphData: function (oEvent) {
+        var aPopData = this._oPerfGraph.data("PopData");
+        var data = oEvent.getParameter("data");
+
+        if (this._oGraphPopover) {
+          this._oGraphPopover.close();
+          this._oGraphPopover.destroyContent();
+        } else {
+          this._oGraphPopover = new sap.m.Popover({
+            placement: "Top",
+          });
+        }
+
+        try {
+          if (data[0].data.Value) {
+            this._oGraphPopover.destroyFooter();
+            var divStr = "";
+            var sIndex = data[0].data._context_row_number;
+            this._oGraphPopover.setTitle(data[0].data.Name);
+            if (aPopData[0].hasOwnProperty("ExpectedValue")) {
+              divStr =
+                "<div class='hapPopoverContainer'>" +
+                "<table class='hapPopoverTable'>" +
+                "<thead>" +
+                "<tr>" +
+                "<th class='hapPopoverBgPurple'>Beklenen Değer</th>" +
+                "<th class='hapPopoverBgBlue'>Gerçekleşen Değer</th>" +
+                "</tr>" +
+                "</thead>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td>" +
+                aPopData[sIndex].ExpectedValue +
+                "</td>" +
+                "<td>" +
+                aPopData[sIndex].RealizedValue +
+                "</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table></div>";
+              this._oGraphPopover.setFooter(
+                new sap.m.Button({
+                  type: "Accept",
+                  text: "Hesaplama Detayı",
+                  press: function () {
+                    window.open(
+                      "https://webapps01.thy.com/intranets/kurumsal-operasyonel-cozumler/web10/TTASDocuments/2017_BGDS_De%C4%9Ferlendirme%20Kriterleri.pdf",
+                      "_blank"
+                    );
+                  },
+                  width: "95%",
+                }).addStyleClass("sapUiTinyMargin")
+              );
+            } else if (aPopData[0].hasOwnProperty("Values")) {
+              divStr =
+                "<div class='hapPopoverContainerLarge'>" +
+                "<table class='hapPopoverTable'>" +
+                "<thead>" +
+                "<tr>" +
+                "<th class='hapPopoverBgPurple hapPopoverColumnLarge'>Yetkinlik Adı</th>" +
+                "<th class='hapPopoverBgBlue'>Puan</th>" +
+                "</tr>" +
+                "</thead>" +
+                "<tbody>";
+              for (var i = 0; i < aPopData[sIndex].Values.length; i++) {
+                divStr =
+                  divStr +
+                  "<tr>" +
+                  "<td class='hapPopoverAlignLeft'>" +
+                  aPopData[sIndex].Values[i].ElementName +
+                  "</td>" +
+                  "<td>" +
+                  aPopData[sIndex].Values[i].FinalAppraisal +
+                  "</td>" +
+                  "</tr>";
+              }
+
+              divStr = divStr + "</tbody>" + "</table></div>";
+            }
+            this._oGraphPopover.addContent(
+              new sap.ui.core.HTML({
+                content: divStr,
+              })
+            );
+
+            this._oGraphPopover.openBy(data[0].target);
+          }
+        } catch (oErr) {
+          jQuery.sap.log.error(oErr);
+        }
+      },
+      _getPopoverProps: function () {
+        var aPopData = this._oPerfGraph.data("PopData");
+        var that = this;
+        return {
+          customDataControl: function (data) {
+            try {
+              if (data.data.val) {
+                var sIndex = data.data.val[1].value;
+
+                var _changeHeader = function () {
+                  $(
+                    $('[data-sap-ui*="vizHeaderBar-popoverHeaderTitle"]')[0]
+                  ).html(aPopData[sIndex].ElementName);
+                };
+                setTimeout(_changeHeader(), 2500);
+
+                var divStr =
+                  "<div>" +
+                  "<table class='hapPopoverTable'>" +
+                  "<thead>" +
+                  "<tr>" +
+                  "<th class='hapPopoverBgPurple'>Beklenen Değer</th>" +
+                  "<th class='hapPopoverBgBlue'>Gerçekleşen Değer</th>" +
+                  "</tr>" +
+                  "</thead>" +
+                  "<tbody>" +
+                  "<tr>" +
+                  "<td>" +
+                  aPopData[sIndex].ExpectedValue +
+                  "</td>" +
+                  "<td>" +
+                  aPopData[sIndex].RealizedValue +
+                  "</td>" +
+                  "</tr>" +
+                  "</tbody>" +
+                  "</table></div>";
+                return new sap.ui.core.HTML({
+                  content: divStr,
+                });
+              }
+            } catch (oErr) {}
+          },
+        };
       },
 
       /**
-       * Find UI element from model
+       * Add result subsections according to the body elements (Special development)
        * @function
        * @private
        */
-      _findAllUIElementByRow: function (sRowIid) {
-        var oViewModel = this.getModel("formDetailsModel");
-        var aFormUIElements = oViewModel.getProperty("/formUIElements");
+      _addResultSubSection: function (oSection, oViewData, sRowIid) {
         var that = this;
-        var aFormUIElementFiltered =
-          _.filter(aFormUIElements, {
-            RowIid: sRowIid,
-          }) || [];
+        var oSubSection = new sap.uxap.ObjectPageSubSection({
+          title: oSection.getTitle(),
+          titleUppercase: false,
+        }).addStyleClass("sapUiNoContentPadding");
 
-        var aFormUIElementList = aFormUIElementFiltered.map(function (oRow, i) {
-          return {
-            Id: oRow.Id,
-            UIElement:
-              that.byId(oRow.UIElementId) ||
-              sap.ui.getCore().byId(oRow.UIElementId),
-          };
+        this._addUIElement(sRowIid, "SubSection", null, oSubSection);
+        // var oVL = new sap.ui.layout.VerticalLayout({
+        // 	width: "100%"
+        // }).addStyleClass("sapUiNoContentPadding");
+
+        // this._addUIElement(sRowIid, "VerticalLayout", null, oVL);
+        //this._addRow(oVL, oViewData, sRowIid, false, true);
+
+        // Add main grid
+        var oGrid = new sap.ui.layout.Grid({
+          defaultSpan: "XL4 L4 M6 S12",
+        });
+        this._addUIElement(sRowIid, "ResultSectionGrid", null, oGrid);
+
+        oSubSection.addBlock(oGrid);
+
+        var _addQualificationResults = function (
+          oParent,
+          sParent,
+          sList,
+          sHeaderDesign
+        ) {
+          if (sList) {
+            var oList = new sap.m.List();
+            oParent.addAggregation("list", oList);
+          }
+          $.each(oViewData.bodyElements, function (sIndex, oElement) {
+            if (oElement.Parent === sParent) {
+              if (!sList) {
+                var oHIP = new HapIndicatorPanel({
+                  headerText: oElement.Name,
+                });
+
+                oHIP.setHeaderDesign(sHeaderDesign);
+                _addQualificationResults(oHIP, oElement.RowIid, true);
+                oParent.addHapPanel(oHIP);
+              } else {
+                var oListItem = new sap.m.StandardListItem({
+                  title: oElement.Name,
+                });
+                oList.addItem(oListItem);
+              }
+            }
+          });
+        };
+
+        var sRowStrengths = oViewData.formParameters[
+          "FORM_VB_DP_STRENGTHS"
+        ].substr(0, 8);
+        var sRowWeakness = oViewData.formParameters[
+          "FORM_VB_DP_WEAKNESS"
+        ].substr(0, 8);
+        var sRowOppurts = oViewData.formParameters["FORM_VB_DP_OPPURTS"].substr(
+          0,
+          8
+        );
+
+        $.each(oViewData.bodyElements, function (sIndex, oElement) {
+          if (oElement.Parent === sRowIid) {
+            var sHeaderDesign = "None";
+            var oHIP = new HapIndicatorPanel({
+              headerText: oElement.Name,
+              headerAlign: "Center",
+              headerDescription: oElement.Description,
+            });
+
+            if (oElement.ElementId === sRowStrengths) {
+              sHeaderDesign = "Positive";
+            } else if (oElement.ElementId === sRowOppurts) {
+              sHeaderDesign = "Emphasized";
+            } else if (oElement.ElementId === sRowWeakness) {
+              sHeaderDesign = "Negative";
+            }
+            oHIP.setHeaderDesign(sHeaderDesign);
+            _addQualificationResults(
+              oHIP,
+              oElement.RowIid,
+              false,
+              sHeaderDesign
+            );
+            oGrid.addContent(oHIP);
+          }
         });
 
-        return aFormUIElementList;
+        //Add subsection to section
+        oSection.addSubSection(oSubSection);
       },
 
       /**
@@ -1295,7 +2315,7 @@ sap.ui.define(
           width: "100%",
         }).addStyleClass("sapUiNoContentPadding");
 
-        this._addUIElement(sRowIid, "SubSectionContainer", null, oVL);
+        this._addUIElement(sRowIid, "VerticalLayout", null, oVL);
 
         oSubSection.addBlock(oVL);
 
@@ -1303,6 +2323,167 @@ sap.ui.define(
         //Add subsection to section
         oSection.addSubSection(oSubSection);
       },
+      // /**
+      //  * Add rows
+      //  * @function
+      //  * @private
+      //  */
+      // _addRow: function (oParent, oViewData, sRowIid, sChild, bFirst) {
+      //   var oViewModel = this.getModel("formDetailsModel");
+      //   var aRowUIElements = oViewModel.getProperty("/formUIElements");
+      //   var bExist = false;
+      //   var that = this;
+
+      //   for (var i = 0; i < aRowUIElements.length; i++) {
+      //     if (
+      //       aRowUIElements[i].RowIid === sRowIid &&
+      //       aRowUIElements[i].ColumnIid === null &&
+      //       aRowUIElements[i].UIType === "RowPanel"
+      //     ) {
+      //       bExist = true;
+      //       break;
+      //     }
+      //   }
+
+      //   var oElem = oViewData.bodyElements[sRowIid];
+
+      //   if (!bExist) {
+      //     //Add element it self
+      //     if (oElem === undefined) {
+      //       return;
+      //     }
+
+      //     /*4-P,4-R,6*/
+      //     /*that._sEduColumn*/
+      //     var oRowPanel = new sap.m.Panel({
+      //       width: "100%",
+      //       expandable: true,
+      //       expanded: {
+      //         parts: [
+      //           {
+      //             path: "formDetailsModel>/formData/HeaderStatus",
+      //           },
+      //           {
+      //             path:
+      //               "formDetailsModel>/bodyCells/" +
+      //               sRowIid +
+      //               "/" +
+      //               that._sEduColumn +
+      //               "/ValueNum",
+      //           },
+      //           {
+      //             path: "formDetailsModel>/bodyElements/" + sRowIid,
+      //           },
+      //         ],
+      //         formatter: function (oHeaderStatus, sCellValue, oBodyElement) {
+      //           try {
+      //             if (
+      //               oBodyElement.Child === "0000" ||
+      //               oBodyElement.Child === ""
+      //             ) {
+      //               return false;
+      //             } else {
+      //               return true;
+      //             }
+
+      //             /* TODO */
+      //             if (sCellValue === null || sCellValue === undefined) {
+      //               return true;
+      //             } else {
+      //               if (
+      //                 sCellValue === "1" ||
+      //                 sCellValue == 1 ||
+      //                 sCellValue === "0001"
+      //               ) {
+      //                 return true;
+      //               } else {
+      //                 if (
+      //                   oHeaderStatus.ApStatus === "4" &&
+      //                   oHeaderStatus.ApStatusSub === "D"
+      //                 ) {
+      //                   return true;
+      //                 } else {
+      //                   return false;
+      //                 }
+      //               }
+      //             }
+      //           } catch (oErr) {
+      //             return true;
+      //           }
+      //         },
+      //       },
+
+      //       backgroundDesign: "Transparent",
+      //     }).addStyleClass("hapRowPanel");
+
+      //     oRowPanel.addStyleClass("hapRowPanelLevel" + oElem.ApLevel);
+
+      //     if (bFirst) {
+      //       oRowPanel.addStyleClass("hapRowPanelFirst");
+      //     }
+
+      //     this._addUIElement(sRowIid, "RowPanel", null, oRowPanel);
+
+      //     this._addRowHeader(oRowPanel, oElem);
+
+      //     var oGrid = new sap.ui.layout.Grid({
+      //       defaultSpan: "L12 M12 S12",
+      //     }).addStyleClass("hapRowGrid");
+
+      //     this._addUIElement(sRowIid, "RowPanelGrid", null, oGrid);
+
+      //     if (
+      //       oElem.Description &&
+      //       oElem.Description !== oElem.Name &&
+      //       oElem.ApLevel !== "01" &&
+      //       oElem.ApLevel !== "02"
+      //     ) {
+      //       var oDesc = new HapMessageStrip({
+      //         messageType: "None",
+      //         htmlContent:
+      //           "{formDetailsModel>/bodyElements/" + sRowIid + "/Description}",
+      //         visible:
+      //           "{formDetailsModel>/bodyElements/" +
+      //           sRowIid +
+      //           "/DescriptionVisible}",
+      //       });
+
+      //       oDesc.addStyleClass("hapElementDescriptionLevel" + oElem.ApLevel);
+      //       oDesc.setLayoutData(
+      //         new sap.ui.layout.GridData({
+      //           span: "L12 M12 S12",
+      //         })
+      //       );
+      //       this._addUIElement(sRowIid, "RowDescription", null, oDesc);
+      //       oGrid.addContent(oDesc);
+      //     }
+
+      //     var oBL = new sap.ui.layout.BlockLayout({
+      //       background: "Default",
+      //     }).addStyleClass("sapUiNoContentPadding");
+      //     oGrid.addContent(oBL);
+      //     oRowPanel.addContent(oGrid);
+      //     oParent.addContent(oRowPanel);
+      //     if (oElem.Availability !== "H") {
+      //       this._addCells(oBL, sRowIid, oViewData);
+      //     }
+      //   }
+      //   // Add children and brothers
+      //   if (oElem.Child !== "0000" && oElem.Child !== sRowIid) {
+      //     if (oViewData.bodyElements[oElem.Child].Parent === sRowIid) {
+      //       this._addRow(oRowPanel, oViewData, oElem.Child, true, false);
+      //     }
+      //   }
+
+      //   if (
+      //     sChild &&
+      //     oElem.Brother !== "0000" &&
+      //     oElem.Brother !== sRowIid &&
+      //     oElem.Brother !== sChild
+      //   ) {
+      //     this._addRow(oParent, oViewData, oElem.Brother, true, false);
+      //   }
+      // },
 
       /**
        * Add rows - new design
@@ -1311,18 +2492,16 @@ sap.ui.define(
        */
       _addRowNew: function (oParent, oViewData, sRowIid, bChild, bFirst) {
         var oViewModel = this.getModel("formDetailsModel");
-        //var aRowUIElements = oViewModel.getProperty("/formUIElements");
+        var aRowUIElements = oViewModel.getProperty("/formUIElements");
         var bExist = false;
         var that = this;
         var oRowPanel = null;
 
-        oRowPanel = that._findUIElement(sRowIid, "RowPanel", null, false);
-
-        // _.find(aRowUIElements, {
-        //   RowIid: sRowIid,
-        //   ColumnIid: null,
-        //   UIType: "RowPanel",
-        // });
+        oRowPanel = _.find(aRowUIElements, {
+          RowIid: sRowIid,
+          ColumnIid: null,
+          UIType: "RowPanel",
+        });
 
         if (oRowPanel) {
           bExist = true;
@@ -1361,10 +2540,32 @@ sap.ui.define(
             //Generate Header
             this._addRowHeader(oRowPanel, oElem);
 
-            var oPanelGrid = new sap.ui.layout.Grid({
-              defaultSpan: "XL3 L4 M6 S12",
-              hSpacing: 2,
-            }).addStyleClass("hapResponsiveGrid");
+            //Create a form
+            var oForm = new sap.ui.layout.form.Form({
+              editable: true,
+              layout: new sap.ui.layout.form.ResponsiveGridLayout({
+                labelSpanXL: 12,
+                labelSpanL: 12,
+                labelSpanM: 12,
+                labelSpanS: 12,
+                adjustLabelSpan: false,
+                emptySpanXL: 0,
+                emptySpanL: 0,
+                emptySpanM: 0,
+                emptySpanS: 0,
+                columnsXL: 12,
+                columnsL: 12,
+                columnsM: 12,
+                singleContainerFullSize: true,
+              }),
+            });
+            this._addUIElement(sRowIid, "RowPanelForm", null, oForm);
+
+            var oGrid = new sap.ui.layout.Grid({
+              defaultSpan: "L12 M12 S12",
+            }).addStyleClass("hapRowGrid");
+
+            this._addUIElement(sRowIid, "RowPanelGrid", null, oGrid);
 
             if (
               oElem.Description &&
@@ -1387,19 +2588,23 @@ sap.ui.define(
               oDesc.addStyleClass("hapElementDescriptionLevel" + oElem.ApLevel);
               oDesc.setLayoutData(
                 new sap.ui.layout.GridData({
-                  span: "XL12 L12 M12 S12",
+                  span: "L12 M12 S12",
                 })
               );
               this._addUIElement(sRowIid, "RowDescription", null, oDesc);
-              oPanelGrid.addContent(oDesc);
+              oGrid.addContent(oDesc);
             }
 
             if (oElem.Availability !== "H") {
-              this._addCellsNew(oPanelGrid, sRowIid, oViewData);
+              this._addCellsNew(oForm, sRowIid, oViewData);
             }
 
-            oRowPanel.addContent(oPanelGrid);
-            this._addUIElement(sRowIid, "RowPanelGrid", null, oPanelGrid);
+            //Add form to the grid
+            oGrid.addContent(oForm);
+
+            //Add grid to Row Panel
+            oRowPanel.addContent(oGrid);
+            oRowPanel.addContent(oForm);
 
             //Add grid to the parent
             oParent.addContent(oRowPanel);
@@ -1423,56 +2628,119 @@ sap.ui.define(
       },
 
       /**
-       * Get button list of an element
+       * Add row toolbar
        * @function
        * @private
        */
-      _getElementButtons: function (oElem, sElementEditable) {
+      _addRowHeader: function (oParent, oElem) {
         var that = this;
+        var sParamVal;
+        var sNameElement = "";
         var oViewModel = that.getModel("formDetailsModel");
         var oViewData = oViewModel.getData();
-        var sParamVal;
-        var aButtons = [];
+        var oPanelToolbar = new sap.m.OverflowToolbar();
+        var sElementEditable =
+          "{= ${formDetailsModel>/bodyElements/" +
+          oElem.RowIid +
+          "/Availability} === 'X' ? true : false }";
+        var sAttachVisible =
+          "{formDetailsModel>/bodyElements/" +
+          oElem.RowIid +
+          "/AttachmentVisible}";
+        var oPanelHeader = null;
+        this._addUIElement(
+          oElem.RowIid,
+          "RowPanelToolbar",
+          null,
+          oPanelToolbar
+        );
+
+        if (!oElem.FreeInput) {
+          sNameElement = "NameString";
+          oPanelHeader = new sap.m.Text({
+            text: {
+              path:
+                "formDetailsModel>/bodyElements/" +
+                oElem.RowIid +
+                "/NameString",
+            },
+          });
+        } else {
+          sNameElement = "Name";
+          oPanelHeader = new sap.m.Input({
+            value: {
+              path: "formDetailsModel>/bodyElements/" + oElem.RowIid + "/Name",
+            },
+            width: "40%",
+            maxLength: 80,
+            editable: sElementEditable,
+            layoutData: new sap.m.OverflowToolbarLayoutData({
+              moveToOverflow: false,
+            }),
+          });
+        }
+        oPanelHeader.addStyleClass("hapElementNameLevel" + oElem.ApLevel);
+
+        this._addUIElement(oElem.RowIid, "RowPanelHeader", null, oPanelHeader);
+
+        var oSpacer = new sap.m.ToolbarSpacer();
+
+        var oRowIid = new sap.ui.core.CustomData({
+          key: "elementRowIid",
+          value: oElem.RowIid,
+        });
+        var oElementName = new sap.ui.core.CustomData({
+          key: "elementName",
+        });
+        oElementName.bindProperty(
+          "value",
+          "formDetailsModel>/bodyElements/" + oElem.RowIid + "/" + sNameElement
+        );
+
+        oPanelToolbar.addContent(oPanelHeader);
+        oPanelToolbar.addContent(oSpacer);
+
+        // //Müdür formlarında sadece "Yeni Hedef" olacak
+        // //Bölüm hedefleri zaten otomatik olarak bireysel hedeflere gelecek
+        // oNewButton = new sap.m.Button({
+        // 	text: "Yeni Hedef",
+        // 	icon: "sap-icon://goal",
+        // 	press: jQuery.proxy(that._handleAddFreeFormElement, that, {
+        // 		oElem: oElem,
+        // 		sObj: false
+        // 	})
+        // });
+        // aNewButtons.push(oNewButton);
+        // if (!oViewData.formParameters["UX_APPRAISAL_FORM_MANAGER"]) {
+        // 	oNewButton = null;
+        // 	oNewButton = new sap.m.Button({
+        // 		text: "Bölüm Hedeflerinden",
+        // 		icon: "sap-icon://target-group",
+        // 		press: jQuery.proxy(that._handleAddFreeFormElement, that, {
+        // 			oElem: oElem,
+        // 			sObj: true
+        // 		})
+        // 	});
+        // 	aNewButtons.push(oNewButton);
+        // }
 
         sParamVal = oViewData.formParameters["FORM_VB_ROW_INDIVIDUAL_GOALS"];
 
         if (oElem.EnhancementVisible) {
-          var aElementButtons = oViewData.formData?.BodyElementButtons;
-          var oEnhanceButton = _.find(aElementButtons, {
-            RowIid: oElem.RowIid,
-            Id: "ENHANCE",
-          });
-
-          var sEnhanceButtonText = oEnhanceButton
-            ? oEnhanceButton.Text
-            : that.getText("labelAddElement");
-
-          var oEnhanceAddName = new sap.ui.core.CustomData({
-            key: "enhanceName",
-            value: sEnhanceButtonText,
-          });
-
           if (oElem.ElementId !== sParamVal) {
-            var aCustomDataAdd =
-              this._generateCustomDataForActionButtons(oElem);
-            aCustomDataAdd.push(oEnhanceAddName);
             var oAddButton = new sap.m.Button({
               icon: "sap-icon://add",
-              text: sEnhanceButtonText,
+              text: "{i18n>labelAddElement}",
               type: "Accept",
               press: that._handleAddFormElement.bind(that),
               enabled: sElementEditable,
-              customData: aCustomDataAdd,
             });
+            oAddButton.addCustomData(oRowIid);
+            oAddButton.addCustomData(oElementName);
 
-            aButtons.push({
-              Button: oAddButton,
-              Name: "RowAddButton",
-            });
+            oPanelToolbar.addContent(oAddButton);
+            this._addUIElement(oElem.RowIid, "RowAddButton", null, oAddButton);
           } else {
-            var aCustomDataObjAdd =
-              this._generateCustomDataForActionButtons(oElem);
-            aCustomDataObjAdd.push(oEnhanceAddName);
             var oObjectButton = new sap.m.Button({
               text: "Yeni Hedef Ekle",
               icon: "sap-icon://add",
@@ -1482,7 +2750,9 @@ sap.ui.define(
                 oElem: oElem,
                 sObj: false,
               }),
-              customData: aCustomDataObjAdd,
+              layoutData: new sap.m.OverflowToolbarLayoutData({
+                moveToOverflow: false,
+              }),
               /*press: function (oEvent) {
 								var oActionSheet = new sap.m.ActionSheet({
 									showCancelButton: false,
@@ -1517,13 +2787,61 @@ sap.ui.define(
 							}*/
             });
 
-            aButtons.push({
-              Button: oObjectButton,
-              Name: "RowAddButton",
-            });
+            oPanelToolbar.addContent(oObjectButton);
+            this._addUIElement(
+              oElem.RowIid,
+              "RowMenuButton",
+              null,
+              oObjectButton
+            );
+
+            /*var oMenu = new sap.m.Menu({
+						title: "{i18n>labelAddElement}",
+						items: [
+							new sap.m.MenuItem({
+								text: "Serbest Metin",
+								icon: "sap-icon://goal",
+								press: jQuery.proxy(that._handleAddFreeFormElement, that, {
+									oElem: oElem,
+									sObj: false
+								})
+							}),
+							new sap.m.MenuItem({
+								text: "Bölüm Hedeflerinden",
+								icon: "sap-icon://target-group",
+								press: jQuery.proxy(that._handleAddFreeFormElement, that, {
+									oElem: oElem,
+									sObj: true
+								})
+							})
+						]
+					});
+
+					var oMenuButton = new sap.m.MenuButton({
+						text: "{i18n>labelAddElement}",
+						icon: "sap-icon://add",
+						type: "Accept",
+						menu: oMenu,
+						enabled: sElementEditable
+					});
+					oMenuButton.addCustomData(oRowIid);
+					oMenuButton.addCustomData(oElementName);
+					oPanelToolbar.addContent(oMenuButton);
+					this._addUIElement(oElem.RowIid, "RowMenuButton", null, oMenuButton);*/
           }
         }
 
+        sParamVal = oViewData.formParameters["FORM_VB_DP_TRAINING"];
+
+        if (oElem.ElementId === sParamVal) {
+          var oTrainingButton = new sap.m.Button({
+            icon: "sap-icon://e-learning",
+            type: "Reject",
+            text: "Eğitim tarihçesi",
+            press: that._showDevTrainings.bind(that),
+          }).addStyleClass("hapButtonGreen");
+          oPanelToolbar.addContent(oTrainingButton);
+        }
         /*Survey button*/
         if (oElem.FormExist) {
           var sFormEnabled =
@@ -1535,41 +2853,53 @@ sap.ui.define(
             oElem.FormColumnIid +
             "/ValueTxt} === '1' }";
 
-          var oFormId = new sap.ui.core.CustomData({
-            key: "elementFormId",
-            value: {
-              path:
-                "formDetailsModel>/bodyElements/" + oElem.RowIid + "/FormId",
-            },
+          var oRowIid4 = new sap.ui.core.CustomData({
+            key: "elementRowIid",
+            value: oElem.RowIid,
           });
-
-          var aCustomDataSurvey =
-            this._generateCustomDataForActionButtons(oElem);
-          aCustomDataSurvey.push(oFormId);
-
+          var oFormId4 = new sap.ui.core.CustomData({
+            key: "elementFormId",
+            value: oElem.FormId,
+          });
+          var oElementName4 = new sap.ui.core.CustomData({
+            key: "elementName",
+          });
+          oElementName4.bindProperty(
+            "value",
+            "formDetailsModel>/bodyElements/" + oElem.RowIid + "/Name"
+          );
           var oSurveyButton = new sap.m.Button({
             icon: "sap-icon://survey",
             type: "Accept",
             press: that._handleOpenSurvey.bind(that),
             enabled: sFormEnabled,
-            customData: aCustomDataSurvey,
           });
+          oSurveyButton.addCustomData(oRowIid4);
+          oSurveyButton.addCustomData(oFormId4);
+          oSurveyButton.addCustomData(oElementName4);
 
-          aButtons.push({
-            Button: oSurveyButton,
-            Name: "RowSurveyButton",
-          });
+          oPanelToolbar.addContent(oSurveyButton);
+          this._addUIElement(
+            oElem.RowIid,
+            "RowSurveyButton",
+            null,
+            oSurveyButton
+          );
         }
 
         /*Attachment button*/
         if (oElem.AttachmentVisible) {
-          var sAttachVisible =
-            "{formDetailsModel>/bodyElements/" +
-            oElem.RowIid +
-            "/AttachmentVisible}";
-
-          var aCustomDataAtt = this._generateCustomDataForActionButtons(oElem);
-
+          var oRowIid2 = new sap.ui.core.CustomData({
+            key: "elementRowIid",
+            value: oElem.RowIid,
+          });
+          var oElementName2 = new sap.ui.core.CustomData({
+            key: "elementName",
+          });
+          oElementName2.bindProperty(
+            "value",
+            "formDetailsModel>/bodyElements/" + oElem.RowIid + "/Name"
+          );
           var oAttButton = new sap.m.Button({
             icon: "sap-icon://add-document",
             text: "{i18n>addAttachmentFile}",
@@ -1579,92 +2909,92 @@ sap.ui.define(
             }),
             enabled: sElementEditable,
             visible: sAttachVisible,
-            customData: aCustomDataAtt,
           });
+          oAttButton.addCustomData(oRowIid2);
+          oAttButton.addCustomData(oElementName2);
+          this._addUIElement(oElem.RowIid, "RowAttButton", null, oAttButton);
+          oPanelToolbar.addContent(oAttButton);
+        }
 
-          aButtons.push({
-            Button: oAttButton,
-            Name: "RowAttButton",
-          });
-
-          // var oRowIid3 = new sap.ui.core.CustomData({
-          //   key: "elementRowIid",
-          //   value: oElem.RowIid,
-          // });
-          // var oElementName3 = new sap.ui.core.CustomData({
-          //   key: "elementName",
-          //   value: {
-          //     path: "formDetailsModel>/bodyElements/" + oElem.RowIid + "/Name",
-          //   },
-          // });
-          var aCustomDataAttList =
-            this._generateCustomDataForActionButtons(oElem);
-
-          var oAttListButton = new sap.m.Button({
-            icon: "sap-icon://attachment",
-            type: "Reject",
-            text: {
-              parts: [
-                {
-                  path: "i18n>attachmentList",
-                },
-                {
-                  path:
-                    "formDetailsModel>/attachmentCollection/" +
-                    oElem.RowIid +
-                    "/attachmentList",
-                },
-              ],
-              formatter: function (sText, aAttList) {
-                try {
-                  if (aAttList) {
-                    if (aAttList.length > 0) {
-                      return sText + " (" + aAttList.length + ")";
-                    } else {
-                      return sText;
-                    }
+        var oRowIid3 = new sap.ui.core.CustomData({
+          key: "elementRowIid",
+          value: oElem.RowIid,
+        });
+        var oElementName3 = new sap.ui.core.CustomData({
+          key: "elementName",
+        });
+        oElementName3.bindProperty(
+          "value",
+          "formDetailsModel>/bodyElements/" + oElem.RowIid + "/Name"
+        );
+        var oAttListButton = new sap.m.Button({
+          icon: "sap-icon://attachment",
+          type: "Reject",
+          text: {
+            parts: [
+              {
+                path: "i18n>attachmentList",
+              },
+              {
+                path:
+                  "formDetailsModel>/attachmentCollection/" +
+                  oElem.RowIid +
+                  "/attachmentList",
+              },
+            ],
+            formatter: function (sText, aAttList) {
+              try {
+                if (aAttList) {
+                  if (aAttList.length > 0) {
+                    return sText + " (" + aAttList.length + ")";
                   } else {
                     return sText;
                   }
-                } catch (oErr) {
+                } else {
                   return sText;
                 }
-              },
+              } catch (oErr) {
+                return sText;
+              }
             },
-            press: that._handleListAttachment.bind(that),
-            visible: {
-              path:
-                "formDetailsModel>/attachmentCollection/" +
-                oElem.RowIid +
-                "/attachmentList",
-              formatter: function (aAttList) {
-                try {
-                  if (aAttList) {
-                    if (aAttList.length > 0) {
-                      return true;
-                    } else {
-                      return false;
-                    }
+          },
+          press: that._handleListAttachment.bind(that),
+          visible: {
+            path:
+              "formDetailsModel>/attachmentCollection/" +
+              oElem.RowIid +
+              "/attachmentList",
+            formatter: function (aAttList) {
+              try {
+                if (aAttList) {
+                  if (aAttList.length > 0) {
+                    return true;
                   } else {
                     return false;
                   }
-                } catch (oErr) {
+                } else {
                   return false;
                 }
-              },
+              } catch (oErr) {
+                return false;
+              }
             },
-            customData: aCustomDataAttList,
-          });
+          },
+        });
+        oAttListButton.addCustomData(oRowIid3);
+        oAttListButton.addCustomData(oElementName3);
 
-          aButtons.push({
-            Button: oAttListButton,
-            Name: "RowAttListButton",
-          });
-          /*Attachment button*/
-        }
+        this._addUIElement(
+          oElem.RowIid,
+          "RowAttListButton",
+          null,
+          oAttListButton
+        );
+        oPanelToolbar.addContent(oAttListButton);
+
+        /*Attachment button*/
 
         if (oElem.DeletionVisible) {
-          var aCustomDataDel = this._generateCustomDataForActionButtons(oElem);
           var oRemoveButton = new sap.m.Button({
             icon: "sap-icon://delete",
             type: "Reject",
@@ -1673,130 +3003,17 @@ sap.ui.define(
             layoutData: new sap.m.OverflowToolbarLayoutData({
               moveToOverflow: false,
             }),
-            customData: aCustomDataDel,
           });
-
-          aButtons.push({
-            Button: oRemoveButton,
-            Name: "RowDeleteButton",
-          });
+          oRemoveButton.addCustomData(oRowIid);
+          oRemoveButton.addCustomData(oElementName);
+          this._addUIElement(
+            oElem.RowIid,
+            "RowDeleteButton",
+            null,
+            oRemoveButton
+          );
+          oPanelToolbar.addContent(oRemoveButton);
         }
-
-        return aButtons;
-      },
-      /**
-       * Generate custom data for action buttons
-       * To avoid custom data memory leak error!!!
-       * @function
-       * @private
-       */
-      _generateCustomDataForActionButtons: function (oElem) {
-        var aCustomData = [];
-
-        var oRowIid = new sap.ui.core.CustomData({
-          key: "elementRowIid",
-          value: {
-            path: "formDetailsModel>/bodyElements/" + oElem.RowIid + "/RowIid",
-          },
-        });
-        aCustomData.push(oRowIid);
-
-        var oElementName = new sap.ui.core.CustomData({
-          key: "elementName",
-          value: {
-            path: "formDetailsModel>/bodyElements/" + oElem.RowIid + "/Name",
-          },
-        });
-
-        aCustomData.push(oElementName);
-
-        var oElementLevel = new sap.ui.core.CustomData({
-          key: "elementLevel",
-          value: {
-            path: "formDetailsModel>/bodyElements/" + oElem.RowIid + "/ApLevel",
-          },
-        });
-
-        aCustomData.push(oElementLevel);
-
-        return aCustomData;
-      },
-
-      /**
-       * Add row toolbar
-       * @function
-       * @private
-       */
-      _addRowHeader: function (oParent, oElem) {
-        var that = this;
-        var sNameElement = "";
-        var sElementEditable =
-          "{= ${formDetailsModel>/bodyElements/" +
-          oElem.RowIid +
-          "/Availability} === 'X' ? true : false }";
-        var oPanelToolbar = new sap.m.OverflowToolbar();
-
-        var oPanelHeader = null;
-        this._addUIElement(
-          oElem.RowIid,
-          "RowPanelToolbar",
-          null,
-          oPanelToolbar
-        );
-
-        if (!oElem.FreeInput) {
-          sNameElement = "Name";
-          oPanelHeader = new sap.m.Text({
-            text: {
-              path: "formDetailsModel>/bodyElements/" + oElem.RowIid + "/Name",
-            },
-          });
-        } else {
-          sNameElement = "Name";
-          oPanelHeader = new sap.m.Input({
-            value: {
-              path: "formDetailsModel>/bodyElements/" + oElem.RowIid + "/Name",
-            },
-            width: "40%",
-            maxLength: 80,
-            editable: sElementEditable,
-            layoutData: new sap.m.OverflowToolbarLayoutData({
-              moveToOverflow: false,
-            }),
-          });
-        }
-        oPanelHeader.addStyleClass("hapElementNameLevel" + oElem.ApLevel);
-
-        this._addUIElement(oElem.RowIid, "RowPanelHeader", null, oPanelHeader);
-
-        var oSpacer = new sap.m.ToolbarSpacer();
-
-        var oRowIid = new sap.ui.core.CustomData({
-          key: "elementRowIid",
-          value: {
-            path: "formDetailsModel>/bodyElements/" + oElem.RowIid + "/RowIid",
-          },
-        });
-        var oElementName = new sap.ui.core.CustomData({
-          key: "elementName",
-          value: {
-            path:
-              "formDetailsModel>/bodyElements/" +
-              oElem.RowIid +
-              "/" +
-              sNameElement,
-          },
-        });
-
-        oPanelToolbar.addContent(oPanelHeader);
-        oPanelToolbar.addContent(oSpacer);
-
-        var aRowButtons = this._getElementButtons(oElem, sElementEditable);
-
-        $.each(aRowButtons, function (i, oButton) {
-          oPanelToolbar.addContent(oButton.Button);
-          that._addUIElement(oElem.RowIid, oButton.Name, null, oButton.Button);
-        });
 
         oParent.setHeaderToolbar(oPanelToolbar);
       },
@@ -1806,8 +3023,60 @@ sap.ui.define(
        * @function
        * @private
        */
+      // _addCells: function (oParent, sRowIid, oViewData) {
+      //   var that = this;
+      //   var oBLR = new sap.ui.layout.BlockLayoutRow();
+      //   oParent.addContent(oBLR);
+      //   $.each(oViewData.formData["BodyColumns"], function (sIndex, oColumn) {
+      //     if (oViewData.bodyCells[sRowIid].hasOwnProperty(oColumn.ColumnIid)) {
+      //       var oCell = oViewData.bodyCells[sRowIid][oColumn.ColumnIid];
+      //       if (
+      //         (oCell.CellValueAvailability !== "H" &&
+      //           oCell.CellValueAvailability !== "K") ||
+      //         oCell.CellNoteAvailability !== "H"
+      //       ) {
+      //         var oFB = new sap.m.FlexBox({
+      //           direction: "Column",
+      //           alignItems: "Start",
+      //           justifyContent: "Center",
+      //         })
+      //           .addStyleClass("sapUiNoContentPadding")
+      //           .addStyleClass("hapCellContainer");
+      //         var oBLC = new sap.ui.layout.BlockLayoutCell()
+      //           .addStyleClass("sapUiNoContentPadding")
+      //           .addStyleClass("sapUiTinyMarginEnd");
+      //         that._addUIElement(
+      //           sRowIid,
+      //           "CellContainer",
+      //           oColumn.ColumnIid,
+      //           oFB
+      //         );
+
+      //         if (oCell.LayoutType === "R") {
+      //           oFB.setLayoutData(
+      //             new sap.ui.layout.GridData({
+      //               span: "L12 M12 S12",
+      //             })
+      //           );
+      //           oBLC.setWidth(100);
+      //         }
+      //         oBLR.addContent(oBLC);
+
+      //         //Add cell content
+      //         that._addCell(oBLC, oCell, oViewData);
+      //       }
+      //     }
+      //   });
+      // },
+
+      /**
+       * Add cells according to the doc tab
+       * @function
+       * @private
+       */
       _addCellsNew: function (oParent, sRowIid, oViewData) {
         var that = this;
+
         //bu satırda bölüm hedefi var mı?
         var oObjTeam = _.find(oViewData.formData["BodyCells"], {
           RowIid: sRowIid,
@@ -1820,7 +3089,8 @@ sap.ui.define(
           function (o) {
             return (
               o.RowIid == sRowIid &&
-              (o.ColumnIid == that._sFinAppColumn ||
+              (o.ColumnIid == that._sSelfAppColumn ||
+                o.ColumnIid == that._sFinAppColumn ||
                 o.ColumnIid == that._sEmpAppColumn) &&
               (o.CellValueAvailability !== "H" ||
                 o.CellNoteAvailability !== "H")
@@ -1836,83 +3106,241 @@ sap.ui.define(
                 oCell.CellValueAvailability !== "K") ||
               oCell.CellNoteAvailability !== "H"
             ) {
-              var oVB = new sap.m.VBox({
-                width: "100%",
-              });
-
-              var oEL = null;
-
+              var oFC = new sap.ui.layout.form.FormContainer();
+              var oFE = null;
               if (
                 oCell.CellValueAvailability !== "H" &&
                 oCell.CellValueAvailability !== "K"
               ) {
-                oEL = new sap.m.Label({
-                  text:
+                oFE = new sap.ui.layout.form.FormElement({
+                  label:
                     "{path:'formDetailsModel>/bodyCells/" +
                     oCell.RowIid +
                     "/" +
                     oCell.ColumnIid +
-                    "/Caption'}:",
+                    "/Caption'}",
                 });
               } else if (oCell.CellNoteAvailability !== "H") {
-                oEL = new sap.m.Label({
-                  text:
+                oFE = new sap.ui.layout.form.FormElement({
+                  label:
                     "{path:'formDetailsModel>/bodyCells/" +
                     oCell.RowIid +
                     "/" +
                     oCell.ColumnIid +
-                    "/CaptionNote'}:",
+                    "/CaptionNote'}",
                 });
               }
-              oVB.addItem(oEL);
-              oParent.addContent(oVB);
+              oFC.addFormElement(oFE);
+              oParent.addFormContainer(oFC);
 
               //Add cell content
-              that._addCellNew(oVB, oCell, oViewData);
-              //   if (
-              //     oCell.ColumnIid === that._sObjColumn ||
-              //     oCell.ColumnIid === that._sObjTeamColumn
-              //   ) {
-              //     if (!_.isEmpty(oObjTeam)) {
-              //       //eğer bölüm hedefi varsa bu 2 sütunu tek satırda göster
-              //       oFC.setLayoutData(
-              //         new sap.ui.layout.GridData({
-              //           span: "XL6 L6 M6 S12",
-              //         })
-              //       );
-              //     } else {
-              //       //Müdür formunda bölüm hedefi sütunu olmayacak
-              //       //sadece _sObjColumn u tüm satıha yay :)
-              //       oFC.setLayoutData(
-              //         new sap.ui.layout.GridData({
-              //           span: "XL12 L12 M12 S12",
-              //         })
-              //       );
-              //     }
-              //   } else if (
-              //     oCell.ColumnIid === that._sFinAppColumn ||
-              //     oCell.ColumnIid === that._sEmpAppColumn
-              //   ) {
-              //     oFC.setLayoutData(
-              //       new sap.ui.layout.GridData({
-              //         span: "XL2 L4 M6 S12",
-              //       })
-              //     );
-              //   } else {
-              //     oFC.setLayoutData(
-              //       new sap.ui.layout.GridData({
-              //         span: "XL2 L4 M6 S12",
-              //       })
-              //     );
-              //   }
+              that._addCellNew(oFE, oCell, oViewData);
+              if (
+                oCell.ColumnIid === that._sObjColumn ||
+                oCell.ColumnIid === that._sObjTeamColumn
+              ) {
+                if (!_.isEmpty(oObjTeam)) {
+                  //eğer bölüm hedefi varsa bu 2 sütunu tek satırda göster
+                  oFC.setLayoutData(
+                    new sap.ui.layout.GridData({
+                      span: "XL6 L6 M6 S12",
+                    })
+                  );
+                } else {
+                  //Müdür formunda bölüm hedefi sütunu olmayacak
+                  //sadece _sObjColumn u tüm satıha yay :)
+                  oFC.setLayoutData(
+                    new sap.ui.layout.GridData({
+                      span: "XL12 L12 M12 S12",
+                    })
+                  );
+                }
+              } else if (
+                oCell.ColumnIid === that._sFinAppColumn ||
+                oCell.ColumnIid === that._sEmpAppColumn
+              ) {
+                oFC.setLayoutData(
+                  new sap.ui.layout.GridData({
+                    span: "XL2 L4 M6 S12",
+                  })
+                );
+              } else {
+                oFC.setLayoutData(
+                  new sap.ui.layout.GridData({
+                    span: "XL2 L4 M6 S12",
+                  })
+                );
+              }
             }
           }
         });
       },
 
+      // _addCell: function (oParent, oCell, oViewData) {
+      //   var that = this;
+      //   var oFBC = new sap.m.FlexBox({
+      //     direction: "Column",
+      //     alignItems: "Start",
+      //   });
+      //   oParent.addContent(oFBC);
+
+      //   if (oCell.RowIid !== "0000" && oCell.ColumnIid !== "0000") {
+      //     if (
+      //       oCell.CellValueAvailability !== "H" &&
+      //       oCell.CellValueAvailability !== "K"
+      //     ) {
+      //       //Column label
+      //       var sCaptionVisible =
+      //         "{= ${formDetailsModel>/bodyCells/" +
+      //         oCell.RowIid +
+      //         "/" +
+      //         oCell.ColumnIid +
+      //         "/Caption} === '' ? false : true }";
+
+      //       var oCL = new sap.m.Label({
+      //         text: oCell.Caption + ":",
+      //         visible: sCaptionVisible,
+      //         tooltip: oCell.RowIid + "-" + oCell.ColumnIid,
+      //       });
+
+      //       oCL.addStyleClass("hapElementCaption");
+      //       that._addUIElement(
+      //         oCell.RowIid,
+      //         "CellValueCaption",
+      //         oCell.ColumnIid,
+      //         oCL
+      //       );
+      //       oFBC.addItem(oCL);
+      //       switch (oCell.ValueType) {
+      //         case "N":
+      //           switch (oCell.LayoutType) {
+      //             case "M":
+      //               /*Multi input*/
+      //               var oEl = this._addMultiInput(oCell);
+      //               break;
+      //             case "J":
+      //               /*Text area json*/
+      //               var oEl = this._addTextAreaObjective(oCell);
+      //               break;
+      //             default:
+      //               var oEl = this._addInputField(oCell, "ValueNum");
+      //           }
+      //           break;
+
+      //         case "D":
+      //           var oEl = this._addDateField(oCell);
+      //           break;
+
+      //         case "S":
+      //           /*String*/
+      //           switch (oCell.LayoutType) {
+      //             case "S":
+      //               /*String*/
+      //               var oEl = this._addInputField(oCell, "ValueString");
+      //               break;
+      //             case "R":
+      //               /*Radiobutton*/
+      //               var oEl = this._addRadioButton(oCell);
+      //               break;
+      //             case "L":
+      //               //var oEl = this._addRadioButton(oCell);
+      //               var oEl = this._addListBox(oCell);
+      //               /*sap.m.Select*
+      // 						break;
+      // 					case "C":
+      // 						var oEl = this._addCheckBox(oCell);
+      // 						break;
+      // 					case "T":
+      // 						var oEl = this._addCheckBox(oCell);
+      // 						break;
+      // 					case "M":
+      // 						/*Multi input*/
+      //               var oEl = this._addMultiInput(oCell);
+      //               break;
+      //             case "J":
+      //               /*Text area json*/
+      //               var oEl = this._addTextAreaObjective(oCell);
+      //               break;
+      //           }
+      //           break;
+      //       }
+      //       that._addUIElement(oCell.RowIid, "CellValue", oCell.ColumnIid, oEl);
+      //       //oEl.addStyleClass("hapCellElement");
+      //       oFBC.addItem(oEl);
+      //     }
+
+      //     if (
+      //       oCell.CellNoteAvailability !== "H" &&
+      //       oCell.LayoutType !== "M" &&
+      //       oCell.LayoutType !== "J"
+      //     ) {
+      //       //Note label
+      //       var sCellNoteEditablePath =
+      //         "formDetailsModel>/bodyCells/" +
+      //         oCell.RowIid +
+      //         "/" +
+      //         oCell.ColumnIid +
+      //         "/CellNoteAvailability";
+
+      //       var sCaptionNoteVisible =
+      //         "{= ${formDetailsModel>/bodyCells/" +
+      //         oCell.RowIid +
+      //         "/" +
+      //         oCell.ColumnIid +
+      //         "/CaptionNote} === '' ? false : true }";
+
+      //       var oCNL = new sap.m.Label({
+      //         text: oCell.CaptionNote + ":",
+      //         visible: sCaptionNoteVisible,
+      //       });
+      //       oCNL.addStyleClass("hapElementCaption");
+      //       that._addUIElement(
+      //         oCell.RowIid,
+      //         "CellNoteCaption",
+      //         oCell.ColumnIid,
+      //         oCNL
+      //       );
+      //       oFBC.addItem(oCNL);
+
+      //       var oTA = new sap.m.TextArea({
+      //         value:
+      //           "{formDetailsModel>/bodyCells/" +
+      //           oCell.RowIid +
+      //           "/" +
+      //           oCell.ColumnIid +
+      //           "/NoteString}",
+      //         cols: 50,
+      //         rows: 5, //"{= parseInt(${formDetailsModel>/bodyCells/" + oCell.RowIid + "/" + oCell.ColumnIid + "/NoteLines})}",
+      //         editable: {
+      //           path: sCellNoteEditablePath,
+      //           formatter: function (sCellNoteAvailability) {
+      //             if (
+      //               sCellNoteAvailability === "X" ||
+      //               sCellNoteAvailability === "A"
+      //             ) {
+      //               return true;
+      //             } else {
+      //               return false;
+      //             }
+      //           },
+      //         },
+      //       }).addStyleClass("hapTextArea");
+      //       that._addUIElement(oCell.RowIid, "CellNote", oCell.ColumnIid, oTA);
+      //       oTA.addStyleClass("hapCellElement");
+      //       oFBC.addItem(oTA);
+      //     }
+      //   }
+      // }, //_addCell
+
       _addCellNew: function (oParent, oCell, oViewData) {
         var that = this;
         var oEl = null;
+        var oTg = null;
+
+        var oFB = new sap.m.FlexBox({
+          direction: "Column",
+          width: "100%",
+        });
 
         var aBodyElements = oViewData.bodyElements;
         var sLastRow = oViewData.formParameters["RESULT_LINE"];
@@ -1991,15 +3419,18 @@ sap.ui.define(
             }
             that._addUIElement(oCell.RowIid, "CellValue", oCell.ColumnIid, oEl);
             //oEl.addStyleClass("hapCellElement");
-            // if (oCell.LayoutType === "R") {
-            //   oEl.setLayoutData(
-            //     new sap.ui.layout.GridData({
-            //       span: "XL12 L12 M12 S12",
-            //     })
-            //   );
-            // }
-            oParent.addItem(oEl);
+            if (oCell.LayoutType === "R") {
+              oEl.setLayoutData(
+                new sap.ui.layout.GridData({
+                  span: "XL12 L12 M12 S12",
+                })
+              );
+            }
+            oFB.addItem(oEl);
 
+            if (oTg) {
+              oFB.addItem(oTg);
+            }
             //oParent.addField(oEl);
           }
 
@@ -2071,13 +3502,13 @@ sap.ui.define(
                 oCell.ColumnIid,
                 oSC
               );
-              oParent.addItem(oSC);
+              oFB.addItem(oSC);
             } else {
               var oTA = new sap.m.TextArea({
                 value: {
                   path: sCellNoteStringPath,
                 },
-                rows: 3, //"{= parseInt(${formDetailsModel>/bodyCells/" + oCell.RowIid + "/" + oCell.ColumnIid + "/NoteLines})}",
+                rows: 2, //"{= parseInt(${formDetailsModel>/bodyCells/" + oCell.RowIid + "/" + oCell.ColumnIid + "/NoteLines})}",
                 width: "100%",
                 editable: {
                   path: sCellNoteEditablePath,
@@ -2101,65 +3532,14 @@ sap.ui.define(
               );
               //oTA.addStyleClass("hapCellElement");
               //oParent.addField(oTA);
-              oParent.addItem(oTA);
+              oFB.addItem(oTA);
             }
           }
+          oParent.addField(oFB);
         }
-      }, //_addCellNew
+      }, //_addCell
 
       _addNewElementFreeFormCells: function (
-        oParent,
-        sNewRowIid,
-        oEnhanceData
-      ) {
-        var that = this;
-        var aBodyElements = oEnhanceData.BodyElements.results;
-        var aBodyCells = oEnhanceData.BodyCells.results;
-        var aBodyColumns = oEnhanceData.BodyColumns.results;
-        var oElem = _.find(aBodyElements, ["RowIid", sNewRowIid]);
-        var aNewCells = _.filter(aBodyCells, ["RowIid", sNewRowIid]);
-
-        if (oElem.FreeInput) {
-          var oVB = new sap.m.VBox({
-            width: "100%",
-            layoutData: new sap.ui.layout.GridData({
-              span: "XL12 L12 M12 S12",
-            }),
-          }).addStyleClass("resetMinHeight");
-
-          var oFIL = new sap.m.Label({
-            text: `{formDetailsModel>/bodyCells/${sNewRowIid}/${that._sObjColumn}/Caption}`,
-            width: "100%",
-          });
-
-          oVB.addItem(oFIL);
-          var oFI = new sap.m.Input({
-            value: `{formDetailsModel>/bodyElements/${sNewRowIid}/Name}`,
-            maxLength: 80,
-            width: "100%",
-          });
-
-          oVB.addItem(oFI);
-
-          oParent.addContent(oVB);
-        }
-
-        //now add cell
-        $.each(aNewCells, function (i, oCell) {
-          var oColumn = _.find(aBodyColumns, ["ColumnIid", oCell.ColumnIid]);
-          if (oColumn) {
-            if (
-              oCell.CellValueAvailability === "X" ||
-              oCell.CellValueAvailability === "R" ||
-              oCell.CellNoteAvailability === "X"
-            ) {
-              that._addNewElementFreeFormCell(oParent, oCell);
-            }
-          }
-        });
-      }, //_addNewElementFreeFormCells
-
-      _addNewElementFreeFormCellsOld: function (
         oParent,
         sNewRowIid,
         oEnhanceData
@@ -2217,167 +3597,6 @@ sap.ui.define(
       }, //_addNewElementFreeFormCells
 
       _addNewElementFreeFormCell: function (oParent, oCell) {
-        var that = this;
-        var oViewModel = this.getModel("formDetailsModel");
-        var oViewData = oViewModel.getData();
-
-        if (
-          oCell.RowIid !== "0000" &&
-          oCell.ColumnIid !== "0000" &&
-          oCell.ColumnIid !== that._sObjTeamColumn
-        ) {
-          //Column label
-          var oVB = new sap.m.VBox({
-            width: "100%",
-          });
-
-          var oEL = null;
-
-          if (
-            oCell.CellValueAvailability !== "H" &&
-            oCell.CellValueAvailability !== "K"
-          ) {
-            oEL = new sap.m.Label({
-              text: `{formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/Caption}`,
-            });
-          } else if (oCell.CellNoteAvailability !== "H") {
-            oEL = new sap.m.Label({
-              text: `{formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/CaptionNote}`,
-            });
-          }
-          oVB.addItem(oEL);
-          oParent.addContent(oVB);
-
-          //Add cell content
-
-          that._addCellNew(oVB, oCell, oViewData);
-
-          // if (
-          //   oCell.CellValueAvailability !== "H" &&
-          //   oCell.CellValueAvailability !== "K"
-          // ) {
-          //   oEL = new sap.m.Label({
-          //     text: `{formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/Caption}`
-
-          //   });
-
-          //   switch (oCell.ValueType) {
-          //     case "N":
-          //       switch (oCell.LayoutType) {
-          //         case "M":
-          //           /*Multi input*/
-          //           var oEl = this._addMultiInput(oCell);
-          //           break;
-          //         case "J":
-          //           /*Text area json*/
-          //           var oEl = this._addTextAreaObjective(oCell);
-          //           break;
-          //         default:
-          //           var oEl = this._addInputField(oCell, "ValueNum");
-          //       }
-          //       break;
-          //     case "D":
-          //       var oEl = this._addDateField(oCell);
-          //       break;
-          //     case "S":
-          //       /*String*/
-          //       switch (oCell.LayoutType) {
-          //         case "S":
-          //           /*String*/
-          //           var oEl = this._addInputField(oCell, "ValueString");
-          //           break;
-          //         case "R":
-          //           /*Radiobutton*/
-          //           var oEl = this._addRadioButton(oCell);
-          //           break;
-          //         case "L":
-          //           //var oEl = this._addRadioButton(oCell);
-          //           var oEl = this._addListBox(oCell); /*sap.m.Select*/
-          //           break;
-          //         case "C":
-          //           var oEl = this._addCheckBox(oCell);
-          //           break;
-          //         case "T":
-          //           var oEl = this._addInputField(oCell, "ValueNum");
-          //           break;
-          //         case "M":
-          //           /*Multi input*/
-          //           var oEl = this._addMultiInput(oCell);
-          //           break;
-          //         case "J":
-          //           /*Text area json*/
-          //           var oEl = this._addTextAreaObjective(oCell);
-          //           break;
-          //       }
-          //       break;
-          //   }
-          //   that._addUIElement(oCell.RowIid, "CellValue", oCell.ColumnIid, oEl);
-          //   //oEl.addStyleClass("hapCellElement");
-          //   oEl.setLayoutData(
-          //     new sap.ui.layout.GridData({
-          //       span: "XL4 L4 M8 S12",
-          //     })
-          //   );
-          //   //oParent.addContent(oEl);
-          //   oFE.addField(oEl);
-          // }
-
-          // if (
-          //   oCell.CellNoteAvailability !== "H" &&
-          //   oCell.LayoutType !== "M" &&
-          //   oCell.LayoutType !== "J"
-          // ) {
-          //   var sCellNoteEditablePath =
-          //     "formDetailsModel>/bodyCells/" +
-          //     oCell.RowIid +
-          //     "/" +
-          //     oCell.ColumnIid +
-          //     "/CellNoteAvailability";
-
-          //   //Note label
-          //   oFE = null;
-          //   oFE = new sap.ui.layout.form.FormElement({
-          //     label: oCell.CaptionNote,
-          //   });
-          //   oFC.addFormElement(oFE);
-          //   oParent.addFormContainer(oFC);
-
-          //   var oTA = new sap.m.TextArea({
-          //     value:
-          //       "{formDetailsModel>/bodyCells/" +
-          //       oCell.RowIid +
-          //       "/" +
-          //       oCell.ColumnIid +
-          //       "/NoteString}",
-          //     cols: 50,
-          //     rows: 5,
-          //     editable: {
-          //       path: sCellNoteEditablePath,
-          //       formatter: function (sCellNoteAvailability) {
-          //         if (
-          //           sCellNoteAvailability === "X" ||
-          //           sCellNoteAvailability === "A"
-          //         ) {
-          //           return true;
-          //         } else {
-          //           return false;
-          //         }
-          //       },
-          //     },
-          //   });
-          //   oTA.setLayoutData(
-          //     new sap.ui.layout.GridData({
-          //       span: "XL4 L4 M8 S12",
-          //     })
-          //   );
-          //   that._addUIElement(oCell.RowIid, "CellNote", oCell.ColumnIid, oTA);
-          //   //oParent.addContent(oTA);
-          //   oFE.addField(oTA);
-          // }
-        }
-      }, //_addNewElementFreeFormCellNew
-
-      _addNewElementFreeFormCellOld: function (oParent, oCell) {
         var that = this;
 
         if (
@@ -2551,7 +3770,7 @@ sap.ui.define(
               if (sColIid === that._sWeightColumn) {
                 return "100px";
               } else {
-                return "150px";
+                return "200px";
               }
             },
           },
@@ -2594,7 +3813,7 @@ sap.ui.define(
             ],
             formatter: that._getCellEditable.bind(that),
           },
-          width: "130px",
+          width: "100px",
           placeholder: "Tarih seçiniz",
         }); //.addStyleClass("hapDateField");
         return oDF;
@@ -2604,10 +3823,26 @@ sap.ui.define(
         try {
           var oViewModel = this.getModel("formDetailsModel");
           var oBodyCells = oViewModel.getProperty("/bodyCells/" + oCell.RowIid);
+          var sEduSel = true;
+          if (
+            oCell.ColumnIid !== this._sEduColumn &&
+            oBodyCells.hasOwnProperty(this._sEduColumn)
+          ) {
+            sEduSel = false;
+            var oEduCell = oBodyCells[this._sEduColumn];
+            if (
+              oEduCell.ValueNum === "1" ||
+              oEduCell.ValueNum == 1 ||
+              oEduCell.ValueNum === "0001"
+            ) {
+              sEduSel = true;
+            }
+          }
 
           if (
-            sCellValueAvailability === "X" ||
-            sCellValueAvailability === "R"
+            (sCellValueAvailability === "X" ||
+              sCellValueAvailability === "R") &&
+            sEduSel
           ) {
             return true;
           } else {
@@ -2647,9 +3882,27 @@ sap.ui.define(
             ],
             formatter: that._getCellEditable.bind(that),
           },
+          // formatter: function(sCellValueAvailability) {
+          // 	if (sCellValueAvailability === "X" || sCellValueAvailability === "R") {
+          // 		return true;
+          // 	} else {
+          // 		return false;
+          // 	}
+          // }
+          //},
           type: "AcceptReject",
           change: that._onSwitchValueChanged.bind(that),
         }).addStyleClass("hapCheckBox");
+
+        if (oCell.ColumnIid === that._sManAppColumn) {
+          oCB.attachBrowserEvent("mouseover", function () {
+            jQuery.sap.delayedCall(500, that, that._openValDescInfo, [this]);
+          });
+
+          oCB.attachBrowserEvent("mouseout", function () {
+            that._closeValDescInfo(this);
+          });
+        }
 
         //Binding reference for value set
         oCB.data("bindingReference", sCellValue);
@@ -2658,7 +3911,56 @@ sap.ui.define(
 
         return oCB;
       },
+      _openValDescInfo: function (oSource) {
+        var that = this;
+        var oViewModel = this.getModel("formDetailsModel");
+        var aCellValues = oViewModel.getProperty("/formData/BodyCellValues");
+        var sRowIid = oSource.data("elementRowIid");
+        var sColumnIid = oSource.data("elementColumnIid");
+        var aValueDesc = [];
 
+        if (
+          sRowIid === this._currentRowIid &&
+          sColumnIid === this._currentColumnIid
+        ) {
+          return;
+        }
+
+        this._currentRowIid = sRowIid;
+        this._currentColumnIid = sColumnIid;
+
+        $.each(aCellValues, function (sKey, oCellValue) {
+          if (
+            oCellValue.RowIid === sRowIid &&
+            oCellValue.ColumnIid === sColumnIid
+          ) {
+            aValueDesc.push(oCellValue);
+          }
+        });
+
+        oViewModel.setProperty("/currentCellValueDescription", aValueDesc);
+
+        if (aValueDesc.length > 0) {
+          if (!that._oValDescPopover) {
+            that._oValDescPopover = sap.ui.xmlfragment(
+              "hcm.ux.hapv2_1.fragment.ValueDescription",
+              this
+            );
+            // connect dialog to view (models, lifecycle)
+            that.getView().addDependent(that._oValDescPopover);
+          } else {
+            that._oValDescPopover.close();
+          }
+          that._oValDescPopover.openBy(oSource);
+        }
+      },
+      _closeValDescInfo: function (oSource) {
+        if (this._oValDescPopover) {
+          this._currentRowIid = "0000";
+          this._currentColumnIid = "0000";
+          this._oValDescPopover.close();
+        }
+      },
       _addRadioButton: function (oCell) {
         var that = this;
         var sCell =
@@ -2899,57 +4201,49 @@ sap.ui.define(
           },
 
           change: function (oEvent) {
-            if (
-              oCell.ColumnIid === that._sFinAppColumn ||
-              oCell.ColumnIid === that._sEmpAppColumn
-            ) {
-              var sRowIid = oEvent.getSource().data("RowIid");
-              var sColumnIid = oEvent.getSource().data("ColumnIid");
-              var aBodyCells = oViewData.formData["BodyCells"];
-              var oLine = _.find(aBodyCells, {
-                RowIid: sRowIid,
-                ColumnIid: sColumnIid,
-              });
-              oLine.ValueNum = "0";
-              oLine.ValueText = "";
-              oLine.ValueTxt = "";
-              oViewModel.setProperty("/formData/BodyCells", aBodyCells);
+            var sRowIid = oEvent.getSource().data("RowIid");
+            var sColumnIid = oEvent.getSource().data("ColumnIid");
+            var aBodyCells = oViewData.formData["BodyCells"];
+            var oLine = _.find(aBodyCells, {
+              RowIid: sRowIid,
+              ColumnIid: sColumnIid,
+            });
+            oLine.ValueNum = "0";
+            oLine.ValueText = "";
+            oLine.ValueTxt = "";
+            oViewModel.setProperty("/formData/BodyCells", aBodyCells);
 
-              var oModel = this.getModel();
+            var oModel = this.getModel();
 
-              var oOperation = {
-                Operation: "CALCSUM",
-                RowId: "",
-                ColumnId: "",
-                Result: "",
-                BodyCells: _.clone(
-                  oViewModel.getProperty("/formData/BodyCells")
-                ),
-                BodyElements: oViewModel.getProperty("/formData/BodyElements"),
-              };
+            var oOperation = {
+              Operation: "CALCSUM",
+              RowId: "",
+              ColumnId: "",
+              Result: "",
+              BodyCells: _.clone(oViewModel.getProperty("/formData/BodyCells")),
+              BodyElements: oViewModel.getProperty("/formData/BodyElements"),
+            };
 
-              oModel.create("/CalculateSummarySet", oOperation, {
-                success: function (oData, oResponse) {
-                  var sRowId = oData.RowId;
-                  var sColumnId = oData.ColumnId;
+            oModel.create("/CalculateSummarySet", oOperation, {
+              success: function (oData, oResponse) {
+                var sRowId = oData.RowId;
+                var sColumnId = oData.ColumnId;
 
-                  var aBodyCellsForSummary = oViewData.formData["BodyCells"];
+                var aBodyCellsForSummary = oViewData.formData["BodyCells"];
 
-                  oLine = _.find(aBodyCellsForSummary, {
-                    RowIid: sRowId,
-                    ColumnIid: sColumnId,
-                  });
-                  if (oLine?.NoteString) {
-                    oLine.NoteString = oData.Result;
-                    oViewModel.setProperty(
-                      "/formData/BodyCells",
-                      aBodyCellsForSummary
-                    );
-                  }
-                },
-                error: function () {},
-              });
-            }
+                oLine = _.find(aBodyCellsForSummary, {
+                  RowIid: sRowId,
+                  ColumnIid: sColumnId,
+                });
+
+                oLine.NoteString = oData.Result;
+                oViewModel.setProperty(
+                  "/formData/BodyCells",
+                  aBodyCellsForSummary
+                );
+              },
+              error: function () {},
+            });
           },
         }); //.addStyleClass("hapListBox");
 
@@ -3116,7 +4410,439 @@ sap.ui.define(
           template: oItem,
         });
 
+        oRI.addStyleClass("sapUiSmallMarginBottom");
+        oRI.addStyleClass("customRatingIndicator");
+
         return oRI;
+      },
+      _addRatingIndicator: function (oCell) {
+        var that = this;
+        var oViewModel = this.getModel("formDetailsModel");
+        var oViewData = oViewModel.getData();
+        var sEditablePath =
+          "formDetailsModel>/bodyCells/" +
+          oCell.RowIid +
+          "/" +
+          oCell.ColumnIid +
+          "/CellValueAvailability";
+        var sValueStrPath =
+          "formDetailsModel>/bodyCells/" +
+          oCell.RowIid +
+          "/" +
+          oCell.ColumnIid +
+          "/ValueText";
+        var sColumnIid =
+          "formDetailsModel>/bodyCells/" +
+          oCell.RowIid +
+          "/" +
+          oCell.ColumnIid +
+          "/ColumnIid";
+        var sCellValue =
+          "formDetailsModel>/bodyCells/" +
+          oCell.RowIid +
+          "/" +
+          oCell.ColumnIid +
+          "/ValueNum";
+
+        var oRI = new sap.m.RatingIndicator({
+          enabled: {
+            path: sEditablePath,
+            formatter: function (sCellValueAvailability) {
+              if (
+                sCellValueAvailability === "X" ||
+                sCellValueAvailability === "R"
+              ) {
+                return true;
+              } else {
+                return false;
+              }
+            },
+          },
+          value: {
+            path: sCellValue,
+            formatter: function (sCellValue) {
+              var iCellValue = parseInt(sCellValue);
+              return iCellValue > 4 ? 0 : iCellValue;
+            },
+          },
+          maxValue:
+            oViewData.bodyCellValues[oCell.RowIid][oCell.ColumnIid].CellValues
+              .length - 2, //Kapsamdışı ve Değer seçin
+          iconSize: "32px",
+          tooltip: {
+            path: sValueStrPath,
+          },
+
+          liveChange: function (oEvent) {
+            var sRowIid = oCell.RowIid;
+            var sColumnIid = oCell.ColumnIid;
+            var aBodyCells = oViewData.formData["BodyCells"];
+            var sValue = oEvent.getParameter("value");
+            var oBodyCellValues = oViewModel.getData().bodyCellValues;
+
+            var oLine = _.find(aBodyCells, {
+              RowIid: sRowIid,
+              ColumnIid: sColumnIid,
+            });
+            oLine.ValueNum = sValue + ".000";
+            oLine.ValueString = "000" + sValue;
+            oLine.ValueText =
+              oBodyCellValues[sRowIid][sColumnIid].CellValues[sValue].ValueText;
+            oLine.ValueTxt = oEvent.getParameter("value") + ",000";
+            oViewModel.setProperty("/formData/BodyCells", aBodyCells);
+
+            var oModel = this.getModel();
+
+            var oOperation = {
+              Operation: "CALCSUM",
+              RowId: "",
+              ColumnId: "",
+              Result: "",
+              BodyCells: _.clone(oViewModel.getProperty("/formData/BodyCells")),
+              BodyElements: oViewModel.getProperty("/formData/BodyElements"),
+            };
+
+            oModel.create("/CalculateSummarySet", oOperation, {
+              success: function (oData, oResponse) {
+                var sRowId = oData.RowId;
+                var sColumnId = oData.ColumnId;
+
+                var aBodyCellsForSummary = oViewData.formData["BodyCells"];
+
+                oLine = _.find(aBodyCellsForSummary, {
+                  RowIid: sRowId,
+                  ColumnIid: sColumnId,
+                });
+
+                oLine.NoteString = oData.Result;
+                oViewModel.setProperty(
+                  "/formData/BodyCells",
+                  aBodyCellsForSummary
+                );
+              },
+              error: function () {},
+            });
+          },
+        });
+
+        oRI.addStyleClass("sapUiSmallMarginBottom");
+        oRI.addStyleClass("customRatingIndicator");
+
+        return oRI;
+      },
+
+      _addToggleButton: function (oCell) {
+        var oViewModel = this.getModel("formDetailsModel");
+        var oViewData = oViewModel.getData();
+        var sEditablePath =
+          "formDetailsModel>/bodyCells/" +
+          oCell.RowIid +
+          "/" +
+          oCell.ColumnIid +
+          "/CellValueAvailability";
+        var sPressedPath =
+          "formDetailsModel>/bodyCells/" +
+          oCell.RowIid +
+          "/" +
+          oCell.ColumnIid +
+          "/ValueString";
+
+        var oTB = new sap.m.ToggleButton({
+          text: "Kapsam Dışı",
+          icon: "sap-icon://sys-cancel-2",
+          enabled: {
+            path: sEditablePath,
+            formatter: function (sCellValueAvailability) {
+              if (
+                sCellValueAvailability === "X" ||
+                sCellValueAvailability === "R"
+              ) {
+                return true;
+              } else {
+                return false;
+              }
+            },
+          },
+          pressed: {
+            path: sPressedPath,
+            formatter: function (sCellValueAvailability) {
+              if (sCellValueAvailability === "0005") {
+                return true;
+              } else {
+                return false;
+              }
+            },
+          },
+          press: function (oEvent) {
+            var sRowIid = oCell.RowIid;
+            var sColumnIid = oCell.ColumnIid;
+            var aBodyCells = oViewData.formData["BodyCells"];
+            var oBodyCellValues = oViewModel.getData().bodyCellValues;
+
+            var oLine = _.find(aBodyCells, {
+              RowIid: sRowIid,
+              ColumnIid: sColumnIid,
+            });
+
+            if (oEvent.getParameter("pressed")) {
+              oLine.ValueNum = "5.000";
+              oLine.ValueString = "0005";
+              oLine.ValueText = "Kapsam Dışı";
+              oLine.ValueTxt = "5,000";
+              oViewModel.setProperty("/formData/BodyCells", aBodyCells);
+            } else {
+              oLine.ValueNum = "0.000";
+              oLine.ValueString = "0000";
+              oLine.ValueText = "Değer Seçin";
+              oLine.ValueTxt = "0,000";
+              oViewModel.setProperty("/formData/BodyCells", aBodyCells);
+            }
+
+            var oModel = this.getModel();
+
+            var oOperation = {
+              Operation: "CALCSUM",
+              RowId: "",
+              ColumnId: "",
+              Result: "",
+              BodyCells: _.clone(oViewModel.getProperty("/formData/BodyCells")),
+              BodyElements: oViewModel.getProperty("/formData/BodyElements"),
+            };
+
+            oModel.create("/CalculateSummarySet", oOperation, {
+              success: function (oData, oResponse) {
+                var sRowId = oData.RowId;
+                var sColumnId = oData.ColumnId;
+
+                var aBodyCellsForSummary = oViewData.formData["BodyCells"];
+
+                oLine = _.find(aBodyCellsForSummary, {
+                  RowIid: sRowId,
+                  ColumnIid: sColumnId,
+                });
+
+                oLine.NoteString = oData.Result;
+                oViewModel.setProperty(
+                  "/formData/BodyCells",
+                  aBodyCellsForSummary
+                );
+              },
+              error: function () {},
+            });
+          },
+        });
+
+        return oTB;
+      },
+
+      _addFormActions: function () {
+        var oPage = this.byId("idFormDetailPage");
+        var that = this;
+
+        var oActionButton = new sap.m.Button({
+          text: "{formDetailsModel>Text}",
+          visible: {
+            parts: [
+              {
+                path: "formDetailsModel>Availability",
+              },
+              {
+                path: "formDetailsModel>StatusRelevant",
+              },
+              {
+                path: "formDetailsModel>/allSectionsClicked",
+              },
+            ],
+            formatter: function (sAvailability, sStatusRelevant, sAllClicked) {
+              if (sAvailability === "" || sAvailability === "B") {
+                return true;
+              } else {
+                return false;
+              }
+            },
+          },
+          enabled: {
+            parts: [
+              {
+                path: "formDetailsModel>Availability",
+              },
+              {
+                path: "formDetailsModel>StatusRelevant",
+              },
+              {
+                path: "formDetailsModel>/allSectionsClicked",
+              },
+            ],
+            formatter: function (sAvailability, sStatusRelevant, sAllClicked) {
+              if (sAvailability === "" || sAvailability === "B") {
+                if (sStatusRelevant) {
+                  if (sAllClicked) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                } else {
+                  return true;
+                }
+              } else {
+                return false;
+              }
+            },
+          },
+          type: {
+            parts: [
+              {
+                path: "formDetailsModel>Id",
+              },
+              {
+                path: "formDetailsModel>StatusRelevant",
+              },
+              {
+                path: "formDetailsModel>Icon",
+              },
+            ],
+            formatter: function (sId, sStatusRelevant, sIcon) {
+              if (sStatusRelevant === true) {
+                return sap.m.ButtonType.Emphasized;
+              }
+
+              if (sId === "SAVE") {
+                return sap.m.ButtonType.Accept;
+              }
+
+              if (sId === "CANCEL") {
+                return sap.m.ButtonType.Reject;
+              }
+
+              return sap.m.ButtonType.Default;
+            },
+          },
+          icon: {
+            parts: [
+              {
+                path: "formDetailsModel>Id",
+              },
+              {
+                path: "formDetailsModel>StatusRelevant",
+              },
+              {
+                path: "formDetailsModel>Icon",
+              },
+            ],
+            formatter: function (sId, sStatusRelevant, sIcon) {
+              switch (sId) {
+                case "SAVE":
+                  return "sap-icon://save";
+                case "CANCEL":
+                  return "sap-icon://sys-cancel-2";
+                case "PRINT":
+                  return "sap-icon://print";
+              }
+            },
+          },
+          press: that._handleActionButtonPressed.bind(this),
+        });
+
+        // oActionButton.attachBrowserEvent("mouseenter", function(oEvent) {
+        // 	if ($(oEvent.currentTarget).data("buttonid") === "APPROVE") {
+        // 		MessageToast.show("Deneme");
+        // 	}
+        // });
+
+        /*Add custom data 2 for binding*/
+        var oButtonId = new sap.ui.core.CustomData({
+          key: "ButtonId",
+          value: "{formDetailsModel>Id}",
+          writeToDom: true,
+        });
+        oActionButton.addCustomData(oButtonId);
+        var oStatusRelevant = new sap.ui.core.CustomData({
+          key: "StatusRelevant",
+          value: "{formDetailsModel>StatusRelevant}",
+        });
+        oActionButton.addCustomData(oStatusRelevant);
+        var oEmphasize = new sap.ui.core.CustomData({
+          key: "IsEmphasized",
+          value:
+            "{= ${formDetailsModel>StatusRelevant} ? 'Emphasized' : 'None'}",
+          writeToDom: true,
+        });
+        oActionButton.addCustomData(oEmphasize);
+        var oTargetSection = new sap.ui.core.CustomData({
+          key: "TargetSection",
+          value: "{formDetailsModel>TargetSection}",
+        });
+        oActionButton.addCustomData(oTargetSection);
+
+        // var oToolbar = new sap.m.OverflowToolbar();
+        // oToolbar.bindAggregation("content", {
+        // 	path: "formDetailsModel>/footerButtons",
+        // 	templateShareable: false,
+        // 	template: oActionButton
+        // });
+        //oPage.addCustomFooterContent(oToolbar);
+
+        oPage.bindAggregation("customFooterContent", {
+          path: "formDetailsModel>/footerButtons",
+          templateShareable: false,
+          template: oActionButton,
+        });
+      },
+      _adjustButtons: function () {
+        var oViewModel = this.getModel("formDetailsModel");
+        var aHapButtons = oViewModel.getProperty("/formData/Buttons");
+        var aSections = oViewModel.getProperty("/formSections");
+        var oPrevSection = null;
+        var oNextSection = null;
+        var aFooterButtons = [];
+        var sFound = false;
+        var that = this;
+
+        var sCurrentSection = this._oPageLayout.getSelectedSection();
+
+        $.each(aSections, function (sIndex, oSection) {
+          if (oSection.element.getId() === sCurrentSection) {
+            sFound = true;
+          } else {
+            if (sFound === true) {
+              oNextSection = oSection.element;
+              return false;
+            } else {
+              oPrevSection = oSection.element;
+            }
+          }
+        });
+
+        if (oPrevSection) {
+          aFooterButtons.push({
+            Id: "PREV",
+            Text: this.formatter.convertToStartCase(oPrevSection.getTitle()),
+            StatusRelevant: false,
+            Icon: null,
+            TargetSection: oPrevSection.getId(),
+            Availability: "",
+          });
+        }
+
+        if (oNextSection) {
+          aFooterButtons.push({
+            Id: "NEXT",
+            Text: this.formatter.convertToStartCase(oNextSection.getTitle()),
+            StatusRelevant: false,
+            Icon: null,
+            TargetSection: oNextSection.getId(),
+            Availability: "",
+          });
+        }
+
+        $.each(aHapButtons, function (sIndex, oHapButton) {
+          var oHapButtonLocal = that._cloneObject(oHapButton);
+          oHapButtonLocal.TargetSection = null;
+          aFooterButtons.push(oHapButtonLocal);
+        });
+
+        oViewModel.setProperty("/footerButtons", aFooterButtons);
+        oViewModel.refresh();
       },
 
       _adjustButtonsNew: function () {
@@ -3909,8 +5635,7 @@ sap.ui.define(
         });
         oViewModel.setProperty("/formParameters", oParams);
 
-        //This data is being set by the navigation data
-        //oViewModel.setProperty("/navigationElementId", oParams["FIRST_ROW"]);
+        oViewModel.setProperty("/navigationFormId", oParams["FIRST_ROW"]);
       },
 
       _convertUIData: function () {
@@ -4082,7 +5807,7 @@ sap.ui.define(
           .map(function (e) {
             return e.ElementId;
           })
-          .indexOf(oViewModel.getProperty("/navigationElementId"));
+          .indexOf(oViewModel.getProperty("/navigationFormId"));
         iIndex++;
         if (aNavigationData.length - 1 === iIndex) {
           oViewModel.setProperty("/saveAndKeepButtonVisibility", false);
@@ -4091,8 +5816,8 @@ sap.ui.define(
 
         this._oNavContainer.to(sPageId);
         this._oNavContainer.setAutoFocus(true);
-        oViewModel.setProperty(
-          "/navigationElementId",
+        this.getModel("formDetailsModel").setProperty(
+          "/navigationFormId",
           aNavigationData[iIndex].ElementId
         );
 
@@ -4123,7 +5848,7 @@ sap.ui.define(
         //   .map(function (e) {
         //     return e.ElementId;
         //   })
-        //   .indexOf(oViewModel.getProperty("/navigationElementId"));
+        //   .indexOf(oViewModel.getProperty("/navigationFormId"));
         // iIndex++;
 
         // if (aNavigationData.length - 1 === iIndex) {
@@ -4141,7 +5866,7 @@ sap.ui.define(
           Operation: "SAVE&KEEP",
           RowIid: null,
           ButtonId: null,
-          RowElemId: oViewModel.getProperty("/navigationElementId"),
+          RowElemId: oViewModel.getProperty("/navigationFormId"),
           BodyElements: oViewModel.getProperty("/formData/BodyElements"),
           BodyCells: oViewModel.getProperty("/formData/BodyCells"),
           BodyCellValues: oViewModel.getProperty("/formData/BodyCellValues"),
@@ -4170,16 +5895,32 @@ sap.ui.define(
             if (sHasErrors === false) {
               that._setChangeListeners(false);
               that._navigateToNextTab();
+              // that._oNavContainer.to(sPageId);
+              // that._oNavContainer.setAutoFocus(true);
+              // that
+              //   .getModel("formDetailsModel")
+              //   .setProperty(
+              //     "/navigationFormId",
+              //     aNavigationData[iIndex].ElementId
+              //   );
+
+              // var $items = $(".bd-side-nav-item-link");
+
+              // $items.each(function () {
+              //   if (
+              //     $(this).attr("data-element-row-id") ===
+              //     aNavigationData[iIndex].RowIid
+              //   ) {
+              //     $(this).addClass("bd-side-nav-item-link-active");
+              //   } else {
+              //     $(this).removeClass("bd-side-nav-item-link-active");
+              //   }
+              // });
             }
           },
           error: function (oError) {
-            that._closeBusyFragment();
-            try {
-              var M = JSON.parse(oError.responseText).error.message.value;
-              MessageBox.error(M);
-            } catch (e) {
-              MessageBox.error(oError.responseText);
-            }
+            var M = JSON.parse(oError.responseText).error.message.value;
+            MessageBox.error(M);
           },
           async: true,
         });
@@ -4328,61 +6069,41 @@ sap.ui.define(
           delete oBodyCells[sRowIid];
         }
 
-        var aUIElementListOfRow = this._findAllUIElementByRow(sRowIid);
-
-        $.each(aUIElementListOfRow, function (i, oUIElement) {
-          try {
-            if (typeof oUIElement?.UIElement?.destroyContent === "function") {
-              oUIElement.UIElement.destroyContent();
+        for (var i = aRowUIElements.length - 1; i >= 0; i--) {
+          if (aRowUIElements[i].RowIid === sRowIid) {
+            try {
+              if (
+                typeof aRowUIElements[i].UIElement.destroyContent === "function"
+              ) {
+                aRowUIElements[i].UIElement.destroyContent();
+              }
+            } catch (err) {
+              jQuery.sap.log.error(
+                sRowIid + " satırının içeriği silinirken hata"
+              );
             }
-
-            if (typeof oUIElement?.UIElement?.destroy === "function") {
-              oUIElement.UIElement.destroy();
+            try {
+              if (typeof aRowUIElements[i].UIElement.destroy === "function") {
+                aRowUIElements[i].UIElement.destroy();
+              }
+            } catch (err) {
+              jQuery.sap.log.error(sRowIid + " satırı silinirken hata");
             }
-
-            _.remove(aRowUIElements, function (oElement) {
-              return oElement.Id === oUIElement.Id;
-            });
-          } catch (err) {
-            console.error(sRowIid + " satırının içeriği silinirken hata");
+            aRowUIElements.splice(i, 1);
           }
-        });
+        }
 
-        // for (var i = aRowUIElements.length - 1; i >= 0; i--) {
-        //   if (aRowUIElements[i].RowIid === sRowIid) {
-        //     try {
-        //       if (
-        //         typeof aRowUIElements[i].UIElement.destroyContent === "function"
-        //       ) {
-        //         aRowUIElements[i].UIElement.destroyContent();
-        //       }
-        //     } catch (err) {
-        //       jQuery.sap.log.error(
-        //         sRowIid + " satırının içeriği silinirken hata"
-        //       );
-        //     }
-        //     try {
-        //       if (typeof aRowUIElements[i].UIElement.destroy === "function") {
-        //         aRowUIElements[i].UIElement.destroy();
-        //       }
-        //     } catch (err) {
-        //       jQuery.sap.log.error(sRowIid + " satırı silinirken hata");
-        //     }
-        //     aRowUIElements.splice(i, 1);
-        //   }
-        // }
+        for (var j = aBodyElements.length - 1; j >= 0; j--) {
+          if (aBodyElements[j].RowIid === sRowIid) {
+            aBodyElements.splice(j, 1);
+          }
+        }
 
-        // for (var j = aBodyElements.length - 1; j >= 0; j--) {
-        //   if (aBodyElements[j].RowIid === sRowIid) {
-        //     aBodyElements.splice(j, 1);
-        //   }
-        // }
-
-        // for (var k = aBodyCells.length - 1; k >= 0; k--) {
-        //   if (aBodyCells[k].RowIid === sRowIid) {
-        //     aBodyCells.splice(k, 1);
-        //   }
-        // }
+        for (var k = aBodyCells.length - 1; k >= 0; k--) {
+          if (aBodyCells[k].RowIid === sRowIid) {
+            aBodyCells.splice(k, 1);
+          }
+        }
 
         oViewModel.setProperty("/formUIElements", aRowUIElements);
         oViewModel.setProperty("/formData/BodyElements", aBodyElements);
@@ -4709,8 +6430,6 @@ sap.ui.define(
         var sHasErrors = false;
         var sRowIid = oEvent.getSource().data("elementRowIid");
         var sElementName = oEvent.getSource().data("elementName");
-        var sEnhanceName = oEvent.getSource().data("enhanceName");
-        var sElementLevel = oEvent.getSource().data("elementLevel");
         var sMaxChildren = this._checkMaxChildren(sRowIid);
 
         if (sMaxChildren > 0) {
@@ -4736,7 +6455,6 @@ sap.ui.define(
           ButtonId: null,
           BodyElements: oViewModel.getProperty("/formData/BodyElements"),
           BodyCells: oViewModel.getProperty("/formData/BodyCells"),
-          BodyCellValues: oViewModel.getProperty("/formData/BodyCellValues"),
           BodyColumns: oViewModel.getProperty("/formData/BodyColumns"),
           ResultTable: oViewModel.getProperty("/formData/ResultTable"),
           Return: oViewModel.getProperty("/formData/Return"),
@@ -4784,11 +6502,8 @@ sap.ui.define(
                   oData,
                   sRowIid,
                   false,
-                  sEnhanceName
-                    ? sElementName + " - " + sEnhanceName
-                    : sElementName,
-                  false,
-                  sElementLevel
+                  sElementName,
+                  false
                 );
               }
             }
@@ -4807,9 +6522,9 @@ sap.ui.define(
         var that = this;
         var oElem = oParam.oElem;
         var sObj = oParam.sObj;
+
         var sRowIid = oElem.RowIid;
         var sElementName = oElem.Name;
-        var sElementLevel = oElem.ApLevel;
 
         var sHasErrors = false;
         var sMaxChildren = this._checkMaxChildren(sRowIid);
@@ -4886,8 +6601,7 @@ sap.ui.define(
                   sRowIid,
                   false,
                   sElementName,
-                  sObj,
-                  sElementLevel
+                  sObj
                 );
               }
             }
@@ -4947,7 +6661,6 @@ sap.ui.define(
           ButtonId: null,
           BodyElements: oViewModel.getProperty("/formData/BodyElements"),
           BodyCells: oViewModel.getProperty("/formData/BodyCells"),
-          BodyCellValues: oViewModel.getProperty("/formData/BodyCellValues"),
           ResultTable: oViewModel.getProperty("/formData/ResultTable"),
           Return: oViewModel.getProperty("/formData/Return"),
           ReturnOp: oViewModel.getProperty("/formData/ReturnOp"),
@@ -5086,8 +6799,7 @@ sap.ui.define(
         sRowIid,
         sFromCatalog,
         sParentName,
-        sObj,
-        sElementLevel
+        sObj
       ) {
         var oViewModel = this.getModel("formDetailsModel");
         var aRowUIElements = oViewModel.getProperty("/formUIElements");
@@ -5108,12 +6820,13 @@ sap.ui.define(
         var oElementSurveys = oViewModel.getProperty("/elementSurveys");
         var oFormQuestions = oViewModel.getProperty("/formData/FormQuestions");
         var oFormAnswers = oViewModel.getProperty("/formData/FormAnswers");
+        var oCurrentRowPanel = null;
         var sChildRowIid = null;
         var sNewRowIid = null;
         var that = this;
-        var aNewElements = [];
 
-        // Backup current form state in case of a cancel -- BEGIN
+        //->Serkan
+        //eklemeden vazgeçilirse eklenmemiş yapıyı geri almak için oluşturuldu
         var aBodyCellsClone = _.clone(
           oViewModel.getProperty("/formData/BodyCells")
         );
@@ -5151,7 +6864,7 @@ sap.ui.define(
           "/beforeAddFreeFormData/oBodyElements",
           oBodyElementsClone
         );
-        // Backup current form state in case of a cancel -- END
+        //<- Serkan
 
         if (oData.FormQuestions !== null) {
           aFormQuestions = oData.FormQuestions.hasOwnProperty("results")
@@ -5162,7 +6875,6 @@ sap.ui.define(
             : [];
         }
 
-        //Set new element
         $.each(aBodyElements, function (sIndex, oElement) {
           if (oElement.RowIid === sRowIid) {
             sChildRowIid = oElement.Child;
@@ -5181,8 +6893,6 @@ sap.ui.define(
             } else {
               $.extend(oBodyElements, oNewElement);
             }
-
-            aNewElements.push(oElement);
 
             oBodyCells[oElement.RowIid] = {};
             oBodyCellValues[oElement.RowIid] = {};
@@ -5235,68 +6945,42 @@ sap.ui.define(
         /*Re-produce surveys*/
         that._formElementSurveysObject();
 
-        var _enhanceSingle = function (p, c, s) {
-          var oVM = that.getModel("formDetailsModel");
-          var oVD = oVM.getData();
-
-          var oCurrentRowPanel = null;
-
-          oCurrentRowPanel = that._findUIElement(p, "RowPanel", null, true);
-
-          if (oCurrentRowPanel !== null && c !== null && c !== "0000") {
-            that._addRowNew(oCurrentRowPanel, oVD, c, true, false);
-
-            if (s) {
-              var oNewInput = that._findUIElement(
-                p,
-                "RowPanelHeader",
-                null,
-                true
-              );
-
-              if (oNewInput.UIElement) {
-                oNewInput.UIElement.addEventDelegate({
-                  onAfterRendering: function () {
-                    oNewInput.UIElement.focus();
-                  },
-                });
-              }
-            }
-          }
-        };
-
-        var _doEnhanceFromCatalog = function () {
-          $.each(aNewElements, function (n, e) {
-            _enhanceSingle(sRowIid, e.RowIid, false);
-          });
-        };
-
         var _doEnhance = function () {
-          var oVM = this.getModel("formDetailsModel");
-          var oVD = oVM.getData();
-          //var oCurrentRow =  _.find(aRowUIElements, {
-          //   RowIid: sRowIid,
-          //   ColumnIid: null,
-          //   UIType: "RowPanel",
-          // });
+          var oCurrentRow = _.find(aRowUIElements, {
+            RowIid: sRowIid,
+            ColumnIid: null,
+            UIType: "RowPanel",
+          });
 
-          //oCurrentRowPanel = oCurrentRow ? oCurrentRow.UIElement : null;
-          if (sElementLevel === "02") {
-            var oCurrentPageLayout = that._findUIElement(
-              sRowIid,
-              "PageLayout",
-              null,
-              true
+          oCurrentRowPanel = oCurrentRow ? oCurrentRow.UIElement : null;
+
+          if (
+            oCurrentRowPanel !== null &&
+            sNewRowIid !== null &&
+            sNewRowIid !== "0000"
+          ) {
+            var oViewData = oViewModel.getData();
+            that._addRowNew(
+              oCurrentRowPanel,
+              oViewData,
+              sNewRowIid,
+              true,
+              false
             );
-            if (
-              oCurrentPageLayout !== null &&
-              sNewRowIid !== null &&
-              sNewRowIid !== "0000"
-            ) {
-              that._addSection(oVD, oCurrentPageLayout, sNewRowIid);
+
+            var aFormUIElements = oViewModel.getProperty("/formUIElements");
+            var oNewInput = _.find(aFormUIElements, {
+              RowIid: sNewRowIid,
+              ColumnIid: null,
+              UIType: "RowPanelHeader",
+            });
+            if (oNewInput.UIElement) {
+              oNewInput.UIElement.addEventDelegate({
+                onAfterRendering: function () {
+                  oNewInput.UIElement.focus();
+                },
+              });
             }
-          } else {
-            _enhanceSingle(sRowIid, sNewRowIid, true);
           }
         };
 
@@ -5306,8 +6990,6 @@ sap.ui.define(
           if (!sFromCatalog) {
             this._addElementCallBack = _doEnhance;
             this._openAddNewElementFreeFormDialog(sNewRowIid, oData);
-          } else {
-            _doEnhanceFromCatalog();
           }
         } else {
           this._addElementCallBack = _doEnhance;
@@ -5716,12 +7398,10 @@ sap.ui.define(
           this.getView().addDependent(this._oAddNewElementFreeFormDialog);
         }
 
-        //var oForm = sap.ui.getCore().byId("idNewElementFreeForm");
-        var oGrid = sap.ui.getCore().byId("idNewElementFreeGrid");
+        var oForm = sap.ui.getCore().byId("idNewElementFreeForm");
         try {
-          //oForm.destroyFormContainers();
-          oGrid.destroyContent();
-          this._addNewElementFreeFormCells(oGrid, sNewRowIid, oEnhanceData);
+          oForm.destroyFormContainers();
+          this._addNewElementFreeFormCells(oForm, sNewRowIid, oEnhanceData);
           this._oAddNewElementFreeFormDialog.open();
         } catch (oErr) {
           console.log(oErr);
@@ -5816,7 +7496,22 @@ sap.ui.define(
         var oNewElement = oViewModel.getProperty("/newElement");
         var oViewData = oViewModel.getData();
 
-        // Clone before deletion
+        // Aşağıda satır silme işlemi child,brother,sort yapısını bozuyor
+        // var aBodyElements = _.filter(oViewData.formData.BodyElements, function (o) {
+        // 	return o.RowIid !== oNewElement.RowIid;
+        // });
+        // var aBodyCells = _.filter(oViewData.formData.BodyCells, function (o) {
+        // 	return o.RowIid !== oNewElement.RowIid;
+        // });
+        // var oBodyElements = oViewData.bodyElements;
+        // var oBodyCells = oViewData.bodyCells;
+        // var oBodyCellValues = oViewData.bodyCellValues;
+
+        // delete oBodyElements[oNewElement.RowIid];
+        // delete oBodyCells[oNewElement.RowIid];
+        // delete oBodyCellValues[oNewElement.RowIid];
+
+        //-> Serkan
         var aBodyCellsClone = _.clone(
           oViewModel.getProperty("/beforeAddFreeFormData/aBodyCells")
         );
@@ -5847,6 +7542,7 @@ sap.ui.define(
         oViewModel.setProperty("/bodyElements", oBodyElementsClone);
         oViewModel.setProperty("/bodyCells", oBodyCellsClone);
         oViewModel.setProperty("/bodyCellValues", oBodyCellValuesClone);
+        //<- Serkan
       },
       onApplyAddElementFree: function () {
         var oViewModel = this.getModel("formDetailsModel");
@@ -6156,6 +7852,52 @@ sap.ui.define(
       onCloseUploadFormDialog: function () {
         MessageToast.show(this.getText("fileUploadCancelled"));
         this._oUploadAttachmentDialog.close();
+      },
+
+      onGetTrainingGroupHeader: function (oGroup) {
+        return new sap.m.GroupHeaderListItem({
+          title: oGroup.key,
+          upperCase: false,
+        });
+      },
+
+      _showDevTrainings: function (oEvent) {
+        if (!this._oDevTrainingsDialog) {
+          // create dialog via fragment factory
+          this._oDevTrainingsDialog = sap.ui.xmlfragment(
+            "hcm.ux.hapv2_1.fragment.DevelopmentTrainings",
+            this
+          );
+          // connect dialog to view (models, lifecycle)
+          this.getView().addDependent(this._oDevTrainingsDialog);
+        }
+
+        var oList = sap.ui.getCore().byId("idDevTrainingsList");
+        var oViewModel = this.getModel("formDetailsModel");
+        var aFilter = [];
+
+        aFilter.push(
+          new Filter(
+            "Pernr",
+            FilterOperator.EQ,
+            oViewModel.getProperty("/formData/HeaderAppraisee/0/Id")
+          )
+        );
+
+        // filter binding
+        var oBinding = oList.getBinding("items");
+        oBinding.filter(aFilter);
+
+        this._oDevTrainingsDialog.open();
+      },
+
+      onTrainingDialogClose: function () {
+        var oList = sap.ui.getCore().byId("idDevTrainingsList");
+        var oBinding = oList.getBinding("items");
+        var aFilter = [];
+        oBinding.filter(aFilter);
+
+        this._oDevTrainingsDialog.close();
       },
     });
   }
