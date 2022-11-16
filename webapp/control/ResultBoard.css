@@ -1,0 +1,90 @@
+.smod-result-board-container {
+  display: inline-block;
+  margin-top: 0.1875rem;
+  margin-bottom: 0.1875rem;
+}
+
+.smod-result-board {
+  display: flex;
+  height: 25px;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  border-left-width: 0.375rem;
+  border-left-style: solid;
+  border-radius: 0.25rem;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.smod-result-board-none {
+  border-color: rgb(42, 42, 42);
+  border-left-width: 0.375rem;
+}
+
+.smod-result-board-error {
+  border-color: #bb0000;
+  border-left-width: 0.375rem;
+}
+
+.smod-result-board-success {
+  border-color: #107e3e;
+  border-left-width: 0.375rem;
+}
+
+.smod-result-board-warning {
+  border-color: #e9730c;
+  border-left-width: 0.375rem;
+}
+
+.smod-result-board-tooltip {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  color: white;
+  font-size: 11px;
+  background-color: #222d36;
+  border-radius: 0.25rem;
+  padding: 10px 15px 10px 15px;
+  top: 35px;
+  left: -10px;
+  opacity: 0;
+}
+
+.smod-result-board-tooltip::before {
+  content: "";
+  position: absolute;
+  transform: rotate(45deg);
+  background-color: #222d36;
+  padding: 5px;
+  z-index: 1;
+  top: -5%;
+  left: 45%;
+}
+
+.smod-result-board:hover .smod-result-board-tooltip {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.smod-result-board-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 0.3rem;
+}
+
+.smod-result-board-result {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 4;
+  padding: 0.3rem;
+}
+
+.smod-result-board,
+.smod-result-board * {
+  cursor: pointer !important;
+  font-size: 11px;
+}

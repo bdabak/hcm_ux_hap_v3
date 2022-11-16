@@ -13,7 +13,7 @@
 
 .hapResponsiveGrid
   > div[class*="sapUiRespGridSpan"]:not(.sapUiRespGridSpanXL12) {
-  min-height: 133px !important;
+  min-height: 100px !important;
 }
 
 .hapPage,
@@ -920,4 +920,17 @@ html.sapUiMedia-Std-Tablet
 .sapMRIIconHov,
 .sapMRIIconReadOnly {
   font-family: SAP-icons !important;
+}
+
+.hapWeightingTag .sapMGenericTagText {
+  display: none !important;
+}
+
+.hapPage .sapMMenuBtn span.sapMBtnInner.sapMBtnEmphasized {
+  border-left-color: transparent !important;
+}
+
+.hapPage .sapFDynamicPageTitleMainInner,
+.hapPage .sapFDynamicPageTitleMainHeadingInner {
+  overflow: visible !important;
 }

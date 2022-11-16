@@ -43,7 +43,7 @@ sap.ui.define(
         setTimeout(function () {
           //SVG bug
           $("#" + that.getId()).removeClass("hidden");
-        }, 100);
+        }, 300);
       },
       renderer: function (oRM, oControl) {
         var items = oControl.getRatingItems();

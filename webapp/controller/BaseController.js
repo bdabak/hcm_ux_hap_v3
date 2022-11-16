@@ -49,6 +49,11 @@ sap.ui.define(
         return this.getView().setModel(oModel, sName);
       },
 
+      setAppState: function (bState) {
+        var oAppModel = this.getModel("appView");
+        oAppModel.setProperty("/busy", bState);
+      },
+
       /**
        * Getter for the resource bundle.
        * @public
