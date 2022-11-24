@@ -1,7 +1,7 @@
 sap.ui.define(["sap/ui/core/Control"], function (Control) {
   "use strict";
   var E = Control.extend(
-    "hcm.ux.hapv2_1.control.SmodCalibrationGridFilterBlock",
+    "hcm.ux.hapv3.control.SmodCalibrationGridFilterBlock",
     {
       metadata: {
         properties: {

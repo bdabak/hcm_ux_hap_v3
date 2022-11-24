@@ -1,11 +1,8 @@
 sap.ui.define(
-  [
-    "sap/ui/core/Control",
-    "hcm/ux/hapv2_1/control/SmodCalibrationGridBlockItem",
-  ],
+  ["sap/ui/core/Control", "hcm/ux/hapv3/control/SmodCalibrationGridBlockItem"],
   function (Control, GridBlockItem) {
     "use strict";
-    var E = Control.extend("hcm.ux.hapv2_1.control.SmodCalibrationGridBlock", {
+    var E = Control.extend("hcm.ux.hapv3.control.SmodCalibrationGridBlock", {
       metadata: {
         properties: {
           headerText: {
@@ -23,7 +20,7 @@ sap.ui.define(
         },
         aggregations: {
           itemList: {
-            type: "hcm.ux.hapv2_1.control.SmodCalibrationGridBlockItem",
+            type: "hcm.ux.hapv3.control.SmodCalibrationGridBlockItem",
             multiple: true,
             singularName: "item",
           },

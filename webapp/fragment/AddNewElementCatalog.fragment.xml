@@ -8,11 +8,11 @@
 	<Dialog title="{i18n>addNewElementCatalogHeader}" showHeader="true" stretch="{device>/system/phone}" id="idAddNewElementCatalogDialog" contentWidth="850px" contentHeight="500px" resizable="true" draggable="true">
 		<content>
 			<table:TreeTable rows="{path:'enhanceModel>/Hierarchy', parameters: {arrayNames:['Children']}}" selectionMode="None" enableSelectAll="false">
-				<table:toolbar>
-					<Toolbar>
+				<table:extension>
+					<OverflowToolbar>
 						<Title text="{i18n>catalogHeader}"/>
-					</Toolbar>
-				</table:toolbar>
+					</OverflowToolbar>
+				</table:extension>
 				<table:columns>
 					<table:Column width="35rem">
 						<Label text="Nesne" class="hapDialogLabel"/>

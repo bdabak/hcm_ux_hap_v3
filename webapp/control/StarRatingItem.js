@@ -1,7 +1,7 @@
 sap.ui.define(["sap/ui/core/Control"], function (Control) {
   "use strict";
 
-  return Control.extend("hcm.ux.hapv2_1.control.StarRatingItem", {
+  return Control.extend("hcm.ux.hapv3.control.StarRatingItem", {
     metadata: {
       properties: {
         value: { type: "string", bindable: true },
@@ -96,52 +96,6 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
       oRM.close("label"); //Label  end
     },
 
-    //   onmouseover: function (event) {
-    //     var editable = this.getParent()?.getEditable();
-
-    //     if (editable) {
-    //       if (event.target.className.includes("smod-rating-item-icon")) {
-    //         $(event.currentTarget)
-    //           .parent()
-    //           .find(".smod-rating-item-icon")
-    //           .removeClass("hover-active");
-    //         $(event.currentTarget)
-    //           .nextUntil(":last", ".smod-rating-item-label")
-    //           .find(".smod-rating-item-icon")
-    //           .addClass("hover-passive");
-
-    //         //--Make active
-    //         $(event.currentTarget)
-    //           .next()
-    //           .prevUntil(
-    //             $(event.currentTarget).parent(),
-    //             ".smod-rating-item-label"
-    //           )
-    //           .find(".smod-rating-item-icon")
-    //           .removeClass("hover-passive")
-    //           .addClass("hover-active");
-    //       }
-    //     }
-    //   },
-
-    //   onmouseout: function (event) {
-    //     var editable = this.getParent()?.getEditable();
-    //     if (editable) {
-    //       var hint = this.getParent().$().find(".smod-rating-value-hint");
-    //       if (hint) {
-    //         $(hint).fadeOut(function () {
-    //           $(hint).text("");
-    //         });
-    //       }
-
-    //       this.$()
-    //         .parent()
-    //         .find(".smod-rating-item-icon")
-    //         .removeClass("hover-active")
-    //         .removeClass("hover-passive");
-    //     }
-    //   },
-
     ontap: function (event) {
       var that = this;
       var editable = this.getParent()?.getEditable();
@@ -171,40 +125,6 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
 
         //this._refreshActive();
       }
-    },
-
-    _refreshActive: function () {
-      // var excludedValues = this.getParent()?.getExcludedValues() || [];
-      // var sSelectedValue = this.getParent().getSelectedValue();
-      // try {
-      //   if (
-      //     excludedValues.length > 0 &&
-      //     sSelectedValue &&
-      //     excludedValues.includes(sSelectedValue)
-      //   ) {
-      //     this.$()
-      //       .parent()
-      //       .find(".smod-rating-item-icon")
-      //       .addClass("invalidate");
-      //     return;
-      //   }
-      // } catch (e) {}
-      // if (this.getParent().getSelectedValue() === this.getValue()) {
-      //   //--Make selected column and previous active
-      //   this.$()
-      //     .parent()
-      //     .find(".smod-rating-item-icon")
-      //     .removeClass("active");
-      //   this.$()
-      //     .parent()
-      //     .find(".smod-rating-item-icon")
-      //     .removeClass("invalidate");
-      //   this.$()
-      //     .next()
-      //     .prevUntil(this.$().parent(), ".smod-rating-item-label")
-      //     .find(".smod-rating-item-icon")
-      //     .addClass("active");
-      // }
     },
   });
 });

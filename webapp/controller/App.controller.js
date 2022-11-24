@@ -1,9 +1,9 @@
 sap.ui.define(
-  ["hcm/ux/hapv2_1/controller/BaseController", "sap/ui/model/json/JSONModel"],
+  ["hcm/ux/hapv3/controller/BaseController", "sap/ui/model/json/JSONModel"],
   function (BaseController, JSONModel) {
     "use strict";
 
-    return BaseController.extend("hcm.ux.hapv2_1.controller.App", {
+    return BaseController.extend("hcm.ux.hapv3.controller.App", {
       onInit: function () {
         var oViewModel,
           fnSetAppNotBusy,
@@ -13,7 +13,7 @@ sap.ui.define(
           busy: false,
           delay: 0,
           busyImageSource: jQuery.sap.getModulePath(
-            "hcm.ux.hapv2_1",
+            "hcm.ux.hapv3",
             "/images/loading_rudder.svg"
           ),
         });

@@ -1,7 +1,7 @@
 sap.ui.define(
   [
-    "hcm/ux/hapv2_1/controller/Worklist.controller",
-    "hcm/ux/hapv2_1/controller/BaseController",
+    "hcm/ux/hapv3/controller/Worklist.controller",
+    "hcm/ux/hapv3/controller/BaseController",
     "sap/ui/base/ManagedObject",
     "test/unit/helper/FakeI18nModel",
     "sap/ui/thirdparty/sinon",

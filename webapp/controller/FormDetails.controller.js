@@ -1,7 +1,7 @@
 /*global _*/
 sap.ui.define(
   [
-    "hcm/ux/hapv2_1/controller/BaseController",
+    "hcm/ux/hapv3/controller/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/routing/History",
     "sap/m/MessageToast",
@@ -13,11 +13,11 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/ui/core/format/DateFormat",
     "sap/ui/core/Fragment",
-    "hcm/ux/hapv2_1/control/StarRating",
-    "hcm/ux/hapv2_1/control/StarRatingItem",
-    "hcm/ux/hapv2_1/control/ScaleEntrance",
-    "hcm/ux/hapv2_1/control/ResultBoard",
-    "hcm/ux/hapv2_1/model/formatter",
+    "hcm/ux/hapv3/control/StarRating",
+    "hcm/ux/hapv3/control/StarRatingItem",
+    "hcm/ux/hapv3/control/ScaleEntrance",
+    "hcm/ux/hapv3/control/ResultBoard",
+    "hcm/ux/hapv3/model/formatter",
   ],
   function (
     BaseController,
@@ -40,7 +40,7 @@ sap.ui.define(
   ) {
     "use strict";
 
-    return BaseController.extend("hcm.ux.hapv2_1.controller.FormDetails", {
+    return BaseController.extend("hcm.ux.hapv3.controller.FormDetails", {
       formatter: formatter,
       hasChanges: false,
 
@@ -200,7 +200,7 @@ sap.ui.define(
       _handleCallUserGuide: function () {
         var that = this;
         Fragment.load({
-          name: "hcm.ux.hapv2_1.fragment.UserGuideViewer",
+          name: "hcm.ux.hapv3.fragment.UserGuideViewer",
           controller: that,
         }).then(function (oDialog) {
           that._oGuideViewer = oDialog;
@@ -500,8 +500,14 @@ sap.ui.define(
         var oAppraiser1st = oViewModel.getProperty(
           "/formData/HeaderAppraiser/0"
         );
-        var oAppraiser2nd = oViewModel.getProperty("/formData/HeaderOthers/0");
-        var oAppraiser3rd = oViewModel.getProperty("/formData/HeaderOthers/1");
+
+        var aHeaderOthers =
+          oViewModel.getProperty("/formData/HeaderOthers") || [];
+
+        var oAppraiser2nd = _.find(aHeaderOthers, ["RoleId", "MB"]);
+        var oAppraiser3rd = _.find(aHeaderOthers, ["RoleId", "MC"]);
+        // var oAppraiser2nd = oViewModel.getProperty("/formData/HeaderOthers/0");
+        // var oAppraiser3rd = oViewModel.getProperty("/formData/HeaderOthers/1");
         var oStatus = oViewModel.getProperty("/formData/HeaderStatus");
         var oDates = oViewModel.getProperty("/formData/HeaderDates");
         var aResultsTable = oViewModel.getProperty("/formData/ResultTable");
@@ -546,18 +552,18 @@ sap.ui.define(
           /*Appraiser 2nd Data*/
         }
 
-        // if (oAppraiser3rd) {
-        //   /*Appraiser 3rd Data*/
-        //   oSideBarData.apper3rdInfo.ImageSource =
-        //     "/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/EmployeeInfoSet('" +
-        //     oAppraiser3rd.Id +
-        //     "')/$value";
-        //   oSideBarData.apper3rdInfo.Id = oAppraiser3rd.Id;
-        //   oSideBarData.apper3rdInfo.Title = oAppraiser3rd.Name;
-        //   oSideBarData.apper3rdInfo.Line1 = oAppraiser3rd.Plstx;
-        //   oSideBarData.apper3rdInfo.Line2 = oAppraiser3rd.Orgtx;
-        //   /*Appraiser 3rd Data*/
-        // }
+        if (oAppraiser3rd) {
+          /*Appraiser 3rd Data*/
+          oSideBarData.apper3rdInfo.ImageSource =
+            "/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/EmployeeInfoSet('" +
+            oAppraiser3rd.Id +
+            "')/$value";
+          oSideBarData.apper3rdInfo.Id = oAppraiser3rd.Id;
+          oSideBarData.apper3rdInfo.Title = oAppraiser3rd.Name;
+          oSideBarData.apper3rdInfo.Line1 = oAppraiser3rd.Plstx;
+          oSideBarData.apper3rdInfo.Line2 = oAppraiser3rd.Orgtx;
+          /*Appraiser 3rd Data*/
+        }
 
         /*Status Data*/
         oSideBarData.statusInfo = [];
@@ -1297,59 +1303,14 @@ sap.ui.define(
         oViewModel.setProperty("/navigationData", aNavigationData);
       },
 
-      _buildObjectPageHeader: function (oElement) {
+      _buildObjectTitle: function (oElement) {
         var that = this;
-        var sElementEditable =
-          "{= ${formDetailsModel>/bodyElements/" +
-          oElement.RowIid +
-          "/Availability} === 'X' ? true : false }";
 
-        var aElementButtons = that._getElementButtons(
-          oElement,
-          sElementEditable
-        );
-
-        var _isFieldVisible = function (sCellValueAvailability) {
-          return sCellValueAvailability !== "H";
+        var _isFieldVisible = function (sCellValueAvailability, sValue) {
+          return sCellValueAvailability !== "H" && sValue !== "";
         };
 
-        // var oTitleExpanded = new sap.m.HBox({
-        //   alignItems: "End",
-        //   items: [
-        //     new sap.m.Title({
-        //       text: `{formDetailsModel>/bodyElements/${oElement.RowIid}/Name}`,
-        //     }).addStyleClass("sapUiTinyMarginEnd"),
-        //     new sap.m.GenericTag({
-        //       design: "StatusIconHidden",
-        //       status: "Error",
-        //       value: new sap.m.ObjectNumber({
-        //         number: {
-        //           path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sWeightColumn}/ValueNum`,
-        //           type: "sap.ui.model.type.Float",
-        //           formatOptions: {
-        //             maxFractionDigits: 2,
-        //           },
-        //         },
-        //         numberUnit: "%",
-        //       }),
-        //     }).addStyleClass("hapWeightingTag"),
-        //   ],
-        // });
-        // new sap.m.GenericTag({
-        //   design: "StatusIconHidden",
-        //   status: "Error",
-        //   value: new sap.m.ObjectNumber({
-        //     number: {
-        //       path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sWeightColumn}/ValueNum`,
-        //       type: "sap.ui.model.type.Float",
-        //       formatOptions: {
-        //         maxFractionDigits: 2,
-        //       },
-        //     },
-        //     numberUnit: "%",
-        //   }),
-        // }).addStyleClass("hapWeightingTag sapUiTinyMarginEnd"),
-        var oTitleExpanded = new sap.m.HBox({
+        return new sap.m.HBox({
           alignItems: "End",
           items: [
             new sap.m.Title({
@@ -1371,7 +1332,14 @@ sap.ui.define(
                 ],
               },
               visible: {
-                path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/CellValueAvailability`,
+                parts: [
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sWeightColumn}/CellValueAvailability`,
+                  },
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sWeightColumn}/ValueNum`,
+                  },
+                ],
                 formatter: _isFieldVisible,
               },
             }).addStyleClass("sapUiTinyMarginEnd"),
@@ -1381,7 +1349,14 @@ sap.ui.define(
               status: "Warning",
               result: `{formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/ValueText}`,
               visible: {
-                path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/CellValueAvailability`,
+                parts: [
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/CellValueAvailability`,
+                  },
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/ValueText`,
+                  },
+                ],
                 formatter: _isFieldVisible,
               },
             }).addStyleClass("sapUiTinyMarginEnd"),
@@ -1391,61 +1366,39 @@ sap.ui.define(
               tooltip: "Yönetici Değerlendirmesi",
               result: `{formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinAppColumn}/ValueText}`,
               visible: {
-                path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinAppColumn}/CellValueAvailability`,
+                parts: [
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinAppColumn}/CellValueAvailability`,
+                  },
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinAppColumn}/ValueText`,
+                  },
+                ],
+
                 formatter: _isFieldVisible,
               },
             }).addStyleClass("sapUiTinyMarginEnd"),
           ],
         });
+      },
+      _buildObjectPageHeader: function (oElement) {
+        var that = this;
+        var sElementEditable =
+          "{= ${formDetailsModel>/bodyElements/" +
+          oElement.RowIid +
+          "/Availability} === 'X' ? true : false }";
 
-        var oTitleSnapped = _.cloneDeep(oTitleExpanded);
+        var aElementButtons = that._getElementButtons(
+          oElement,
+          sElementEditable
+        );
+
+        var oTitleExpanded = this._buildObjectTitle(oElement);
+        var oTitleSnapped = this._buildObjectTitle(oElement);
 
         var oPageHeader = new sap.uxap.ObjectPageDynamicHeaderTitle({
           expandedHeading: oTitleExpanded,
           snappedHeading: oTitleSnapped,
-
-          // content: [
-          //   new sap.m.GenericTag({
-          //     design: "StatusIconHidden",
-          //     status: "Error",
-          //     value: new sap.m.ObjectNumber({
-          //       number: {
-          //         path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sWeightColumn}/ValueNum`,
-          //         type: "sap.ui.model.type.Float",
-          //         formatOptions: {
-          //           maxFractionDigits: 2,
-          //         },
-          //       },
-          //       numberUnit: "%",
-          //     }),
-          //   }).addStyleClass("hapWeightingTag"),
-          // ],
-          // expandedContent: [
-          //   new sap.m.HBox({
-          //     items: [
-          //       new ResultBoard({
-          //         icon: "sap-icon://employee",
-          //         tooltip: "Çalışan Değerlendirmesi",
-          //         status: "Warning",
-          //         result: `{formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/ValueText}`,
-          //         visible: {
-          //           path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/CellValueAvailability`,
-          //           formatter: _isFieldVisible,
-          //         },
-          //       }).addStyleClass("sapUiSmallMarginEnd"),
-          //       new ResultBoard({
-          //         icon: "sap-icon://manager",
-          //         status: "Success",
-          //         tooltip: "Yönetici Değerlendirmesi",
-          //         result: `{formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinAppColumn}/ValueText}`,
-          //         visible: {
-          //           path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/CellValueAvailability`,
-          //           formatter: _isFieldVisible,
-          //         },
-          //       }).addStyleClass("sapUiSmallMarginEnd"),
-          //     ],
-          //   }),
-          // ],
         });
 
         $.each(aElementButtons, function (i, oButton) {
@@ -1468,14 +1421,74 @@ sap.ui.define(
           }
         );
         var that = this;
-
-        $.each(aChildren, function (i, oChild) {
-          that._addSection(oViewData, oPageLayout, oChild.RowIid);
-        });
+        this._addNoContentInfo(oPageLayout, sRowIid);
+        if (aChildren.length > 0) {
+          $.each(aChildren, function (i, oChild) {
+            that._addSection(oViewData, oPageLayout, oChild.RowIid);
+          });
+        }
       },
+
+      /**
+       * Add no content information
+       * @function
+       * @private
+       */
+
+      _addNoContentInfo: function (oPageLayout, sRowIid) {
+        var that = this;
+        var sElementPath = `formDetailsModel>/bodyElements/${sRowIid}`;
+        var sElementNamePath = sElementPath + "/Name";
+
+        var oSection = new sap.uxap.ObjectPageSection({
+          showTitle: false,
+          titleUppercase: false,
+          visible: {
+            path: sElementPath,
+            formatter: function (oElem) {
+              return oElem.Child === "0000";
+            },
+          },
+        }).addStyleClass("sapUiNoContentPadding");
+
+        oPageLayout.addSection(oSection);
+        that._addUIElement(sRowIid, "NoContentSection", null, oSection);
+
+        var oSubSection = new sap.uxap.ObjectPageSubSection().addStyleClass(
+          "sapUiNoContentPadding"
+        );
+
+        oSection.addSubSection(oSubSection);
+
+        this._addUIElement(sRowIid, "NoContentSubSection", null, oSubSection);
+
+        var oMessagePage = new sap.m.MessagePage({
+          showHeader: false,
+          icon: "sap-icon://bell",
+          text: {
+            parts: [
+              { path: sElementNamePath },
+              { path: "i18n>childrenNotFound" },
+            ],
+
+            formatter: function (sElementName, sNotification) {
+              return '"' + sElementName + '" ' + sNotification;
+            },
+          },
+          description: { path: "i18n>pushToAddNotice" },
+        }).addStyleClass("hapMessagePage");
+
+        oSubSection.addBlock(oMessagePage);
+      },
+      /**
+       * Add section
+       * @function
+       * @private
+       */
 
       _addSection: function (oViewData, oPageLayout, sRowIid) {
         var that = this;
+
         var oSection = new sap.uxap.ObjectPageSection({
           title: "{formDetailsModel>/bodyElements/" + sRowIid + "/Name}",
           showTitle: true,
@@ -1609,12 +1622,6 @@ sap.ui.define(
 
         oRowPanel = that._findUIElement(sRowIid, "RowPanel", null, false);
 
-        // _.find(aRowUIElements, {
-        //   RowIid: sRowIid,
-        //   ColumnIid: null,
-        //   UIType: "RowPanel",
-        // });
-
         if (oRowPanel) {
           bExist = true;
         }
@@ -1655,6 +1662,7 @@ sap.ui.define(
             var oPanelGrid = new sap.ui.layout.Grid({
               defaultSpan: "XL3 L4 M6 S12",
               hSpacing: 2,
+              containerQuery: true,
             }).addStyleClass("hapResponsiveGrid");
 
             if (
@@ -2937,13 +2945,18 @@ sap.ui.define(
           oCell.ColumnIid +
           "/ColumnIid";
 
+        var sListKeyPath =
+          oCell.CellValueClass === "ZM"
+            ? `{formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueNnv}`
+            : `{formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString}`;
+
+        var sItemKeyPath =
+          oCell.CellValueClass === "ZM"
+            ? `{formDetailsModel>ValueEid}`
+            : `{formDetailsModel>ValueIid}`;
+
         var oLB = new sap.m.Select({
-          selectedKey:
-            "{formDetailsModel>/bodyCells/" +
-            oCell.RowIid +
-            "/" +
-            oCell.ColumnIid +
-            "/ValueString}",
+          selectedKey: sListKeyPath,
           autoAdjustWidth: true,
           enabled: {
             path: sEditablePath,
@@ -2960,57 +2973,83 @@ sap.ui.define(
           },
 
           change: function (oEvent) {
-            if (
-              oCell.ColumnIid === that._sFinAppColumn ||
-              oCell.ColumnIid === that._sEmpAppColumn
-            ) {
-              var sRowIid = oEvent.getSource().data("RowIid");
-              var sColumnIid = oEvent.getSource().data("ColumnIid");
+            var oSelItem = oEvent.getParameter("selectedItem");
+
+            if (oSelItem) {
+              var sValueIid = oSelItem.data("ValueIid");
+              var sValueEid = oSelItem.data("ValueEid");
+              var sValueText = oSelItem.data("ValueText");
+              var oSource = oEvent.getSource();
+              var sRowIid = oSource.data("RowIid");
+              var sColumnIid = oSource.data("ColumnIid");
+              var sCellPath = `/bodyCells/${sRowIid}/${sColumnIid}`;
+              var oBodyCell = oViewModel.getProperty(sCellPath);
               var aBodyCells = oViewData.formData["BodyCells"];
-              var oLine = _.find(aBodyCells, {
+              var sIndex = _.findIndex(aBodyCells, {
                 RowIid: sRowIid,
                 ColumnIid: sColumnIid,
               });
-              oLine.ValueNum = "0";
-              oLine.ValueText = "";
-              oLine.ValueTxt = "";
+
+              oBodyCell.ValueString = aBodyCells[sIndex].ValueString =
+                sValueIid;
+              oBodyCell.ValueNnv = aBodyCells[sIndex].ValueNnv = sValueEid;
+              oBodyCell.ValueText = aBodyCells[sIndex].ValueText = sValueText;
+              oBodyCell.ValueTxt = aBodyCells[sIndex].ValueTxt = sValueEid;
               oViewModel.setProperty("/formData/BodyCells", aBodyCells);
-
-              var oModel = this.getModel();
-
-              var oOperation = {
-                Operation: "CALCSUM",
-                RowId: "",
-                ColumnId: "",
-                Result: "",
-                BodyCells: _.clone(
-                  oViewModel.getProperty("/formData/BodyCells")
-                ),
-                BodyElements: oViewModel.getProperty("/formData/BodyElements"),
-              };
-
-              oModel.create("/CalculateSummarySet", oOperation, {
-                success: function (oData, oResponse) {
-                  var sRowId = oData.RowId;
-                  var sColumnId = oData.ColumnId;
-
-                  var aBodyCellsForSummary = oViewData.formData["BodyCells"];
-
-                  oLine = _.find(aBodyCellsForSummary, {
-                    RowIid: sRowId,
-                    ColumnIid: sColumnId,
-                  });
-                  if (oLine?.NoteString) {
-                    oLine.NoteString = oData.Result;
-                    oViewModel.setProperty(
-                      "/formData/BodyCells",
-                      aBodyCellsForSummary
-                    );
-                  }
-                },
-                error: function () {},
-              });
+              oViewModel.setProperty(sCellPath, oBodyCell);
             }
+
+            // if (
+            //   oCell.ColumnIid === that._sFinAppColumn ||
+            //   oCell.ColumnIid === that._sEmpAppColumn
+            // ) {
+            //   var sRowIid = oEvent.getSource().data("RowIid");
+            //   var sColumnIid = oEvent.getSource().data("ColumnIid");
+            //   var aBodyCells = oViewData.formData["BodyCells"];
+            //   var oLine = _.find(aBodyCells, {
+            //     RowIid: sRowIid,
+            //     ColumnIid: sColumnIid,
+            //   });
+            //   oLine.ValueNum = "0";
+            //   oLine.ValueText = "";
+            //   oLine.ValueTxt = "";
+            //   oViewModel.setProperty("/formData/BodyCells", aBodyCells);
+
+            //   var oModel = this.getModel();
+
+            //   var oOperation = {
+            //     Operation: "CALCSUM",
+            //     RowId: "",
+            //     ColumnId: "",
+            //     Result: "",
+            //     BodyCells: _.clone(
+            //       oViewModel.getProperty("/formData/BodyCells")
+            //     ),
+            //     BodyElements: oViewModel.getProperty("/formData/BodyElements"),
+            //   };
+
+            //   oModel.create("/CalculateSummarySet", oOperation, {
+            //     success: function (oData, oResponse) {
+            //       var sRowId = oData.RowId;
+            //       var sColumnId = oData.ColumnId;
+
+            //       var aBodyCellsForSummary = oViewData.formData["BodyCells"];
+
+            //       oLine = _.find(aBodyCellsForSummary, {
+            //         RowIid: sRowId,
+            //         ColumnIid: sColumnId,
+            //       });
+            //       if (oLine?.NoteString) {
+            //         oLine.NoteString = oData.Result;
+            //         oViewModel.setProperty(
+            //           "/formData/BodyCells",
+            //           aBodyCellsForSummary
+            //         );
+            //       }
+            //     },
+            //     error: function () {},
+            //   });
+            // }
           },
         }); //.addStyleClass("hapListBox");
 
@@ -3031,10 +3070,25 @@ sap.ui.define(
         oLB.addCustomData(oColumnIid);
 
         var oItem = new sap.ui.core.Item({
-          key: "{formDetailsModel>ValueIid}",
+          key: sItemKeyPath,
           text: "{formDetailsModel>ValueText}",
         });
 
+        var oValueIid = new sap.ui.core.CustomData({
+          key: "ValueIid",
+          value: "{formDetailsModel>ValueIid}",
+        });
+        oItem.addCustomData(oValueIid);
+        var oValueEid = new sap.ui.core.CustomData({
+          key: "ValueEid",
+          value: "{formDetailsModel>ValueEid}",
+        });
+        oItem.addCustomData(oValueEid);
+        var oValueText = new sap.ui.core.CustomData({
+          key: "ValueText",
+          value: "{formDetailsModel>ValueText}",
+        });
+        oItem.addCustomData(oValueText);
         /*Attach template to RBG*/
         oLB.bindAggregation("items", {
           path:
@@ -3407,7 +3461,7 @@ sap.ui.define(
         if (!this._oSurveyDialog) {
           // create dialog via fragment factory
           this._oSurveyDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2_1.fragment.ElementSurvey",
+            "hcm.ux.hapv3.fragment.ElementSurvey",
             this
           );
           this._oSurveyDialog.setEscapeHandler(this.onEscapeDialog);
@@ -4672,7 +4726,7 @@ sap.ui.define(
         if (!this._oListAttachmentDialog) {
           // create dialog via fragment factory
           this._oListAttachmentDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2_1.fragment.AttachmentList",
+            "hcm.ux.hapv3.fragment.AttachmentList",
             this
           );
           // connect dialog to view (models, lifecycle)
@@ -5768,7 +5822,7 @@ sap.ui.define(
         if (!this._oAddNewElementFreeDialog) {
           // create dialog via fragment factory
           this._oAddNewElementFreeDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2_1.fragment.AddNewElementFree",
+            "hcm.ux.hapv3.fragment.AddNewElementFree",
             this
           );
           // connect dialog to view (models, lifecycle)
@@ -5786,7 +5840,7 @@ sap.ui.define(
         if (!this._oAddNewElementFreeFormDialog) {
           // create dialog via fragment factory
           this._oAddNewElementFreeFormDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2_1.fragment.AddNewElementFreeForm",
+            "hcm.ux.hapv3.fragment.AddNewElementFreeForm",
             this
           );
           //escape handler
@@ -5818,7 +5872,7 @@ sap.ui.define(
         if (!this._oAddNewElementObjectiveDialog) {
           // create dialog via fragment factory
           this._oAddNewElementObjectiveDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2_1.fragment.AddNewElementObjective",
+            "hcm.ux.hapv3.fragment.AddNewElementObjective",
             this
           );
           //escape handler
@@ -5836,7 +5890,7 @@ sap.ui.define(
         if (!this._oAddNewElementCatalogDialog) {
           // create dialog via fragment factory
           this._oAddNewElementCatalogDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2_1.fragment.AddNewElementCatalog",
+            "hcm.ux.hapv3.fragment.AddNewElementCatalog",
             this
           );
           // connect dialog to view (models, lifecycle)
@@ -6117,7 +6171,7 @@ sap.ui.define(
         if (!this._oUploadAttachmentDialog) {
           // create dialog via fragment factory
           this._oUploadAttachmentDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2_1.fragment.UploadAttachments",
+            "hcm.ux.hapv3.fragment.UploadAttachments",
             this
           );
           // connect dialog to view (models, lifecycle)

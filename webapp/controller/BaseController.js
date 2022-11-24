@@ -3,13 +3,13 @@ sap.ui.define(
   [
     "sap/ui/core/mvc/Controller",
     "sap/m/Dialog",
-    "hcm/ux/hapv2_1/utils/UIHelper",
+    "hcm/ux/hapv3/utils/UIHelper",
     "sap/m/MessageBox",
   ],
   function (Controller, Dialog, UIHelper, MessageBox) {
     "use strict";
 
-    return Controller.extend("hcm.ux.hapv2_1.controller.BaseController", {
+    return Controller.extend("hcm.ux.hapv3.controller.BaseController", {
       onInit: function () {},
       /**
        * Convenience method for accessing the router.
@@ -93,7 +93,7 @@ sap.ui.define(
       _getBusyFragment: function () {
         if (!this.oBusyDialog) {
           this.oBusyDialog = sap.ui.xmlfragment(
-            "hcm.ux.hapv2_1.fragment.GenericBusyDialog",
+            "hcm.ux.hapv3.fragment.GenericBusyDialog",
             this
           );
 

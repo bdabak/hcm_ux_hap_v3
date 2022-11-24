@@ -16,7 +16,7 @@ sap.ui.define([], function () {
     },
     getImagePath: function (sPath) {
       var sImagePath = jQuery.sap.getModulePath(
-        "hcm.ux.hapv2_1",
+        "hcm.ux.hapv3",
         "/images/barchart_loading.gif"
       );
 

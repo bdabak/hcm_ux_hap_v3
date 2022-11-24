@@ -2,7 +2,7 @@
 sap.ui.define(["sap/ui/core/Control"], function (Control) {
   "use strict";
 
-  return Control.extend("hcm.ux.hapv2_1.control.ScaleEntrance", {
+  return Control.extend("hcm.ux.hapv3.control.ScaleEntrance", {
     metadata: {
       properties: {
         cellValueList: { type: "object", bindable: true },
@@ -22,7 +22,7 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
     init: function () {
       var that = this;
       //initialisation code, in this case, ensure css is imported
-      var sLibraryPath = jQuery.sap.getModulePath("hcm.ux.hapv2_1"); //get the server location of the ui library
+      var sLibraryPath = jQuery.sap.getModulePath("hcm.ux.hapv3"); //get the server location of the ui library
       jQuery.sap.includeStyleSheet(sLibraryPath + "/control/ScaleEntrance.css");
 
       var oModel = new sap.ui.model.json.JSONModel({

@@ -1,190 +1,179 @@
 {
+  "_version": "1.2.0",
+  "sap.app": {
     "_version": "1.2.0",
-    "sap.app": {
-        "_version": "1.2.0",
-        "id": "hcm.ux.hapv2_1",
-        "type": "application",
-        "i18n": "i18n/i18n.properties",
-        "title": "{{appTitle}}",
-        "description": "{{appDescription}}",
-        "applicationVersion": {
-            "version": "1.0.0"
-        },
-        "dataSources": {
-            "mainService": {
-                "uri": "/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0",
-                    "localUri": "localService/metadata.xml"
-                }
-            }
-        },
-        "sourceTemplate": {
-            "id": "servicecatalog.connectivityComponent",
-            "version": "0.0.0",
-            "toolsId": "dab5b321-1509-4b83-9330-8d0abd6ce79a"
+    "id": "hcm.ux.hapv3",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
         }
+      }
     },
-    "sap.ui": {
-        "_version": "1.2.0",
-        "technology": "UI5",
-        "icons": {
-            "icon": "sap-icon://task",
-            "favIcon": "",
-            "phone": "",
-            "phone@2": "",
-            "tablet": "",
-            "tablet@2": ""
-        },
-        "deviceTypes": {
-            "desktop": true,
-            "tablet": true,
-            "phone": true
-        },
-        "fullWidth": true,
-        "supportedThemes": [
-            "sap_hcb",
-            "sap_belize"
-        ]
-    },
-    "sap.ui5": {
-        "_version": "1.2.0",
-        "rootView": {
-            "viewName": "hcm.ux.hapv2_1.view.App",
-            "type": "XML",
-            "id": "app"
-        },
-        "dependencies": {
-            "minUI5Version": "1.71.49",
-            "libs": {
-                "sap.f": {
-                    "minVersion": ""
-                },
-                "sap.m": {
-                    "minVersion": "1.36.0"
-                },
-                "sap.ui.core": {
-                    "minVersion": "1.36.0"
-                },
-                "sap.ui.layout": {
-                    "minVersion": "1.36.0"
-                },
-                "sap.ushell": {
-                    "minVersion": "1.36.0"
-                },
-                "sap.uxap": {
-                    "minVersion": ""
-                }
-            }
-        },
-        "contentDensities": {
-            "compact": true,
-            "cozy": true
-        },
-        "models": {
-            "i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "settings": {
-                    "bundleName": "hcm.ux.hapv2_1.i18n.i18n"
-                }
-            },
-            "": {
-                "dataSource": "mainService",
-                "settings": {
-                    "metadataUrlParams": {
-                        "sap-documentation": "heading"
-                    }
-                }
-            }
-        },
-        "resources": {
-            "css": [
-                {
-                    "uri": "./css/introjs.css"
-                },
-                {
-                    "uri": "./css/style.css"
-                }
-            ],
-            "js": [
-                {
-                    "uri": "./utils/intro.js"
-                },
-                {
-                    "uri": "./utils/lodash.js"
-                }
-            ]
-        },
-        "routing": {
-            "config": {
-                "routerClass": "sap.m.routing.Router",
-                "viewType": "XML",
-                "viewPath": "hcm.ux.hapv2_1.view",
-                "controlId": "app",
-                "controlAggregation": "pages",
-                "bypassed": {
-                    "target": [
-                        "notFound"
-                    ]
-                },
-                "async": true
-            },
-            "routes": [
-                {
-                    "pattern": "",
-                    "name": "formlist",
-                    "target": [
-                        "formlist"
-                    ]
-                },
-                {
-                    "pattern": "calibration/{roleId}",
-                    "name": "calibration",
-                    "target": [
-                        "calibration"
-                    ]
-                },
-                {
-                    "pattern": "GetDetail/{appraisalId}",
-                    "name": "formdetail",
-                    "target": [
-                        "formdetail"
-                    ]
-                }
-            ],
-            "targets": {
-                "formlist": {
-                    "viewName": "FormList",
-                    "viewId": "formlist",
-                    "viewLevel": 1,
-                    "title": "{i18n>formListViewTitle}"
-                },
-                "calibration": {
-                    "viewName": "Calibration",
-                    "viewId": "calibration",
-                    "viewLevel": 1,
-                    "title": "{i18n>calibration}"
-                },
-                "formdetail": {
-                    "viewName": "FormDetails",
-                    "viewId": "formdetail",
-                    "viewLevel": 2,
-                    "title": "{i18n>formDetailViewTitle}"
-                },
-                "objectNotFound": {
-                    "viewName": "ObjectNotFound",
-                    "viewId": "objectNotFound"
-                },
-                "notFound": {
-                    "viewName": "NotFound",
-                    "viewId": "notFound"
-                }
-            }
-        }
-    },
-    "sap.platform.abap": {
-        "uri": "/sap/bc/ui5_ui5/sap/zhcm_ux_hap",
-        "_version": "1.1.0"
+    "sourceTemplate": {
+      "id": "servicecatalog.connectivityComponent",
+      "version": "0.0.0",
+      "toolsId": "dab5b321-1509-4b83-9330-8d0abd6ce79a"
     }
+  },
+  "sap.ui": {
+    "_version": "1.2.0",
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://task",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    },
+    "fullWidth": true,
+    "supportedThemes": ["sap_hcb", "sap_belize"]
+  },
+  "sap.ui5": {
+    "_version": "1.2.0",
+    "rootView": {
+      "viewName": "hcm.ux.hapv3.view.App",
+      "type": "XML",
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.71.49",
+      "libs": {
+        "sap.f": {
+          "minVersion": ""
+        },
+        "sap.m": {
+          "minVersion": "1.36.0"
+        },
+        "sap.ui.core": {
+          "minVersion": "1.36.0"
+        },
+        "sap.ui.layout": {
+          "minVersion": "1.36.0"
+        },
+        "sap.ushell": {
+          "minVersion": "1.36.0"
+        },
+        "sap.uxap": {
+          "minVersion": ""
+        }
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "hcm.ux.hapv3.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "settings": {
+          "metadataUrlParams": {
+            "sap-documentation": "heading"
+          }
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "./css/introjs.css"
+        },
+        {
+          "uri": "./css/style.css"
+        }
+      ],
+      "js": [
+        {
+          "uri": "./utils/intro.js"
+        },
+        {
+          "uri": "./utils/lodash.js"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "hcm.ux.hapv3.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": ["notFound"]
+        },
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "formlist",
+          "target": ["formlist"]
+        },
+        {
+          "pattern": "calibration/{roleId}",
+          "name": "calibration",
+          "target": ["calibration"]
+        },
+        {
+          "pattern": "GetDetail/{appraisalId}",
+          "name": "formdetail",
+          "target": ["formdetail"]
+        }
+      ],
+      "targets": {
+        "formlist": {
+          "viewName": "FormList",
+          "viewId": "formlist",
+          "viewLevel": 1,
+          "title": "{i18n>formListViewTitle}"
+        },
+        "calibration": {
+          "viewName": "Calibration",
+          "viewId": "calibration",
+          "viewLevel": 1,
+          "title": "{i18n>calibration}"
+        },
+        "formdetail": {
+          "viewName": "FormDetails",
+          "viewId": "formdetail",
+          "viewLevel": 2,
+          "title": "{i18n>formDetailViewTitle}"
+        },
+        "objectNotFound": {
+          "viewName": "ObjectNotFound",
+          "viewId": "objectNotFound"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewId": "notFound"
+        }
+      }
+    }
+  },
+  "sap.platform.abap": {
+    "uri": "/sap/bc/ui5_ui5/sap/zhcm_ux_hap",
+    "_version": "1.1.0"
+  }
 }

@@ -4,7 +4,7 @@ sap.ui.define(
   function (Control, IconPool) {
     "use strict";
 
-    return Control.extend("hcm.ux.hapv2_1.control.ResultBoard", {
+    return Control.extend("hcm.ux.hapv3.control.ResultBoard", {
       metadata: {
         properties: {
           icon: { type: "string", bindable: true },
@@ -24,7 +24,7 @@ sap.ui.define(
       },
       init: function () {
         //initialisation code, in this case, ensure css is imported
-        var sLibraryPath = jQuery.sap.getModulePath("hcm.ux.hapv2_1"); //get the server location of the ui library
+        var sLibraryPath = jQuery.sap.getModulePath("hcm.ux.hapv3"); //get the server location of the ui library
         jQuery.sap.includeStyleSheet(sLibraryPath + "/control/ResultBoard.css");
       },
       renderer: function (oRM, oControl) {

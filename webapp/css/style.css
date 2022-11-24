@@ -934,3 +934,11 @@ html.sapUiMedia-Std-Tablet
 .hapPage .sapFDynamicPageTitleMainHeadingInner {
   overflow: visible !important;
 }
+
+.hapMessagePage {
+  min-height: 70vh;
+}
+
+.hapMessagePage .sapMMessagePageInner {
+  min-height: 70vh;
+}

@@ -3,7 +3,7 @@ sap.ui.define(
   function (Control, StarRatingItem) {
     "use strict";
 
-    return Control.extend("hcm.ux.hapv2_1.control.StarRating", {
+    return Control.extend("hcm.ux.hapv3.control.StarRating", {
       metadata: {
         properties: {
           selectedValue: { type: "string", bindable: true },
@@ -15,7 +15,7 @@ sap.ui.define(
         },
         aggregations: {
           ratingItems: {
-            type: "hcm.ux.hapv2_1.control.StarRatingItem",
+            type: "hcm.ux.hapv3.control.StarRatingItem",
             multiple: true,
             singularName: "ratingItem",
           },
@@ -27,7 +27,7 @@ sap.ui.define(
       },
       init: function () {
         //initialisation code, in this case, ensure css is imported
-        var sLibraryPath = jQuery.sap.getModulePath("hcm.ux.hapv2_1"); //get the server location of the ui library
+        var sLibraryPath = jQuery.sap.getModulePath("hcm.ux.hapv3"); //get the server location of the ui library
         jQuery.sap.includeStyleSheet(sLibraryPath + "/control/StarRating.css");
 
         //Set a unique radio name

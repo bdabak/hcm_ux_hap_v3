@@ -1,6 +1,6 @@
 specVersion: "2.4"
 metadata:
-  name: hcm.ux.hapv2_1
+  name: hcm.ux.hapv3
 type: application
 server:
   customMiddleware:
@@ -32,5 +32,5 @@ server:
     - name: fiori-tools-preview
       afterMiddleware: fiori-tools-appreload
       configuration:
-        component: hcm.ux.hapv2_1
+        component: hcm.ux.hapv3
         ui5Theme: sap_fiori_3

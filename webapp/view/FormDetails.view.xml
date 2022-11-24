@@ -1,6 +1,6 @@
-<mvc:View controllerName="hcm.ux.hapv2_1.controller.FormDetails"
+<mvc:View controllerName="hcm.ux.hapv3.controller.FormDetails"
 	xmlns="sap.m"
-	xmlns:custom="hcm.ux.hapv2_1.control"
+	xmlns:custom="hcm.ux.hapv3.control"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:smod="smod.ui5.controls.src.controls">
 	<!--<custom:CustomSideBar id="idCustomSideBar" navItemSelected="onNavItemSelected" navData="{formDetailsModel>/navigationData}"-->

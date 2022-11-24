@@ -2,10 +2,10 @@
 /*global _ */
 sap.ui.define(
   [
-    "hcm/ux/hapv2_1/controller/BaseController",
+    "hcm/ux/hapv3/controller/BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/routing/History",
-    "hcm/ux/hapv2_1/model/formatter",
+    "hcm/ux/hapv3/model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
@@ -23,7 +23,7 @@ sap.ui.define(
   ) {
     "use strict";
 
-    return BaseController.extend("hcm.ux.hapv2_1.controller.Calibration", {
+    return BaseController.extend("hcm.ux.hapv3.controller.Calibration", {
       formatter: formatter,
 
       /* =========================================================== */

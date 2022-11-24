@@ -14,11 +14,11 @@ builder:
       afterTask: generateCachebusterInfo
       configuration:
         target:
-          destination: ""
+          destination: SEDEF_FIORI
           url: http://fioritest.sedefshipyard.com:8000
           client: "100"
         app:
-          name: ZHCM_UX_HAP_V3
+          name: ZHCM_UX_HAP_V2
           description: Değerlendirme formları
           package: ZHR
           transport: SFDK900214
