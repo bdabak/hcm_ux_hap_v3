@@ -133,6 +133,7 @@
 .star-rating-item-tooltip {
   position: absolute;
   font-size: 80%;
+  line-height: 1rem;
   overflow: visible;
   display: flex;
   bottom: 0;
@@ -155,7 +156,7 @@
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
 }
 
-@container (max-width: 375px) {
+@container (max-width: 385px) {
   .star-rating-main {
     flex-direction: column;
     position: relative;
@@ -163,7 +164,7 @@
   }
 
   .star-rating-item-tooltip {
-    width: 100%;
+    width: 80%;
     left: 0 !important;
     bottom: 1rem;
   }

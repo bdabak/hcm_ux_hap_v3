@@ -942,3 +942,19 @@ html.sapUiMedia-Std-Tablet
 .hapMessagePage .sapMMessagePageInner {
   min-height: 70vh;
 }
+
+.hapObjectiveSelectionTree
+  .sapUiTableRowSel
+  .sapUiTableRowSelectionCell::before {
+  content: "";
+  color: green;
+  font-family: "SAP-icons";
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  /* left: 30%;
+  top: 20%; */
+  border: none;
+}

@@ -14,13 +14,6 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
       events: {},
     },
 
-    /**
-     * @override
-     */
-    onAfterRendering: function () {
-      this._refreshActive();
-    },
-
     renderer: function (oRM, oControl) {
       var sSelectedValue = oControl.getParent()?.getSelectedValue();
       var editable = oControl.getParent()?.getEditable();
@@ -122,8 +115,6 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
         }
 
         this.getParent().fireEvent("change");
-
-        //this._refreshActive();
       }
     },
   });

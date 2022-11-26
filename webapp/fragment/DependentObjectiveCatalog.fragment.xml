@@ -1,0 +1,60 @@
+<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns="sap.m"
+    xmlns:t="sap.ui.table"
+    xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+
+    <t:TreeTable id="dependentObjectiveTree" rows="{path:'formDetailsModel>dependentObjectives', parameters: {arrayNames:['Children'], numberOfExpandedLevels:2}}" selectionMode="Single" enableSelectAll="false" rowSelectionChange=".onDependentObjectSelected" class="hapObjectiveSelectionTree">
+        <t:extension>
+            <OverflowToolbar>
+                <Title text="{i18n>dependentObjectiveSelection}"/>
+            </OverflowToolbar>
+        </t:extension>
+        <t:columns>
+            <t:Column>
+                <Label text="{i18n>objectiveColumnTitle}" />
+                <t:template>
+                    <Text text="{formDetailsModel>Stext}" wrapping="false" tooltip="{formDetailsModel>Otype} {formDetailsModel>Objid}"/>
+                </t:template>
+            </t:Column>
+            <t:Column width="15rem">
+                <Label text="{i18n>indicatorDefinitionColumnTitle}" textAlign="Center" />
+                <t:template>
+                    <Text text="{formDetailsModel>Inddf}" visible="{formDetailsModel>Selectable}" width="100%" wrapping="true"/>
+                </t:template>
+            </t:Column>
+            <t:Column width="10rem" hAlign="Center">
+                <Label text="{i18n>beginDateColumnTitle}" textAlign="Center" />
+                <t:template>
+                    <Text text="{path:'formDetailsModel>Objbg', type: 'sap.ui.model.type.DateTime', formatOptions: { pattern: 'dd.MM.yyyy'}}" visible="{formDetailsModel>Selectable}" textAlign="Center" width="100%" />
+                </t:template>
+            </t:Column>
+            <t:Column width="10rem" hAlign="Center">
+                <Label text="{i18n>endDateColumnTitle}" textAlign="Center" />
+                <t:template>
+                    <Text text="{path:'formDetailsModel>Objen', type: 'sap.ui.model.type.DateTime', formatOptions: { pattern: 'dd.MM.yyyy'}}" visible="{formDetailsModel>Selectable}" textAlign="Center" width="100%" />
+                </t:template>
+            </t:Column>
+            <t:Column width="10rem" hAlign="Center">
+                <Label text="{i18n>currentValueColumnTitle}" textAlign="Center" width="100%" />
+                <t:template>
+                    <Text text="{path:'formDetailsModel>Crovl', type: 'sap.ui.model.type.Float'}" visible="{formDetailsModel>Selectable}" textAlign="Right" width="100%"/>
+                </t:template>
+            </t:Column>
+            <t:Column width="10rem" hAlign="Center">
+                <Label text="{i18n>unitColumnTitle}" textAlign="Center" />
+                <t:template>
+                    <Text text="{formDetailsModel>Objun}" visible="{formDetailsModel>Selectable}" textAlign="Center" width="100%" />
+                </t:template>
+            </t:Column>
+            <!-- <t:Column hAlign="Center">
+                <Label text="Seçim" />
+                <t:template>
+                    <CheckBox visible="{formDetailsModel>Selectable}" selected="{formDetailsModel>Selected}" cd:referenceObjectType="{formDetailsModel>Otype}" cd:referenceObjectId="{formDetailsModel>Objid}"/>
+                </t:template>
+            </t:Column> -->
+        </t:columns>
+    </t:TreeTable>
+</core:FragmentDefinition>

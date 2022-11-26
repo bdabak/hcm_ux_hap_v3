@@ -1,0 +1,84 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:u="sap.ui.unified"
+    xmlns:layout="sap.ui.layout">
+    <Dialog id="newObjectiveWizardDialog" showHeader="false" verticalScrolling="false" contentHeight="70%" contentWidth="80%">
+        <f:DynamicPage stickySubheaderProvider="CreateProductWizard" toggleHeaderOnTitleClick="false" class="sapUiNoContentPadding" showFooter="true">
+            <f:title>
+                <f:DynamicPageTitle>
+                    <f:heading>
+                        <Title text=""/>
+                    </f:heading>
+                </f:DynamicPageTitle>
+            </f:title>
+            <f:content>
+                <Wizard id="newObjectiveWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" showNextButton="false">
+                    <WizardStep id="dependentObjectiveSelection" title="Bağlı Hedef Seçimi" validated="true" activate="dependentObjectiveStepActicate">
+                        <MessageStrip class="sapUiSmallMarginBottom" text="{i18n>selectDependentObjectiveHint}" showIcon="true"/>
+                        <core:Fragment fragmentName="hcm.ux.hapv3.fragment.DependentObjectiveCatalog" type="XML" />
+                    </WizardStep>
+                    <WizardStep id="newObjectiveInformation" validated="false" title="Hedef Bilgileri Girişi" activate="newObjectiveInfoStepActivate">
+                        <MessageStrip class="sapUiSmallMarginBottom" text="Validation in the wizard is controlled by calling the validateStep(Step) and invalidateStep(Step) methods " showIcon="true"/>
+                        <Text text="Cras tellus leo, volutpat vitae ullamcorper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien et viverra imperdiet, orci erat porttitor nulla, eget commodo metus nibh nec ipsum. Aliquam lacinia euismod metus, sollicitudin pellentesque purus volutpat eget. Pellentesque egestas erat quis eros convallis mattis. Mauris hendrerit sapien a malesu corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien	corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien	"/>
+                        <form:SimpleForm editable="true">
+                            <Label text="Name" required="true"/>
+                            <Input valueStateText="Enter 6 symbols or more" valueState="{/productNameState}" id="ProductName" liveChange="additionalInfoValidation" placeholder="Enter name with length greater than 6" value="{/productName}"/>
+                            <Label text="Weight" required="true"/>
+                            <Input valueStateText="Enter digits" valueState="{/productWeightState}" id="ProductWeight" liveChange="additionalInfoValidation" type="Number" placeholder="Enter digits" value="{/productWeight}"/>
+                            <Label text="Manufacturer"/>
+                            <Select selectedKey="{/productManufacturer}">
+                                <core:Item key="Apple" text="Apple"/>
+                                <core:Item key="Microsoft" text="Microsoft"/>
+                                <core:Item key="Google" text="Google"/>
+                                <core:Item key="Sony" text="Sony"/>
+                                <core:Item key="Samsung" text="Samsung"/>
+                                <core:Item key="Logitech" text="Logitech"/>
+                            </Select>
+                            <Label text="Description"/>
+                            <TextArea value="{/productDescription}" rows="8"/>
+                        </form:SimpleForm>
+                    </WizardStep>
+                    <WizardStep id="OptionalInfoStep" validated="true" activate="optionalStepActivation" title="Optional Information">
+                        <MessageStrip class="sapUiSmallMarginBottom" text="You can validate steps by default with the validated='true' property of the step. The next button is always enabled." showIcon="true"/>
+                        <Text text="Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien	corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien	"/>
+                        <form:SimpleForm editable="true">
+                            <Label text="Cover photo"/>
+                            <u:FileUploader width="100%" tooltip="Upload product cover photo to the local server" style="Emphasized" placeholder="Choose a file for Upload..."/>
+                            <Label text="Manufacturing date"/>
+                            <DatePicker id="DP3" displayFormat="short" value="{/manufacturingDate}"/>
+                            <Label text="Availability"/>
+                            <SegmentedButton selectedKey="{/availabilityType}">
+                                <items>
+                                    <SegmentedButtonItem key="In store" text="In store"/>
+                                    <SegmentedButtonItem key="In depot" text="In depot"/>
+                                    <SegmentedButtonItem key="In repository" text="In repository"/>
+                                    <SegmentedButtonItem key="Out of stock" text="Out of stock"/>
+                                </items>
+                            </SegmentedButton>
+                            <Label text="Size"/>
+                            <Input value="{/size}"/>
+                            <ComboBox maxWidth="100px" selectedKey="{/measurement}">
+                                <core:Item key="X" text="X"/>
+                                <core:Item key="Y" text="Y"/>
+                                <core:Item key="Z" text="Z"/>
+                            </ComboBox>
+
+                        </form:SimpleForm>
+                    </WizardStep>
+                </Wizard>
+            </f:content>
+
+            <f:footer>
+                <OverflowToolbar>
+                    <ToolbarSpacer/>
+                    <Button text="{i18n>prevStepButton}" visible="{formDetailsModel>buttonSettings/backButtonVisible}" press=".onObjectiveWizardDialogButtonPressed" />
+                    <Button text="{i18n>nextStepButton}" type="Emphasized" enabled="{formDetailsModel>buttonSettings/nextButtonEnabled}" visible="{formDetailsModel>buttonSettings/nextButtonVisible}" press=".onObjectiveWizardDialogButtonPressed" />
+                    <Button text="{i18n>finalizeButton}" type="Accept" visible="{formDetailsModel>buttonSettings/finishButtonVisible}" press=".onObjectiveWizardDialogButtonPressed" />
+                    <Button text="{i18n>cancelButton}" type="Reject" press=".onObjectiveWizardDialogButtonCancelled"/>
+                </OverflowToolbar>
+            </f:footer>
+        </f:DynamicPage>
+    </Dialog>
+</core:FragmentDefinition>

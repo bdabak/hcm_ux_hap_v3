@@ -246,7 +246,7 @@ sap.ui.define(
         //	this.byId("idPeriodEndDate").setSelectedKey(sBeginYear);
         //}
         //s4hanahdvapp.sedef.com:8000/sap/bc/webdynpro/sap/hap_configuration?WDCONFIGURATIONID=HAP_AC_TAB_CONF
-        http: var _getDate = function (sYear) {
+        var _getDate = function (sYear) {
           var oDate = _.find(aDates, ["Year", parseInt(sYear, 10)]);
           if (oDate) {
             return [oDate.Begda, oDate.Endda];

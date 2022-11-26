@@ -100,6 +100,17 @@ sap.ui.define(
           allSectionsClicked: false,
           navigationElementId: "",
           saveAndNextButtonVisibility: true,
+          objectiveWizardSettings: {
+            buttonSettings: {
+              backButtonVisible: false,
+              nextButtonVisible: true,
+              nextButtonEnabled: false,
+              finishButtonVisible: false,
+            },
+            dependentObjectives: {
+              Children: [],
+            },
+          },
         });
 
         //Set page layout
@@ -1731,9 +1742,11 @@ sap.ui.define(
         var oViewModel = that.getModel("formDetailsModel");
         var oViewData = oViewModel.getData();
         var sParamVal;
+        var sObjectiveRow;
         var aButtons = [];
 
         sParamVal = oViewData.formParameters["FORM_VB_ROW_INDIVIDUAL_GOALS"];
+        sObjectiveRow = oViewData.formParameters["OBJECTIVE_ROW"];
 
         if (oElem.EnhancementVisible) {
           var aElementButtons = oViewData.formData?.BodyElementButtons;
@@ -1759,7 +1772,10 @@ sap.ui.define(
               icon: "sap-icon://add",
               text: sEnhanceButtonText,
               type: "Accept",
-              press: that._handleAddFormElement.bind(that),
+              press:
+                sObjectiveRow && sObjectiveRow === oElem.ElementId
+                  ? that._handleAddObjectiveByWizard.bind(that)
+                  : that._handleAddFormElement.bind(that),
               enabled: sElementEditable,
               customData: aCustomDataAdd,
             });
@@ -4844,6 +4860,195 @@ sap.ui.define(
         };
       },
 
+      _handleAddObjectiveByWizard: function (oEvent) {
+        var that = this;
+        var openWizard = function () {
+          var oView = that.getView();
+
+          // create Objective Wizard Dialog
+          if (!that._objWizardDialog) {
+            that._objWizardDialog = Fragment.load({
+              id: oView.getId(),
+              name: "hcm.ux.hapv3.fragment.AddNewObjectiveByWizard",
+              controller: that,
+            }).then(
+              function (oDialog) {
+                oDialog.attachAfterOpen(
+                  that.onObjectiveWizardDialogAfterOpen,
+                  that
+                );
+                oDialog.attachAfterClose(
+                  that.onObjectiveWizardDialogAfterClose,
+                  that
+                );
+                oView.addDependent(oDialog);
+                oDialog.bindElement(
+                  "formDetailsModel>/objectiveWizardSettings"
+                );
+                return oDialog;
+              }.bind(that)
+            );
+          }
+          that._objWizardDialog.then(function (oDialog) {
+            oDialog.open();
+          });
+        };
+
+        var oViewModel = this.getModel("formDetailsModel");
+        var oModel = this.getModel();
+        var that = this;
+        var sHasErrors = false;
+        var sRowIid = oEvent.getSource().data("elementRowIid");
+        var sElementName = oEvent.getSource().data("elementName");
+        var sEnhanceName = oEvent.getSource().data("enhanceName");
+        var sElementLevel = oEvent.getSource().data("elementLevel");
+        var sMaxChildren = this._checkMaxChildren(sRowIid);
+        var sParentName = sEnhanceName
+          ? sElementName + " - " + sEnhanceName
+          : sElementName;
+
+        if (sMaxChildren > 0) {
+          MessageBox.warning(
+            this.getText("newElementMaxChildrenReached", [
+              sMaxChildren,
+              sElementName,
+            ]),
+            {
+              title: this.getText("newElementAdditionError"),
+            }
+          );
+          return;
+        }
+
+        this._convertUIData();
+
+        var oOperation = {
+          AppraisalId: oViewModel.getProperty("/appraisalId"),
+          PartApId: "0000",
+          Operation: "ENHANCEDOB",
+          RowIid: sRowIid,
+          ButtonId: null,
+          BodyElements: oViewModel.getProperty("/formData/BodyElements"),
+          BodyCells: oViewModel.getProperty("/formData/BodyCells"),
+          BodyCellValues: oViewModel.getProperty("/formData/BodyCellValues"),
+          BodyColumns: oViewModel.getProperty("/formData/BodyColumns"),
+          ResultTable: oViewModel.getProperty("/formData/ResultTable"),
+          Return: oViewModel.getProperty("/formData/Return"),
+          ReturnOp: oViewModel.getProperty("/formData/ReturnOp"),
+          DependentObjectives: [],
+        };
+
+        this._removeAllMessages();
+        that._openBusyFragment();
+        oModel.create("/DocumentOperationsSet", oOperation, {
+          success: function (oData, oResponse) {
+            /* Close busy indicator*/
+            that._closeBusyFragment();
+
+            /* Build objective catalog for selection and adjust form accordingly */
+
+            oData, sRowIid, sFromCatalog, sParentName, sObj, sElementLevel;
+            that._buildDependentObjectiveCatalog(
+              oData,
+              sRowIid,
+              sParentName,
+              openWizard
+            );
+
+            // /* Return messages */
+            // if (oData.Return !== null) {
+            //   if (oData.Return.hasOwnProperty("results")) {
+            //     sHasErrors = that._processReturnMessagesNew(
+            //       oData.Return.results,
+            //       false
+            //     );
+            //   }
+            // }
+
+            // if (!sHasErrors) {
+            //   if (oData.ReturnOp.UiDeferred === "X") {
+            //     /*Add from tree or list*/
+            //     that._buildCatalogForSelection(oData, sRowIid);
+            //   } else {
+            //     /*Free enhancement*/
+            //     that._enhanceDocument(
+            //       oData,
+            //       sRowIid,
+            //       false,
+
+            //       false,
+            //       sElementLevel
+            //     );
+            //   }
+            // }
+          },
+          error: function (oError) {
+            that._closeBusyFragment();
+            jQuery.sap.log.error(oError);
+          },
+          async: true,
+        });
+      },
+
+      onObjectiveWizardDialogAfterOpen: function () {
+        this._oWizard = this.byId("newObjectiveWizard");
+        this._iSelectedStepIndex = 0;
+        this._oSelectedStep =
+          this._oWizard.getSteps()[this._iSelectedStepIndex];
+
+        // this._oTree = this.byId("dependentObjectiveTree");
+        // var items = this._oTree.getItems();
+        // for (i = 0; i < items.length; i++) {
+        //   var currentItem = items[i];
+        //   var model = currentItem.getBindingContext().getObject(); // gives you the model data
+        //   var showSelect = model.Selectable === true; // for example
+        //   currentItem.getSingleSelectControl().setVisible(showSelect);
+        // }
+        //this.handleButtonsVisibility();
+      },
+      onObjectiveWizardDialogAfterClose: function (oEvent) {
+        var oDialog = oEvent.getSource();
+        /* Destroy content and the dialog*/
+        oDialog.destroyContent();
+        oDialog.destroy();
+      },
+      onObjectiveWizardDialogButtonCancelled: function () {
+        this._backUpOldFormState();
+
+        /* Close dialog and set promise to initial state */
+        var oDialog =
+          this.byId("newObjectiveWizardDialog") ||
+          sap.ui.getCore().byId("newObjectiveWizardDialog");
+        oDialog.close();
+
+        /* Give cancelled message */
+        MessageToast.show(this.getText("addOperationCancelled"));
+
+        /* Set promise to initial state */
+        this._objWizardDialog = null;
+      },
+
+      onDependentObjectSelected: function (oEvent) {
+        var oViewModel = this.getModel("formDetailsModel");
+        var oWizardSettings = oViewModel.getProperty(
+          "/objectiveWizardSettings"
+        );
+        var sPath = oEvent.getParameter("rowContext")?.sPath;
+
+        if (sPath) {
+          var oRow = oViewModel.getProperty(sPath);
+          if (oRow?.Selectable) {
+            oWizardSettings.buttonSettings.nextButtonEnabled = true;
+            oWizardSettings.buttonSettings.nextButtonVisible = true;
+          } else {
+            oEvent.getSource().setSelectedIndex(-1);
+            oWizardSettings.buttonSettings.nextButtonEnabled = false;
+            oWizardSettings.buttonSettings.nextButtonVisible = true;
+          }
+        }
+        oViewModel.setProperty("/objectiveWizardSettings", oWizardSettings);
+      },
+
       _handleAddFormElement: function (oEvent) {
         var oViewModel = this.getModel("formDetailsModel");
         var oModel = this.getModel();
@@ -5135,6 +5340,112 @@ sap.ui.define(
           async: true,
         });
       },
+      _doEnhanceDocument: function (sRowIid, sNewRowIid, sElementLevel) {
+        var that = this;
+        var oVM = that.getModel("formDetailsModel");
+        var oVD = oVM.getData();
+
+        if (sElementLevel === "02") {
+          var oCurrentPageLayout = that._findUIElement(
+            sRowIid,
+            "PageLayout",
+            null,
+            true
+          );
+          if (
+            oCurrentPageLayout !== null &&
+            sNewRowIid !== null &&
+            sNewRowIid !== "0000"
+          ) {
+            that._addSection(oVD, oCurrentPageLayout, sNewRowIid);
+          }
+        } else {
+          that._doEnhanceSingle(sRowIid, sNewRowIid, true);
+        }
+      },
+      _buildDependentObjectiveCatalog: function (
+        oData,
+        sRowIid,
+        sParentName,
+        fnCallBack
+      ) {
+        var that = this;
+        var oViewModel = this.getModel("formDetailsModel");
+        var sNewRowIid = null;
+        var aNewElements;
+        var oWizardSettings = oViewModel.getProperty(
+          "/objectiveWizardSettings"
+        );
+        var aStruc = _.cloneDeep(oData.DependentObjectives.results);
+
+        oWizardSettings.dependentObjectives = {
+          Children: [],
+        };
+
+        // Backup current form state in case of a cancel -- BEGIN
+        this._backUpOldFormState();
+        // Backup current form state in case of a cancel -- END
+
+        // Set new form state -- BEGIN
+        var aNewState = this._setNewFormState(oData, sRowIid, sParentName);
+        sNewRowIid = aNewState[0];
+        aNewElements = _.clone(aNewState[1]);
+        // Set new form state -- END
+
+        var buildChildren = function (sOtype, sObjid) {
+          var aData =
+            _.filter(aStruc, {
+              PupOtype: sOtype,
+              PupObjid: sObjid,
+            }) || [];
+
+          var aChildren = [];
+
+          if (aData.length > 0) {
+            $.each(aData, function (i, oCurrent) {
+              var oChild = {};
+              oChild.Stext = oCurrent.Stext;
+              oChild.Otype = oCurrent.Otype;
+              oChild.Objid = oCurrent.Objid;
+              oChild.Inddf = oCurrent.Inddf;
+              oChild.Objbg = oCurrent.Objbg;
+              oChild.Objen = oCurrent.Objen;
+              oChild.Crovl = oCurrent.Crovl;
+              oChild.Objun = oCurrent.Objun;
+              oChild.PupOtype = sOtype;
+              oChild.PupObjid = sObjid;
+              oChild.Selectable = oCurrent.Selectable;
+              oChild.Selected = false;
+              oChild.Children = buildChildren(oChild.Otype, oChild.Objid);
+              aChildren.push(oChild);
+            });
+          }
+
+          return aChildren;
+        };
+
+        var buildHierarchy = function () {
+          var aRoots = _.filter(aStruc, ["PupObjid", "00000000"]);
+
+          $.each(aRoots, function (i, oCurrent) {
+            var oRoot = {};
+            oRoot.Stext = oCurrent.Stext;
+            oRoot.Otype = oCurrent.Otype;
+            oRoot.Objid = oCurrent.Objid;
+            oRoot.Selectable = oCurrent.Selectable;
+            oRoot.Selected = false;
+            oRoot.Children = buildChildren(oRoot.Otype, oRoot.Objid);
+            oWizardSettings.dependentObjectives.Children.push(oRoot);
+          });
+
+          oViewModel.setProperty("/objectiveWizardSettings", oWizardSettings);
+
+          fnCallBack();
+        };
+
+        buildHierarchy();
+      },
+
       _buildCatalogForSelection: function (oData, sRowIid) {
         var oEnhanceModel = this.getModel("enhanceModel");
         var aStruc = [];
@@ -5223,38 +5534,12 @@ sap.ui.define(
           }
         }
       },
-      _enhanceDocument: function (
-        oData,
-        sRowIid,
-        sFromCatalog,
-        sParentName,
-        sObj,
-        sElementLevel
-      ) {
+
+      _backUpOldFormState: function () {
         var oViewModel = this.getModel("formDetailsModel");
-        var aRowUIElements = oViewModel.getProperty("/formUIElements");
-        var aBodyElements = oData.BodyElements.hasOwnProperty("results")
-          ? oData.BodyElements.results
-          : [];
-        var aBodyCells = oData.BodyCells.hasOwnProperty("results")
-          ? oData.BodyCells.results
-          : [];
-        var aBodyCellValues = oData.BodyCellValues.hasOwnProperty("results")
-          ? oData.BodyCellValues.results
-          : [];
-        var aFormQuestions = [];
-        var aFormAnswers = [];
         var oBodyElements = oViewModel.getProperty("/bodyElements");
         var oBodyCells = oViewModel.getProperty("/bodyCells");
         var oBodyCellValues = oViewModel.getProperty("/bodyCellValues");
-        var oElementSurveys = oViewModel.getProperty("/elementSurveys");
-        var oFormQuestions = oViewModel.getProperty("/formData/FormQuestions");
-        var oFormAnswers = oViewModel.getProperty("/formData/FormAnswers");
-        var sChildRowIid = null;
-        var sNewRowIid = null;
-        var that = this;
-        var aNewElements = [];
-
         // Backup current form state in case of a cancel -- BEGIN
         var aBodyCellsClone = _.clone(
           oViewModel.getProperty("/formData/BodyCells")
@@ -5294,8 +5579,32 @@ sap.ui.define(
           oBodyElementsClone
         );
         // Backup current form state in case of a cancel -- END
+      },
 
-        if (oData.FormQuestions !== null) {
+      _setNewFormState: function (oData, sRowIid, sParentName) {
+        var oViewModel = this.getModel("formDetailsModel");
+        var aBodyElements = oData.BodyElements.hasOwnProperty("results")
+          ? oData.BodyElements.results
+          : [];
+        var aBodyCells = oData.BodyCells.hasOwnProperty("results")
+          ? oData.BodyCells.results
+          : [];
+        var aBodyCellValues = oData.BodyCellValues.hasOwnProperty("results")
+          ? oData.BodyCellValues.results
+          : [];
+        var aFormQuestions = [];
+        var aFormAnswers = [];
+        var oBodyElements = oViewModel.getProperty("/bodyElements");
+        var oBodyCells = oViewModel.getProperty("/bodyCells");
+        var oBodyCellValues = oViewModel.getProperty("/bodyCellValues");
+        var oElementSurveys = oViewModel.getProperty("/elementSurveys");
+        var oFormQuestions = oViewModel.getProperty("/formData/FormQuestions");
+        var oFormAnswers = oViewModel.getProperty("/formData/FormAnswers");
+        var sChildRowIid = null;
+        var sNewRowIid = null;
+        var aNewElements = [];
+
+        if (oData?.FormQuestions !== null) {
           aFormQuestions = oData.FormQuestions.hasOwnProperty("results")
             ? oData.FormQuestions.results
             : [];
@@ -5303,6 +5612,8 @@ sap.ui.define(
             ? oData.FormAnswers.results
             : [];
         }
+
+        oViewModel.setProperty("/newElement", null);
 
         //Set new element
         $.each(aBodyElements, function (sIndex, oElement) {
@@ -5374,79 +5685,121 @@ sap.ui.define(
         oViewModel.setProperty("/bodyCells", oBodyCells);
         oViewModel.setProperty("/bodyCellValues", oBodyCellValues);
 
-        /*Re-produce surveys*/
-        that._formElementSurveysObject();
+        return [sNewRowIid, aNewElements, sChildRowIid];
+      },
+      _doEnhanceSingle: function (p, c, s) {
+        var oVM = this.getModel("formDetailsModel");
+        var oVD = oVM.getData();
 
-        var _enhanceSingle = function (p, c, s) {
-          var oVM = that.getModel("formDetailsModel");
-          var oVD = oVM.getData();
+        var oCurrentRowPanel = null;
 
-          var oCurrentRowPanel = null;
+        oCurrentRowPanel = this._findUIElement(p, "RowPanel", null, true);
 
-          oCurrentRowPanel = that._findUIElement(p, "RowPanel", null, true);
+        if (oCurrentRowPanel !== null && c !== null && c !== "0000") {
+          this._addRowNew(oCurrentRowPanel, oVD, c, true, false);
 
-          if (oCurrentRowPanel !== null && c !== null && c !== "0000") {
-            that._addRowNew(oCurrentRowPanel, oVD, c, true, false);
-
-            if (s) {
-              var oNewInput = that._findUIElement(
-                p,
-                "RowPanelHeader",
-                null,
-                true
-              );
-
-              if (oNewInput.UIElement) {
-                oNewInput.UIElement.addEventDelegate({
-                  onAfterRendering: function () {
-                    oNewInput.UIElement.focus();
-                  },
-                });
-              }
-            }
-          }
-        };
-
-        var _doEnhanceFromCatalog = function () {
-          $.each(aNewElements, function (n, e) {
-            _enhanceSingle(sRowIid, e.RowIid, false);
-          });
-        };
-
-        var _doEnhance = function () {
-          var oVM = that.getModel("formDetailsModel");
-          var oVD = oVM.getData();
-
-          if (sElementLevel === "02") {
-            var oCurrentPageLayout = that._findUIElement(
-              sRowIid,
-              "PageLayout",
+          if (s) {
+            var oNewInput = this._findUIElement(
+              p,
+              "RowPanelHeader",
               null,
               true
             );
-            if (
-              oCurrentPageLayout !== null &&
-              sNewRowIid !== null &&
-              sNewRowIid !== "0000"
-            ) {
-              that._addSection(oVD, oCurrentPageLayout, sNewRowIid);
+
+            if (oNewInput.UIElement) {
+              oNewInput.UIElement.addEventDelegate({
+                onAfterRendering: function () {
+                  oNewInput.UIElement.focus();
+                },
+              });
             }
-          } else {
-            _enhanceSingle(sRowIid, sNewRowIid, true);
           }
-        };
+        }
+      },
+      _doEnhanceDocumentFromCatalog: function (aNewElements, sRowIid) {
+        var that = this;
+        $.each(aNewElements, function (n, e) {
+          that._doEnhanceSingle(sRowIid, e.RowIid, false);
+        });
+      },
+      _enhanceDocument: function (
+        oData,
+        sRowIid,
+        sFromCatalog,
+        sParentName,
+        sObj,
+        sElementLevel
+      ) {
+        var sNewRowIid = null;
+        var that = this;
+        var aNewElements;
+
+        // Backup current form state in case of a cancel -- BEGIN
+        this._backUpOldFormState();
+        // Backup current form state in case of a cancel -- END
+
+        // Set new form state -- BEGIN
+        var aNewState = this._setNewFormState(oData, sRowIid, sParentName);
+        sNewRowIid = aNewState[0];
+        aNewElements = _.clone(aNewState[1]);
+        // Set new form state -- END
+
+        /*Re-produce surveys*/
+        that._formElementSurveysObject();
+
+        // var _doEnhanceFromCatalog = function () {
+        //   $.each(aNewElements, function (n, e) {
+        //     that._doEnhanceSingle(sRowIid, e.RowIid, false);
+        //   });
+        // };
+
+        // var _doEnhance = function () {
+        //   var oVM = that.getModel("formDetailsModel");
+        //   var oVD = oVM.getData();
+
+        //   if (sElementLevel === "02") {
+        //     var oCurrentPageLayout = that._findUIElement(
+        //       sRowIid,
+        //       "PageLayout",
+        //       null,
+        //       true
+        //     );
+        //     if (
+        //       oCurrentPageLayout !== null &&
+        //       sNewRowIid !== null &&
+        //       sNewRowIid !== "0000"
+        //     ) {
+        //       that._addSection(oVD, oCurrentPageLayout, sNewRowIid);
+        //     }
+        //   } else {
+        //     that._doEnhanceSingle(sRowIid, sNewRowIid, true);
+        //   }
+        // };
 
         this._addElementCallBack = null;
 
         if (!sObj) {
           if (!sFromCatalog) {
-            this._addElementCallBack = _doEnhance;
+            this._addElementCallBack = jQuery.proxy(
+              that._doEnhanceDocument,
+              that,
+              sRowIid,
+              sNewRowIid,
+              sElementLevel
+            );
             this._openAddNewElementFreeFormDialog(sNewRowIid, oData);
           } else {
-            _doEnhanceFromCatalog();
+            this._doEnhanceDocumentFromCatalog(aNewElements, sRowIid);
           }
         } else {
-          this._addElementCallBack = _doEnhance;
+          // this._addElementCallBack = _doEnhance;
+          this._addElementCallBack = jQuery.proxy(
+            that._doEnhanceDocument,
+            that,
+            sRowIid,
+            sNewRowIid,
+            sElementLevel
+          );
           this._openAddNewElementObjectiveDialog();
         }
       }, //_enhanceDocument
