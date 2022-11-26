@@ -46,7 +46,7 @@
             <t:Column width="10rem" hAlign="Center">
                 <Label text="{i18n>unitColumnTitle}" textAlign="Center" />
                 <t:template>
-                    <Text text="{formDetailsModel>Objun}" visible="{formDetailsModel>Selectable}" textAlign="Center" width="100%" />
+                    <Text text="{path:'formDetailsModel>Objun', formatter: '._getObjectiveUnitText'}" visible="{formDetailsModel>Selectable}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <!-- <t:Column hAlign="Center">
