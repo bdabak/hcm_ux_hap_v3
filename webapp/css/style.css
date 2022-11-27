@@ -943,6 +943,9 @@ html.sapUiMedia-Std-Tablet
   min-height: 70vh;
 }
 
+.hapObjectiveSelectionTree .sapUiTableRowSelectionCell {
+  cursor: pointer;
+}
 .hapObjectiveSelectionTree
   .sapUiTableRowSel
   .sapUiTableRowSelectionCell::before {

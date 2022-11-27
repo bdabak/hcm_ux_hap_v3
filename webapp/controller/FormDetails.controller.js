@@ -2553,7 +2553,10 @@ sap.ui.define(
             ],
             formatter: function (sAvailable, sValueClass, sValueText) {
               //--Show description for value when available
-              if (sValueClass === "ZQ" && sAvailable === "X") {
+              if (
+                (sValueClass === "ZQ" || sValueClass === "ZM") &&
+                sAvailable === "X"
+              ) {
                 return sValueText;
               } else {
                 return "";
@@ -2589,8 +2592,11 @@ sap.ui.define(
               if (sColIid === that._sWeightColumn) {
                 return "100px";
               } else {
-                if (sValueClass === "ZQ" && sAvailable === "X") {
-                  return "250px";
+                if (
+                  (sValueClass === "ZQ" || sValueClass === "ZM") &&
+                  sAvailable === "X"
+                ) {
+                  return sValueClass === "ZM" ? "350px" : "250px";
                 } else {
                   return "150px";
                 }
@@ -2646,6 +2652,10 @@ sap.ui.define(
         try {
           var oViewModel = this.getModel("formDetailsModel");
           var oBodyCells = oViewModel.getProperty("/bodyCells/" + oCell.RowIid);
+
+          if (oCell.ColumnIid === this._sObjDepColumn) {
+            return false;
+          }
 
           if (
             sCellValueAvailability === "X" ||
@@ -4915,6 +4925,9 @@ sap.ui.define(
           RowIid: sRowIid,
           ButtonId: null,
           BodyElements: oViewModel.getProperty("/formData/BodyElements"),
+          BodyElementButtons: oViewModel.getProperty(
+            "/formData/BodyElementButtons"
+          ),
           BodyCells: oViewModel.getProperty("/formData/BodyCells"),
           BodyCellValues: oViewModel.getProperty("/formData/BodyCellValues"),
           BodyColumns: oViewModel.getProperty("/formData/BodyColumns"),
@@ -4931,15 +4944,27 @@ sap.ui.define(
             /* Close busy indicator*/
             that._closeBusyFragment();
 
-            /* Build objective catalog for selection and adjust form accordingly */
+            /* Return messages */
+            if (oData.Return !== null) {
+              if (oData.Return.hasOwnProperty("results")) {
+                sHasErrors = that._processReturnMessagesNew(
+                  oData.Return.results,
+                  false
+                );
+              }
+            }
+
+            if (!sHasErrors) {
+              /* Build objective catalog for selection and adjust form accordingly */
+              that._buildDependentObjectiveCatalog(
+                oData,
+                sRowIid,
+                sParentName,
+                sElementLevel
+              );
+            }
 
             //oData, sRowIid, sFromCatalog, sParentName, sObj, sElementLevel;
-            that._buildDependentObjectiveCatalog(
-              oData,
-              sRowIid,
-              sParentName,
-              sElementLevel
-            );
 
             // /* Return messages */
             // if (oData.Return !== null) {
@@ -4975,29 +5000,35 @@ sap.ui.define(
           async: true,
         });
       },
+
       onObjectiveWizardOpen: function (oData, sNewRowIid) {
         var that = this;
         var oView = this.getView();
 
         // create Objective Wizard Dialog
-        if (!that._objWizardDialog) {
-          that._objWizardDialog = Fragment.load({
+        if (!that._objWizardDialogPromise) {
+          that._objWizardDialogPromise = Fragment.load({
             id: oView.getId(),
             name: "hcm.ux.hapv3.fragment.AddNewObjectiveByWizard",
             controller: that,
           }).then(
             function (oDialog) {
+              that._objWizardDialog = oDialog;
               oDialog.data("enhanceData", _.cloneDeep(oData));
               oDialog.data("newRowIid", sNewRowIid);
               oDialog.attachAfterOpen(that.onObjectiveWizardAfterOpen, that);
               oDialog.attachAfterClose(that.onObjectiveWizardAfterClose, that);
+              oDialog.setEscapeHandler(function (o) {
+                o.reject();
+                that.onObjectiveWizardCancelled();
+              });
               oView.addDependent(oDialog);
               oDialog.bindElement("formDetailsModel>/objectiveWizardSettings");
               return oDialog;
             }.bind(that)
           );
         }
-        that._objWizardDialog.then(function (oDialog) {
+        that._objWizardDialogPromise.then(function (oDialog) {
           oDialog.open();
         });
       },
@@ -5025,9 +5056,29 @@ sap.ui.define(
           }
         }
       },
-      onObjectiveWizardNavChanged: function (oEvent) {
-        var oStep = oEvent.getParameter("");
+      onObjectiveWizardGoReview: function () {
+        if (this._oWizard) {
+          var oReviewStep = this._oWizard.getSteps()[2];
+          this._oWizard.setCurrentStep(oReviewStep);
+        }
       },
+      onObjectiveWizardBackToObjectDetails: function () {
+        if (this._oWizard) {
+          var oObjectStep = this._oWizard.getSteps()[1];
+          var oReviewStep = this._oWizard.getSteps()[2];
+          this._oWizard.invalidateStep(oReviewStep);
+          this._oWizard.setCurrentStep(oObjectStep);
+        }
+      },
+      onObjectiveWizardFinalize: function () {
+        if (typeof this._addElementCallBack === "function") {
+          this._addElementCallBack.call();
+        }
+        if (this._objWizardDialog) {
+          this._objWizardDialog.close();
+        }
+      },
+
       onObjectiveWizardAfterOpen: function (oEvent) {
         var oDialog = oEvent.getSource();
         var oEnhanceData = oDialog.data("enhanceData");
@@ -5065,9 +5116,13 @@ sap.ui.define(
         /* Destroy content and the dialog*/
         oDialog.destroyContent();
         oDialog.destroy();
+
+        /* Invalidate promise and the dialog */
+        this._objWizardDialogPromise = null;
+        this._objWizardDialog = null;
       },
       onObjectiveWizardCancelled: function () {
-        this._restoreAddElement();
+        this._restoreOldFormState();
 
         /* Close dialog and set promise to initial state */
         var oDialog =
@@ -5078,7 +5133,8 @@ sap.ui.define(
         /* Give cancelled message */
         MessageToast.show(this.getText("addOperationCancelled"));
 
-        /* Set promise to initial state */
+        /* Invalidate promise and the dialog */
+        this._objWizardDialogPromise = null;
         this._objWizardDialog = null;
       },
 
@@ -5088,13 +5144,24 @@ sap.ui.define(
           "/objectiveWizardSettings"
         );
         var sPath = oEvent.getParameter("rowContext")?.sPath;
+        var sIndex = oEvent.getSource().getSelectedIndex();
+        var that = this;
 
-        if (sPath) {
+        var aAllSteps = this._oWizard.getSteps();
+        $.each(aAllSteps, function (i, oStep) {
+          if (i === 0) {
+            that._oWizard.setCurrentStep(oStep);
+          } else {
+            that._oWizard.invalidateStep(oStep);
+          }
+        });
+
+        if (sIndex !== -1) {
           var oRow = oViewModel.getProperty(sPath);
           if (oRow?.Selectable) {
             oWizardSettings.buttonSettings.nextButtonEnabled = true;
             oWizardSettings.buttonSettings.nextButtonVisible = true;
-            this._setObjectiveInformationFromDependentObject(oRow);
+            this._setObjectiveInformationFromDependent(oRow);
           } else {
             oEvent.getSource().setSelectedIndex(-1);
             oWizardSettings.buttonSettings.nextButtonEnabled = false;
@@ -5104,7 +5171,7 @@ sap.ui.define(
         oViewModel.setProperty("/objectiveWizardSettings", oWizardSettings);
       },
 
-      _setObjectiveInformationFromDependentObject: function (oRow) {
+      _setObjectiveInformationFromDependent: function (oRow) {
         var that = this;
         var oViewModel = this.getModel("formDetailsModel");
         var sNewRowIid = oViewModel.getProperty(
@@ -5113,6 +5180,10 @@ sap.ui.define(
 
         var sObjNamePath = `/bodyElements/${sNewRowIid}/Name`;
         oViewModel.setProperty(sObjNamePath, oRow.Stext);
+
+        var sObjDescrPath = `/bodyCells/${sNewRowIid}/${this._sObjColumn}/NoteString`;
+        oViewModel.setProperty(sObjDescrPath, oRow.Descr);
+
         var sObjIndPath = `/bodyCells/${sNewRowIid}/${this._sObjIndColumn}/NoteString`;
         oViewModel.setProperty(sObjIndPath, oRow.Inddf);
         var sObjUniPath = `/bodyCells/${sNewRowIid}/${this._sObjUniColumn}/ValueString`;
@@ -5126,19 +5197,33 @@ sap.ui.define(
         var sObjCvlPath = `/bodyCells/${sNewRowIid}/${this._sObjCvlColumn}/ValueNum`;
         oViewModel.setProperty(sObjCvlPath, oRow.Crovl);
 
-        var sObjDepPath = `/bodyCells/${sNewRowIid}/${this._sObjDepColumn}/ValueNnv`;
-        oViewModel.setProperty(sObjDepPath, oRow.Otype + "-" + oRow.Objid);
+        var sObjDepPath = `/bodyCells/${sNewRowIid}/${this._sObjDepColumn}`;
+        oViewModel.setProperty(
+          sObjDepPath + "/ValueString",
+          oRow.Otype + "-" + oRow.Objid
+        );
+        oViewModel.setProperty(
+          sObjDepPath + "/ValueNnv",
+          oRow.Otype + "-" + oRow.Objid
+        );
+        oViewModel.setProperty(
+          sObjDepPath + "/ValueTxt",
+          oRow.Otype + "-" + oRow.Objid
+        );
+        oViewModel.setProperty(sObjDepPath + "/ValueText", oRow.Stext);
+        oViewModel.setProperty(sObjDepPath + "/ValueTextAvailable", "X");
+
+        // oBodyCell.ValueString = aBodyCells[sIndex].ValueString =
+        //         sValueIid;
+        //       oBodyCell.ValueNnv = aBodyCells[sIndex].ValueNnv = sValueEid;
+        //       oBodyCell.ValueText = aBodyCells[sIndex].ValueText = sValueText;
+        //       oBodyCell.ValueTxt = aBodyCells[sIndex].ValueTxt = sValueEid;
+
+        var sObjSccPath = `/bodyCells/${sNewRowIid}/${this._sObjSccColumn}/NoteString`;
+        oViewModel.setProperty(sObjSccPath, oRow.Scacs);
 
         if (this._oWizard) {
           var wizardPromise = new Promise(function (resolve, reject) {
-            var aAllSteps = that._oWizard.getSteps();
-            $.each(aAllSteps, function (i, oStep) {
-              if (i === 0) {
-                that._oWizard.setCurrentStep(oStep);
-              } else {
-                that._oWizard.invalidateStep(oStep);
-              }
-            });
             resolve(true);
           });
 
@@ -5504,14 +5589,17 @@ sap.ui.define(
         oWizardSettings.dependentObjectives = {
           Children: [],
         };
+
+        this._addElementCallBack = null;
+
         oWizardSettings.newRowIid = null;
 
         // var openWizard = function () {
         //   var oView = that.getView();
 
         //   // create Objective Wizard Dialog
-        //   if (!that._objWizardDialog) {
-        //     that._objWizardDialog = Fragment.load({
+        //   if (!that._objWizardDialogPromise) {
+        //     that._objWizardDialogPromise = Fragment.load({
         //       id: oView.getId(),
         //       name: "hcm.ux.hapv3.fragment.AddNewObjectiveByWizard",
         //       controller: that,
@@ -5533,7 +5621,7 @@ sap.ui.define(
         //       }.bind(that)
         //     );
         //   }
-        //   that._objWizardDialog.then(function (oDialog) {
+        //   that._objWizardDialogPromise.then(function (oDialog) {
         //     oDialog.open();
         //   });
         // };
@@ -5558,6 +5646,8 @@ sap.ui.define(
               oChild.Objen = oCurrent.Objen;
               oChild.Crovl = oCurrent.Crovl;
               oChild.Objun = oCurrent.Objun;
+              oChild.Descr = oCurrent.Descr;
+              oChild.Scacs = oCurrent.Scacs;
               oChild.PupOtype = sOtype;
               oChild.PupObjid = sObjid;
               oChild.Selectable = oCurrent.Selectable;
@@ -5578,6 +5668,8 @@ sap.ui.define(
             oRoot.Stext = oCurrent.Stext;
             oRoot.Otype = oCurrent.Otype;
             oRoot.Objid = oCurrent.Objid;
+            oRoot.Descr = oCurrent.Descr;
+            oRoot.Scacs = oCurrent.Scacs;
             oRoot.Selectable = oCurrent.Selectable;
             oRoot.Selected = false;
             oRoot.Children = buildChildren(oRoot.Otype, oRoot.Objid);
@@ -5585,7 +5677,13 @@ sap.ui.define(
           });
           oWizardSettings.newRowIid = sNewRowIid;
           oViewModel.setProperty("/objectiveWizardSettings", oWizardSettings);
-
+          that._addElementCallBack = jQuery.proxy(
+            that._doEnhanceDocument,
+            that,
+            sRowIid,
+            sNewRowIid,
+            sElementLevel
+          );
           that.onObjectiveWizardOpen(oData, sNewRowIid);
         };
 
@@ -5706,6 +5804,9 @@ sap.ui.define(
         var aBodyElementsClone = _.clone(
           oViewModel.getProperty("/formData/BodyElements")
         );
+        var aBodyElementButtonsClone = _.clone(
+          oViewModel.getProperty("/formData/BodyElementButtons")
+        );
         oViewModel.setProperty(
           "/beforeAddFreeFormData/aBodyCells",
           aBodyCellsClone
@@ -5717,6 +5818,10 @@ sap.ui.define(
         oViewModel.setProperty(
           "/beforeAddFreeFormData/aBodyElements",
           aBodyElementsClone
+        );
+        oViewModel.setProperty(
+          "/beforeAddFreeFormData/aBodyElementButtons",
+          aBodyElementButtonsClone
         );
 
         var oBodyCellsClone = _.clone(oBodyCells);
@@ -5745,6 +5850,11 @@ sap.ui.define(
             var oViewModel = that.getModel("formDetailsModel");
             var aBodyElements = oData.BodyElements.hasOwnProperty("results")
               ? oData.BodyElements.results
+              : [];
+            var aBodyElementButtons = oData.BodyElementButtons.hasOwnProperty(
+              "results"
+            )
+              ? oData.BodyElementButtons.results
               : [];
             var aBodyCells = oData.BodyCells.hasOwnProperty("results")
               ? oData.BodyCells.results
@@ -5848,6 +5958,10 @@ sap.ui.define(
             });
 
             oViewModel.setProperty("/formData/BodyElements", aBodyElements);
+            oViewModel.setProperty(
+              "/formData/BodyElementButtons",
+              aBodyElementButtons
+            );
             oViewModel.setProperty("/formData/BodyCells", aBodyCells);
             oViewModel.setProperty("/formData/BodyCellValues", aBodyCellValues);
             oViewModel.setProperty("/formData/FormQuestions", oFormQuestions);
@@ -5959,7 +6073,7 @@ sap.ui.define(
           })
           .catch(function (e) {
             console.log(e);
-            that._restoreAddElement();
+            that._restoreOldFormState();
           });
         // Set new form state -- END
       }, //_enhanceDocument
@@ -6456,12 +6570,12 @@ sap.ui.define(
         }
       },
       onCloseAddElementFree: function () {
-        this._restoreAddElement();
+        this._restoreOldFormState();
         this._oAddNewElementFreeFormDialog.close();
 
         MessageToast.show(this.getText("addOperationCancelled"));
       },
-      _restoreAddElement: function () {
+      _restoreOldFormState: function () {
         var oViewModel = this.getModel("formDetailsModel");
 
         // Clone before deletion
@@ -6473,6 +6587,9 @@ sap.ui.define(
         );
         var aBodyElementsClone = _.clone(
           oViewModel.getProperty("/beforeAddFreeFormData/aBodyElements")
+        );
+        var aBodyElementButtonsClone = _.clone(
+          oViewModel.getProperty("/beforeAddFreeFormData/aBodyElementButtons")
         );
 
         var oBodyCellsClone = _.clone(
@@ -6486,6 +6603,10 @@ sap.ui.define(
         );
 
         oViewModel.setProperty("/formData/BodyElements", aBodyElementsClone);
+        oViewModel.setProperty(
+          "/formData/BodyElementButtons",
+          aBodyElementButtonsClone
+        );
         oViewModel.setProperty("/formData/BodyCells", aBodyCellsClone);
         oViewModel.setProperty(
           "/formData/BodyCellValues",
@@ -6516,7 +6637,7 @@ sap.ui.define(
         MessageToast.show(this.getText("newElementAdded", [oNewElement.Value]));
       },
       onCloseAddElementObjective: function () {
-        this._restoreAddElement();
+        this._restoreOldFormState();
         this._oAddNewElementObjectiveDialog.close();
         MessageToast.show(this.getText("addOperationCancelled"));
       },

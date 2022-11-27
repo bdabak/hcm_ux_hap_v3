@@ -14,19 +14,26 @@
                 </f:DynamicPageTitle>
             </f:title>
             <f:content>
-                <Wizard id="newObjectiveWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" showNextButton="false">
-                    <WizardStep id="dependentObjectiveSelection" title="{i18n>dependentObjectiveSelection}" validated="true" activate="dependentObjectiveStepActicate">
+                <Wizard id="newObjectiveWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" showNextButton="false" stepActivate=".onObjectiveWizardStepChanged">
+                    <WizardStep id="dependentObjectiveSelection" title="{i18n>dependentObjectiveSelection}" validated="true">
                         <MessageStrip class="sapUiSmallMarginBottom" text="{i18n>selectDependentObjectiveHint}" showIcon="true"/>
                         <core:Fragment fragmentName="hcm.ux.hapv3.fragment.ObjectiveByWizardDependentCatalog" type="XML" />
                     </WizardStep>
-                    <WizardStep id="newObjectiveInformation" validated="false" title="{i18n>newObjectiveDetails}" activate="newObjectiveInfoStepActivate">
+                    <WizardStep id="newObjectiveInformation" validated="false" title="{i18n>newObjectiveDetails}">
                         <MessageStrip class="sapUiSmallMarginBottom" text="{i18n>objectiveDetailsHint}" showIcon="true"/>
                         <core:Fragment fragmentName="hcm.ux.hapv3.fragment.ObjectiveByWizardDetails" type="XML" />
-
+                        <Toolbar style="Clear">
+                            <ToolbarSpacer/>
+                            <Button text="{i18n>nextStepButton}" type="Emphasized" press=".onObjectiveWizardGoReview" />
+                        </Toolbar>
                     </WizardStep>
-                    <WizardStep id="OptionalInfoStep" validated="true" activate="optionalStepActivation" title="{i18n>addNewObjectiveStep}">
-                        <MessageStrip class="sapUiSmallMarginBottom" text="You can validate steps by default with the validated='true' property of the step. The next button is always enabled." showIcon="true"/>
-                        <Text text="Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec ppellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien	corper eu, posuere malesuada nisl. Integer pellentesque leo sit amet dui vehicula, quis ullamcorper est pulvinar. Nam in libero sem. Suspendisse arcu metus, molestie a turpis a, molestie aliquet dui. Donec pulvinar, sapien	"/>
+                    <WizardStep id="reviewAndFinalise" validated="false" title="{i18n>addNewObjectiveStep}">
+                        <MessageStrip class="sapUiSmallMarginBottom" text="{i18n>reviewObjectiveHint}" showIcon="true"/>
+                        <Toolbar style="Clear">
+                            <ToolbarSpacer/>
+                            <Button text="{i18n>prevStepButton}" type="Emphasized" press=".onObjectiveWizardBackToObjectDetails" />
+                            <Button icon="sap-icon://add" text="{i18n>finalizeButton}" type="Accept" press=".onObjectiveWizardFinalize" />
+                        </Toolbar>
 
                     </WizardStep>
                 </Wizard>
@@ -35,9 +42,6 @@
             <f:footer>
                 <OverflowToolbar>
                     <ToolbarSpacer/>
-                    <Button text="{i18n>prevStepButton}" visible="{formDetailsModel>buttonSettings/backButtonVisible}" press=".onObjectiveWizardPrevButton" />
-                    <Button text="{i18n>nextStepButton}" type="Emphasized" enabled="{formDetailsModel>buttonSettings/nextButtonEnabled}" visible="{formDetailsModel>buttonSettings/nextButtonVisible}" press=".onObjectiveWizardNextButton" />
-                    <Button text="{i18n>finalizeButton}" type="Accept" visible="{formDetailsModel>buttonSettings/finishButtonVisible}" press=".onObjectiveWizardConfirmButton" />
                     <Button text="{i18n>cancelButton}" type="Reject" press=".onObjectiveWizardCancelled"/>
                 </OverflowToolbar>
             </f:footer>
