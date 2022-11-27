@@ -31,20 +31,21 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
       });
 
       var oCustomizer = new sap.m.Table({
+        alternateRowColors: true,
         columns: [
           new sap.m.Column({
             hAlign: "Left",
-            header: new sap.m.Title({ text: "Ölçek" }),
+            // header: new sap.m.Title({ text: "Ölçek" }),
           }),
           new sap.m.Column({
-            width: "7rem",
+            width: "9rem",
             hAlign: "Center",
-            header: new sap.m.Title({ text: "Min" }),
+            // header: new sap.m.Title({ text: "Min" }),
           }),
           new sap.m.Column({
-            width: "7rem",
+            width: "9rem",
             hAlign: "Center",
-            header: new sap.m.Title({ text: "Max" }),
+            // header: new sap.m.Title({ text: "Max" }),
           }),
         ],
       });
@@ -57,6 +58,7 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
             text: "{Name}",
           }),
           new sap.m.Input({
+            placeholder: "Min",
             value: {
               path: "Low",
               type: "sap.ui.model.type.Float",
@@ -79,6 +81,7 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
             }.bind(that),
           }),
           new sap.m.Input({
+            placeholder: "Max",
             value: {
               path: "High",
               type: "sap.ui.model.type.Float",

@@ -101,12 +101,7 @@ sap.ui.define(
           navigationElementId: "",
           saveAndNextButtonVisibility: true,
           objectiveWizardSettings: {
-            buttonSettings: {
-              backButtonVisible: false,
-              nextButtonVisible: true,
-              nextButtonEnabled: false,
-              finishButtonVisible: false,
-            },
+            selectedObjective: null,
             dependentObjectives: {
               Children: [],
             },
@@ -2359,6 +2354,7 @@ sap.ui.define(
                 },
                 rows: 3, //"{= parseInt(${formDetailsModel>/bodyCells/" + oCell.RowIid + "/" + oCell.ColumnIid + "/NoteLines})}",
                 width: "100%",
+                valueLiveUpdate: true,
                 editable: {
                   path: sCellNoteEditablePath,
                   formatter: function (sCellNoteAvailability) {
@@ -2564,6 +2560,17 @@ sap.ui.define(
             },
           },
           textAlign: "Right",
+          liveChange: function (oEvent) {
+            if (oCell.CellValueClass === "ZS" || oCell.CellValueClass === "S") {
+              var v = oEvent.getParameter("newValue");
+              if (isNaN(parseFloat(v))) {
+                oIF.setValueState("Error");
+                oIF.setValue(0);
+              } else {
+                oIF.setValueState("None");
+              }
+            }
+          },
           submit: this._onInputFieldValueChange,
           editable: {
             parts: [
@@ -2576,6 +2583,7 @@ sap.ui.define(
             ],
             formatter: that._getCellEditable.bind(that),
           },
+          valueLiveUpdate: true,
           width: {
             parts: [
               {
@@ -2904,6 +2912,7 @@ sap.ui.define(
             },
           },
           width: "100%",
+          valueLiveUpdate: true,
           rows: 3,
           editable: false,
         }); //.addStyleClass("hapTextArea");
@@ -5073,6 +5082,15 @@ sap.ui.define(
       onObjectiveWizardFinalize: function () {
         if (typeof this._addElementCallBack === "function") {
           this._addElementCallBack.call();
+          var oViewModel = this.getModel("formDetailsModel");
+          var oNewElement = oViewModel.getProperty(
+            `/bodyElements/${this._objWizardDialog.data("newRowIid")}`
+          );
+          if (oNewElement && oNewElement?.Name) {
+            MessageToast.show(
+              this.getText("newElementAdded", [oNewElement.Name])
+            );
+          }
         }
         if (this._objWizardDialog) {
           this._objWizardDialog.close();
@@ -5159,13 +5177,9 @@ sap.ui.define(
         if (sIndex !== -1) {
           var oRow = oViewModel.getProperty(sPath);
           if (oRow?.Selectable) {
-            oWizardSettings.buttonSettings.nextButtonEnabled = true;
-            oWizardSettings.buttonSettings.nextButtonVisible = true;
             this._setObjectiveInformationFromDependent(oRow);
           } else {
             oEvent.getSource().setSelectedIndex(-1);
-            oWizardSettings.buttonSettings.nextButtonEnabled = false;
-            oWizardSettings.buttonSettings.nextButtonVisible = true;
           }
         }
         oViewModel.setProperty("/objectiveWizardSettings", oWizardSettings);
