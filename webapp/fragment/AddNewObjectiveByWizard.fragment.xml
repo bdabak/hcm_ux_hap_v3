@@ -29,6 +29,7 @@
                     </WizardStep>
                     <WizardStep id="reviewAndFinalise" validated="false" title="{i18n>addNewObjectiveStep}">
                         <MessageStrip class="sapUiSmallMarginBottom" text="{i18n>reviewObjectiveHint}" showIcon="true"/>
+                        <core:Fragment fragmentName="hcm.ux.hapv3.fragment.ObjectiveByWizardReview" type="XML" />
                         <Toolbar style="Clear">
                             <ToolbarSpacer/>
                             <Button text="{i18n>prevStepButton}" type="Emphasized" press=".onObjectiveWizardBackToObjectDetails" />

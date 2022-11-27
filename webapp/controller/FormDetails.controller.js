@@ -2386,7 +2386,8 @@ sap.ui.define(
       _addNewElementFreeFormCells: function (
         oParent,
         sNewRowIid,
-        oEnhanceData
+        oEnhanceData,
+        bReadOnly
       ) {
         var that = this;
         var aBodyElements = oEnhanceData.BodyElements.results;
@@ -2433,6 +2434,21 @@ sap.ui.define(
             }
           }
         });
+
+        if (bReadOnly) {
+          var aContent = oParent.getAggregation("content");
+          $.each(aContent, function (i, oContent) {
+            var aItems = oContent.getAggregation("items");
+            $.each(aItems, function (j, oItem) {
+              if (
+                oItem?.setEditable &&
+                typeof oItem.setEditable === "function"
+              ) {
+                oItem.setEditable(false);
+              }
+            });
+          });
+        }
       }, //_addNewElementFreeFormCells
 
       _addNewElementFreeFormCellsOld: function (
@@ -5109,12 +5125,34 @@ sap.ui.define(
           this._oWizard.getSteps()[this._iSelectedStepIndex];
 
         /* Prepare second step for new objective information */
-        var oGrid =
+        var oDetailsGrid =
           this.byId("idNewObjectiveInformationGrid") ||
           sap.ui.getCore().byId("idNewObjectiveInformationGrid");
+
         try {
-          oGrid.destroyContent();
-          this._addNewElementFreeFormCells(oGrid, sNewRowIid, oEnhanceData);
+          oDetailsGrid.destroyContent();
+          this._addNewElementFreeFormCells(
+            oDetailsGrid,
+            sNewRowIid,
+            oEnhanceData,
+            false
+          );
+        } catch (e) {
+          console.log(e);
+        }
+
+        var oReviewGrid =
+          this.byId("idNewObjectiveReviewGrid") ||
+          sap.ui.getCore().byId("idNewObjectiveReviewGrid");
+
+        try {
+          oReviewGrid.destroyContent();
+          this._addNewElementFreeFormCells(
+            oReviewGrid,
+            sNewRowIid,
+            oEnhanceData,
+            true
+          );
         } catch (e) {
           console.log(e);
         }
@@ -6499,7 +6537,12 @@ sap.ui.define(
         try {
           //oForm.destroyFormContainers();
           oGrid.destroyContent();
-          this._addNewElementFreeFormCells(oGrid, sNewRowIid, oEnhanceData);
+          this._addNewElementFreeFormCells(
+            oGrid,
+            sNewRowIid,
+            oEnhanceData,
+            false
+          );
           this._oAddNewElementFreeFormDialog.open();
         } catch (oErr) {
           console.log(oErr);
