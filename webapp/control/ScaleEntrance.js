@@ -32,6 +32,7 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
 
       var oCustomizer = new sap.m.Table({
         alternateRowColors: true,
+        inset: false,
         columns: [
           new sap.m.Column({
             hAlign: "Left",

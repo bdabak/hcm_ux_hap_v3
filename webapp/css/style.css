@@ -17,7 +17,9 @@
 }
 
 .hapPage,
-.hapPage * {
+.hapPage *,
+.hapDialog,
+.hapDialog * {
   outline: none !important;
 }
 
@@ -957,7 +959,9 @@ html.sapUiMedia-Std-Tablet
   height: 100%;
   align-items: center;
   justify-content: center;
-  /* left: 30%;
-  top: 20%; */
-  border: none;
+}
+
+.hapDialog .sapMInputBaseContentWrapper,
+.hapPage .sapMInputBaseContentWrapper {
+  border-radius: 0.25rem !important;
 }

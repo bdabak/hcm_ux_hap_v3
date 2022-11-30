@@ -1,9 +1,13 @@
-<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout"
-	xmlns="sap.m" xmlns:table="sap.ui.table" xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-	<Dialog stretch="{device>/system/phone}" title="{i18n>selectObjective}">
+<core:FragmentDefinition xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout"
+	xmlns="sap.m"
+	xmlns:table="sap.ui.table"
+	xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	<Dialog stretch="{device>/system/phone}" title="{i18n>selectObjective}" class="hapDialog">
 		<content>
-			<Table items="{ path : 'formDetailsModel>/formData/Objectives', sorter : { path : 'Objid', descending : false } }"
-				noDataText="{i18n>noObjectiveFound}">
+			<Table items="{ path : 'formDetailsModel>/formData/Objectives', sorter : { path : 'Objid', descending : false } }" noDataText="{i18n>noObjectiveFound}">
 				<headerToolbar>
 					<Toolbar>
 						<content>
@@ -49,10 +53,8 @@
 							<Button text="{i18n>selectLine}" press="onSelectObjective" type="Emphasized"/>
 							<TextArea value="{formDetailsModel>Description}" rows="4" editable="false" width="100%"></TextArea>
 							<Text text="{formDetailsModel>Objid}" visible="false"/>
-							<Text text="{formDetailsModel>ZzmeaningTxt}"
-								visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>
-							<Text text="{formDetailsModel>ZzexpResult}"
-								visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>
+							<Text text="{formDetailsModel>ZzmeaningTxt}" visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>
+							<Text text="{formDetailsModel>ZzexpResult}" visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>
 							<Text text="{formDetailsModel>ZzunitTxt}" visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>
 						</cells>
 					</ColumnListItem>
@@ -64,17 +66,17 @@
 		</endButton>
 	</Dialog>
 	<!--<TableSelectDialog noDataText="{i18n>noObjectiveFound}" title="{i18n>selectObjective}" multiSelect="false"-->
-	<!--	search="onSearchAddElementObjective" confirm="onApplyAddElementObjective" cancel="onCloseAddElementObjective"-->
-	<!--	items="{ path : 'formDetailsModel>/formData/Objectives', sorter : { path : 'Objid', descending : false } }">-->
+	<!-- search="onSearchAddElementObjective" confirm="onApplyAddElementObjective" cancel="onCloseAddElementObjective"-->
+	<!-- items="{ path : 'formDetailsModel>/formData/Objectives', sorter : { path : 'Objid', descending : false } }">-->
 	<!--	<ColumnListItem>-->
 	<!--		<cells>-->
 	<!--			<Button text="{i18n>selectLine}" press="onSelectObjective" type="Emphasized"/>-->
 	<!--			<TextArea value="{formDetailsModel>Description}" rows="4" editable="false" width="100%"></TextArea>-->
 	<!--			<Text text="{formDetailsModel>Objid}" visible="false"/>-->
 	<!--			<Text text="{formDetailsModel>ZzmeaningTxt}"-->
-	<!--				visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>-->
+	<!-- visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>-->
 	<!--			<Text text="{formDetailsModel>ZzexpResult}"-->
-	<!--				visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>-->
+	<!-- visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>-->
 	<!--			<Text text="{formDetailsModel>ZzunitTxt}" visible="{= ${formDetailsModel>/formParameters/OBJECTIVE_POPUP_DESC_ONLY} === 'X' ? false : true}"/>-->
 	<!--		</cells>-->
 	<!--	</ColumnListItem>-->

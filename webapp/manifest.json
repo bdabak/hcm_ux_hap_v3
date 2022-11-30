@@ -110,6 +110,9 @@
         },
         {
           "uri": "./utils/lodash.js"
+        },
+        {
+          "uri": "./utils/moment.js"
         }
       ]
     },

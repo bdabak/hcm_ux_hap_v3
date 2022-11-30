@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core"
 	xmlns="sap.m">
-	<Dialog showHeader="true" stretch="{device>/system/phone}" id="idElementSurveyFragment">
+	<Dialog showHeader="true" stretch="{device>/system/phone}" id="idElementSurveyFragment" class="hapDialog">
 		<content></content>
 		<buttons>
 			<Button text="{i18n>surveyIsFilled}" icon="sap-icon://survey" type="Accept" press="onSurveyFinished"/>

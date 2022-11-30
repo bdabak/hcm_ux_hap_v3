@@ -1,4 +1,4 @@
-/*global _*/
+/*global _,moment*/
 sap.ui.define(
   [
     "hcm/ux/hapv3/controller/BaseController",
@@ -106,6 +106,7 @@ sap.ui.define(
               Children: [],
             },
             newRowIid: null,
+            errorList: [],
           },
         });
 
@@ -2435,6 +2436,7 @@ sap.ui.define(
           }
         });
 
+        /* Object By Wizard Review Page Solution*/
         if (bReadOnly) {
           var aContent = oParent.getAggregation("content");
           $.each(aContent, function (i, oContent) {
@@ -2449,63 +2451,6 @@ sap.ui.define(
             });
           });
         }
-      }, //_addNewElementFreeFormCells
-
-      _addNewElementFreeFormCellsOld: function (
-        oParent,
-        sNewRowIid,
-        oEnhanceData
-      ) {
-        var that = this;
-        var oViewModel = this.getModel("formDetailsModel");
-        var oBodyElements = oViewModel.getProperty("/bodyElements");
-        var oBodyCells = oViewModel.getProperty("/bodyCells");
-        var aBodyElements = oEnhanceData.BodyElements.results;
-        var aBodyCells = oEnhanceData.BodyCells.results;
-        var aBodyColumns = oEnhanceData.BodyColumns.results;
-        var oElem = _.find(aBodyElements, ["RowIid", sNewRowIid]);
-        var oFiCell = _.find(aBodyCells, {
-          RowIid: sNewRowIid,
-          ColumnIid: that._sObjColumn,
-        });
-        var aNewCells = _.filter(aBodyCells, ["RowIid", sNewRowIid]);
-
-        //first free input with its label
-        var oFC = new sap.ui.layout.form.FormContainer();
-        var oFE = null;
-
-        if (oElem.FreeInput) {
-          oFE = new sap.ui.layout.form.FormElement({
-            label: oFiCell.Caption,
-          });
-
-          var oFI = new sap.m.Input({
-            value: "{formDetailsModel>/bodyElements/" + sNewRowIid + "/Name}",
-            maxLength: 80,
-          });
-          oFI.setLayoutData(
-            new sap.ui.layout.GridData({
-              span: "XL4 L4 M8 S12",
-            })
-          );
-          oFE.addField(oFI);
-          oFC.addFormElement(oFE);
-          oParent.addFormContainer(oFC);
-        }
-
-        //now add cell
-        $.each(aNewCells, function (sIndex, oCell) {
-          var oColumn = _.find(aBodyColumns, ["ColumnIid", oCell.ColumnIid]);
-          if (oColumn) {
-            if (
-              (oCell.CellValueAvailability !== "H" &&
-                oCell.CellValueAvailability !== "K") ||
-              oCell.CellNoteAvailability !== "H"
-            ) {
-              that._addNewElementFreeFormCell(oParent, oCell);
-            }
-          }
-        });
       }, //_addNewElementFreeFormCells
 
       _addNewElementFreeFormCell: function (oParent, oCell) {
@@ -2581,10 +2526,19 @@ sap.ui.define(
               var v = oEvent.getParameter("newValue");
               if (isNaN(parseFloat(v))) {
                 oIF.setValueState("Error");
-                oIF.setValue(0);
+                oIF.setValue(null);
               } else {
                 oIF.setValueState("None");
               }
+            }
+          },
+          change: function (oEvent) {
+            if (oCell.CellValueClass === "ZS" || oCell.CellValueClass === "S") {
+              var v = oEvent.getParameter("newValue");
+              var d = oCell.CellValueClass === "ZS" ? 2 : 3;
+              v = v.replace(/\./g, "");
+              v = v.replace(/\,/g, ".");
+              oIF.setValue(formatter.formatFloat(d, v));
             }
           },
           submit: this._onInputFieldValueChange,
@@ -4436,6 +4390,7 @@ sap.ui.define(
             that._closeBusyFragment();
 
             if (sHasErrors === false) {
+              MessageToast.show(that.getText("formSaveSuccess"));
               that._setChangeListeners(false);
               if (bExit) {
                 that._doNavToMain();
@@ -5034,7 +4989,7 @@ sap.ui.define(
         if (!that._objWizardDialogPromise) {
           that._objWizardDialogPromise = Fragment.load({
             id: oView.getId(),
-            name: "hcm.ux.hapv3.fragment.AddNewObjectiveByWizard",
+            name: "hcm.ux.hapv3.fragment.NewObjectiveByWizard",
             controller: that,
           }).then(
             function (oDialog) {
@@ -5081,10 +5036,152 @@ sap.ui.define(
           }
         }
       },
+      _checkObjectiveByWizard: function () {
+        var oViewModel = this.getModel("formDetailsModel");
+        var sNewRowIid = oViewModel.getProperty(
+          "/objectiveWizardSettings/newRowIid"
+        );
+
+        oViewModel.setProperty("/objectiveWizardSettings/errorList", []);
+
+        var aErrorList = [];
+
+        var sObjNamePath = `/bodyElements/${sNewRowIid}/Name`;
+        var sObjName = oViewModel.getProperty(sObjNamePath);
+
+        var sObjDescrPath = `/bodyCells/${sNewRowIid}/${this._sObjColumn}/NoteString`;
+        var sObjDescr = oViewModel.getProperty(sObjDescrPath);
+
+        var sObjIndPath = `/bodyCells/${sNewRowIid}/${this._sObjIndColumn}/NoteString`;
+        var sObjInd = oViewModel.getProperty(sObjIndPath);
+
+        var sObjUniPath = `/bodyCells/${sNewRowIid}/${this._sObjUniColumn}/ValueString`;
+        var sObjUni = oViewModel.getProperty(sObjUniPath);
+
+        var sObjBegPath = `/bodyCells/${sNewRowIid}/${this._sObjBegColumn}/ValueDate`;
+        var sObjBeg = oViewModel.getProperty(sObjBegPath);
+
+        var sObjEndPath = `/bodyCells/${sNewRowIid}/${this._sObjEndColumn}/ValueDate`;
+        var sObjEnd = oViewModel.getProperty(sObjEndPath);
+
+        var sObjSccPath = `/bodyCells/${sNewRowIid}/${this._sObjSccColumn}/NoteString`;
+        var sObjScc = oViewModel.getProperty(sObjSccPath);
+
+        /* Check name and desription */
+        if (sObjName.trim().length === 0) {
+          aErrorList.push({
+            field: "Hedef Tanımı",
+            error: "Hedef tanımı boş olamaz",
+          });
+        }
+        if (sObjDescr.trim().length === 0) {
+          aErrorList.push({
+            field: "Hedef Açıklaması",
+            error: "Hedef açıklaması girmelisiniz",
+          });
+        }
+
+        /* Check indicator */
+        if (sObjInd.trim().length === 0) {
+          aErrorList.push({
+            field: "Gösterge Tanımı",
+            error: "Gösterge tanımı girmelisiniz",
+          });
+        }
+
+        /* Check unit */
+        if (sObjUni === "0000") {
+          aErrorList.push({
+            field: "Hedef Birimi",
+            error: "Hedef birimi girmelisiniz",
+          });
+        }
+
+        /* Scale definition */
+        if (sObjScc.trim().length === 0) {
+          aErrorList.push({
+            field: "Ölçek Tanımı",
+            error: "Ölçek tanımlarını girmelisiniz",
+          });
+        }
+        /* Check begin date and end date */
+        if (!sObjBeg) {
+          aErrorList.push({
+            field: "Başlangıç Tarihi",
+            error: "Başlangıç tarihi girmelisiniz",
+          });
+        }
+        if (!sObjEnd) {
+          aErrorList.push({
+            field: "Bitiş Tarihi",
+            error: "Bitiş tarihi girmelisiniz",
+          });
+        }
+
+        if (sObjBeg && sObjEnd && moment(sObjEnd).isBefore(moment(sObjBeg))) {
+          aErrorList.push({
+            field: "Bitiş Tarihi",
+            error: "Bitiş tarihi,  başlangıç tarihinden önce olamaz",
+          });
+        }
+
+        oViewModel.setProperty(
+          "/objectiveWizardSettings/errorList",
+          aErrorList
+        );
+
+        if (aErrorList.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+
+      onOpenObjectiveWizardMessagePopover: function () {
+        var oMP = this._getObjectiveWizardMessagePopover();
+        var oMB =
+          this.byId("objectiveByWizardMessagesButton") ||
+          sap.ui.getCore().byId("objectiveByWizardMessagesButton");
+
+        if (oMB && oMP) {
+          if (oMB.isActive()) {
+            oMP.openBy(oMB);
+          } else {
+            var oDelegate = {
+              onAfterRendering: function () {
+                oMP.openBy(oMB);
+              },
+            };
+            oMB.addEventDelegate(oDelegate);
+          }
+        }
+      },
+
+      _getObjectiveWizardMessagePopover: function () {
+        if (!this._oObjectiveWizardMessagePopover) {
+          this._oObjectiveWizardMessagePopover = sap.ui.xmlfragment(
+            this.getView().getId(),
+            "hcm.ux.hapv3.fragment.NewObjectiveByWizardMessages",
+            this
+          );
+          this.getView().addDependent(this._oObjectiveWizardMessagePopover);
+        }
+        return this._oObjectiveWizardMessagePopover;
+      },
+
       onObjectiveWizardGoReview: function () {
         if (this._oWizard) {
-          var oReviewStep = this._oWizard.getSteps()[2];
-          this._oWizard.setCurrentStep(oReviewStep);
+          if (this._checkObjectiveByWizard()) {
+            var oReviewStep = this._oWizard.getSteps()[2];
+            if (this._oWizard.getCurrentStep() !== oReviewStep.getId()) {
+              this._oWizard.setCurrentStep(oReviewStep);
+            } else {
+              this._oWizard.goToStep(oReviewStep);
+            }
+          } else {
+            MessageToast.show(this.getText("checkErrorsBeforeProceeding"));
+            this.onOpenObjectiveWizardMessagePopover();
+          }
         }
       },
       onObjectiveWizardBackToObjectDetails: function () {
@@ -5211,6 +5308,10 @@ sap.ui.define(
             that._oWizard.invalidateStep(oStep);
           }
         });
+        oViewModel.setProperty(
+          "/objectiveWizardSettings/selectedObjective",
+          null
+        );
 
         if (sIndex !== -1) {
           var oRow = oViewModel.getProperty(sPath);
@@ -5229,6 +5330,10 @@ sap.ui.define(
         var sNewRowIid = oViewModel.getProperty(
           "/objectiveWizardSettings/newRowIid"
         );
+        oViewModel.setProperty(
+          "/objectiveWizardSettings/selectedObjective",
+          _.clone(oRow)
+        );
 
         var sObjNamePath = `/bodyElements/${sNewRowIid}/Name`;
         oViewModel.setProperty(sObjNamePath, oRow.Stext);
@@ -5246,8 +5351,11 @@ sap.ui.define(
         oViewModel.setProperty(sObjEndPath, oRow.Objen);
         var sObjStaPath = `/bodyCells/${sNewRowIid}/${this._sObjStaColumn}/ValueString`;
         oViewModel.setProperty(sObjStaPath, "0001");
-        var sObjCvlPath = `/bodyCells/${sNewRowIid}/${this._sObjCvlColumn}/ValueNum`;
-        oViewModel.setProperty(sObjCvlPath, oRow.Crovl);
+        var sObjCvlPath = `/bodyCells/${sNewRowIid}/${this._sObjCvlColumn}/ValueString`;
+        oViewModel.setProperty(
+          sObjCvlPath,
+          formatter.formatFloat(3, oRow.Crovl)
+        );
 
         var sObjDepPath = `/bodyCells/${sNewRowIid}/${this._sObjDepColumn}`;
         oViewModel.setProperty(
@@ -5275,13 +5383,7 @@ sap.ui.define(
         oViewModel.setProperty(sObjSccPath, oRow.Scacs);
 
         if (this._oWizard) {
-          var wizardPromise = new Promise(function (resolve, reject) {
-            resolve(true);
-          });
-
-          wizardPromise.then(function () {
-            that._oWizard.nextStep();
-          });
+          that._oWizard.nextStep();
         }
       },
 

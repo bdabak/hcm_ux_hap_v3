@@ -1,0 +1,17 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core"
+    xmlns:m="sap.m"
+    xmlns="sap.ui.layout">
+
+    <m:Panel headerText="{i18n>dependentObjectiveSelection}" width="auto" class="sapUiSmallMarginBeginEnd" backgroundDesign="Transparent">
+        <!-- <m:ObjectHeader binding="{formDetailsModel>/objectiveWizardSettings/selectedObjective}" title="{formDetailsModel>Stext}" condensed="true">
+            <m:attributes>
+                <m:ObjectAttribute text="{formDetailsModel>Descr}" />
+            </m:attributes>
+        </m:ObjectHeader> -->
+        <m:ObjectIdentifier binding="{formDetailsModel>/objectiveWizardSettings/selectedObjective}" title="{formDetailsModel>Stext}" text="{formDetailsModel>Descr}" />
+    </m:Panel>
+    <m:Panel width="auto" headerText="{i18n>newObjectiveDetails}" class="sapUiSmallMarginBeginEnd" backgroundDesign="Transparent">
+        <Grid id="idNewObjectiveReviewGrid" defaultSpan="XL3 L4 M6 S12" containerQuery="true" class="hapResponsiveGrid">
+        </Grid>
+    </m:Panel>
+</core:FragmentDefinition>

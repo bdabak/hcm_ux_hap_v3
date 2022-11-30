@@ -6,7 +6,7 @@
     xmlns:t="sap.ui.table"
     xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
 
-    <t:TreeTable id="dependentObjectiveTree" rows="{path:'formDetailsModel>dependentObjectives', parameters: {arrayNames:['Children'], numberOfExpandedLevels:2}}" selectionMode="Single" enableSelectAll="false" rowSelectionChange=".onDependentObjectSelected" class="hapObjectiveSelectionTree">
+    <t:TreeTable id="dependentObjectiveTree" rows="{path:'formDetailsModel>dependentObjectives', parameters: {arrayNames:['Children'], numberOfExpandedLevels:2}}" selectionMode="Single" enableSelectAll="false" rowSelectionChange=".onDependentObjectSelected" class="hapObjectiveSelectionTree sapUiSmallMarginBeginEnd">
         <t:extension>
             <OverflowToolbar>
                 <Title text="{i18n>dependentObjectiveSelection}"/>

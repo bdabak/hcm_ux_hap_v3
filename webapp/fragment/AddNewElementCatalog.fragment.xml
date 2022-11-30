@@ -5,7 +5,7 @@
 	xmlns="sap.m"
 	xmlns:t="sap.ui.table"
 	xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-	<Dialog title="{i18n>addNewElementCatalogHeader}" showHeader="true" stretch="{device>/system/phone}" id="idAddNewElementCatalogDialog" contentWidth="850px" contentHeight="500px" resizable="true" draggable="true">
+	<Dialog title="{i18n>addNewElementCatalogHeader}" showHeader="true" class="hapDialog" stretch="{device>/system/phone}" id="idAddNewElementCatalogDialog" contentWidth="850px" contentHeight="500px" resizable="true" draggable="true">
 		<content>
 			<t:TreeTable rows="{path:'enhanceModel>/Hierarchy', parameters: {arrayNames:['Children'], numberOfExpandedLevels:2}}" selectionMode="None" enableSelectAll="false">
 				<t:extension>

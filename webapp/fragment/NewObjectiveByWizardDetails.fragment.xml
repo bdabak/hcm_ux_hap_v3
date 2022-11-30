@@ -1,0 +1,5 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core"
+    xmlns="sap.ui.layout">
+    <Grid id="idNewObjectiveInformationGrid" defaultSpan="XL3 L4 M6 S12" containerQuery="true" class="hapResponsiveGrid">
+    </Grid>
+</core:FragmentDefinition>

@@ -51,5 +51,15 @@ sap.ui.define([], function () {
     convertFloatToString: function (fVal) {
       return fVal.toLocaleString().replaceAll(",", "").replaceAll(".", ",");
     },
+    formatFloat: function (d, v) {
+      var oFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+        groupingEnabled: true, // grouping is enabled
+        groupingSeparator: ".", // grouping separator is '.'
+        groupingSize: 3, // the amount of digits to be grouped (here: thousand)
+        decimalSeparator: ",", // the decimal separator must be different from the grouping separator
+        decimals: d,
+      });
+      return oFormat.format(v);
+    },
   };
 });
