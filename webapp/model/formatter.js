@@ -61,5 +61,21 @@ sap.ui.define([], function () {
       });
       return oFormat.format(v);
     },
+    convertMessageType: function (sMsgty) {
+      switch (sMsgty) {
+        case "E":
+        case "A":
+        case "X":
+          return sap.ui.core.MessageType.Error;
+        case "W":
+          return sap.ui.core.MessageType.Warning;
+        case "I":
+          return sap.ui.core.MessageType.Information;
+        case "S":
+          return sap.ui.core.MessageType.Success;
+        default:
+          return sap.ui.core.MessageType.None;
+      }
+    },
   };
 });

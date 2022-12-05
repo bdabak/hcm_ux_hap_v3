@@ -111,7 +111,6 @@ sap.ui.define(
         });
 
         //Set page layout
-        this._oPageLayout = this.byId("idDetailObjectPageLayout");
         this._oNavContainer = this.byId("idPageNavigationContainer");
 
         // Store original busy indicator delay, so it can be restored later on
@@ -271,18 +270,53 @@ sap.ui.define(
         that.confirmDialog.open();
       },
       _doNavToMain: function () {
-        this._initializeViewModel();
-        $(document).unbind("keypress");
+        var that = this;
 
-        //
-        var oHistory = History.getInstance();
-        var sPreviousHash = oHistory.getPreviousHash();
+        this._clearUI().then(function () {
+          that._initializeViewModel();
+          $(document).unbind("keypress");
 
-        if (sPreviousHash !== undefined) {
-          window.history.go(-1);
-        } else {
-          this.getRouter().navTo("formlist", null, true);
-        }
+          //
+          var oHistory = History.getInstance();
+          var sPreviousHash = oHistory.getPreviousHash();
+
+          if (sPreviousHash !== undefined) {
+            window.history.go(-1);
+          } else {
+            that.getRouter().navTo("formlist", null, true);
+          }
+        });
+      },
+      _clearUI: function () {
+        var that = this;
+        return new Promise(function (resolve, reject) {
+          var oViewModel = that.getModel("formDetailsModel");
+          var aFormUIElements = oViewModel.getProperty("/formUIElements");
+
+          that._oNavContainer.setInitialPage(null);
+
+          $.each(aFormUIElements, function (i, oFormElement) {
+            try {
+              var oElem = sap.ui.getCore().byId(oFormElement.UIElementId);
+              if (oElem) {
+                if (typeof oElem.destroyCustomData === "function") {
+                  oElem.destroyCustomData();
+                }
+                if (typeof oElem.destroyContent === "function") {
+                  oElem.destroyContent();
+                }
+                if (typeof oElem.destroyItems === "function") {
+                  oElem.destroyItems();
+                }
+                if (typeof oElem.destroy === "function") {
+                  oElem.destroy();
+                }
+              }
+            } catch (e) {}
+          });
+
+          resolve(true);
+        });
       },
       _formatDate: function (sDate) {
         try {
@@ -682,6 +716,10 @@ sap.ui.define(
         /*Initiate view data*/
         this._initializeViewModel();
 
+        /* Remove all page content */
+        // this.byId("idPageNavigationContainer").destroyPages();
+        // this.byId("idPageNavigationContainer").removeAllPages();
+
         /*Close busy dialog*/
         this.getUIHelper()?.setListViewBusy(false);
 
@@ -772,7 +810,7 @@ sap.ui.define(
 
             if (oData.Return !== null) {
               if (oData.Return.hasOwnProperty("results")) {
-                sHasErrors = that._processReturnMessagesNew(
+                sHasErrors = that._processReturnMessages(
                   oData.Return.results,
                   true
                 );
@@ -1092,6 +1130,8 @@ sap.ui.define(
         });
         oActionButton.addCustomData(oTargetSection);
 
+        this._addUIElement(null, "ActionButton", null, oActionButton);
+
         return oActionButton;
       },
 
@@ -1181,6 +1221,8 @@ sap.ui.define(
         });
         oMenuItem.addCustomData(oTargetSection);
 
+        this._addUIElement(null, "SaveMenu", null, oMenuItem);
+
         return oSaveMenu;
       },
 
@@ -1202,6 +1244,26 @@ sap.ui.define(
               oTab.RowIid,
             ]);
 
+            var oErrorButton = new sap.m.Button({
+              type: "Emphasized",
+              text: {
+                path: "formDetailsModel>/formMessages",
+                formatter: function (aFormMessages) {
+                  return aFormMessages.length;
+                },
+              },
+              icon: "sap-icon://error",
+              visible: {
+                path: "formDetailsModel>/formMessages",
+                formatter: function (aFormMessages) {
+                  return aFormMessages.length > 0;
+                },
+              },
+              press: that.onOpenFormMessagePopover.bind(that),
+            });
+
+            that._addUIElement(oTab.RowIid, "ErrorButton", null, oErrorButton);
+
             var oButtonRow = new sap.m.FlexBox({
               direction: "Row",
             }).bindAggregation("items", {
@@ -1209,11 +1271,20 @@ sap.ui.define(
               template: that._getToolbarTemplateNew(),
             });
 
+            that._addUIElement(oTab.RowIid, "ButtonRow", null, oButtonRow);
+
             var oSaveMenu = that._getSaveMenuTemplate();
 
             var oToolbar = new sap.m.OverflowToolbar({
-              content: [new sap.m.ToolbarSpacer(), oButtonRow, oSaveMenu],
+              content: [
+                oErrorButton,
+                new sap.m.ToolbarSpacer(),
+                oButtonRow,
+                oSaveMenu,
+              ],
             }).addStyleClass("hapPageFooter");
+
+            that._addUIElement(oTab.RowIid, "Toolbar", null, oToolbar);
 
             var oPage = new sap.m.Page({
               title:
@@ -1226,6 +1297,8 @@ sap.ui.define(
               },
               footer: oToolbar,
             }).addStyleClass("hapPage");
+
+            that._addUIElement(oTab.RowIid, "Page", null, oPage);
 
             var oCell = _.filter(oViewData.formData.BodyCells, {
               RowIid: oTab.RowIid,
@@ -1274,6 +1347,8 @@ sap.ui.define(
               enableLazyLoading: true,
               headerTitle: oPageHeader,
             });
+
+            that._addUIElement(oTab.RowIid, "PageLayout", null, oPageLayout);
 
             // var oVL = new sap.ui.layout.VerticalLayout({
             //   content: [
@@ -1402,12 +1477,26 @@ sap.ui.define(
         );
 
         var oTitleExpanded = this._buildObjectTitle(oElement);
+        that._addUIElement(
+          oElement.RowIid,
+          "PageTitleExpanded",
+          null,
+          oTitleExpanded
+        );
+
         var oTitleSnapped = this._buildObjectTitle(oElement);
+        that._addUIElement(
+          oElement.RowIid,
+          "PageTitleSnapped",
+          null,
+          oTitleSnapped
+        );
 
         var oPageHeader = new sap.uxap.ObjectPageDynamicHeaderTitle({
           expandedHeading: oTitleExpanded,
           snappedHeading: oTitleSnapped,
         });
+        that._addUIElement(oElement.RowIid, "PageHeader", null, oPageHeader);
 
         $.each(aElementButtons, function (i, oButton) {
           oPageHeader.addAction(oButton.Button);
@@ -1777,6 +1866,13 @@ sap.ui.define(
               customData: aCustomDataAdd,
             });
 
+            that._addUIElement(
+              oElem.RowIid,
+              "ElementAddButton",
+              null,
+              oAddButton
+            );
+
             aButtons.push({
               Button: oAddButton,
               Name: "RowAddButton",
@@ -1829,6 +1925,13 @@ sap.ui.define(
 							}*/
             });
 
+            that._addUIElement(
+              oElem.RowIid,
+              "ElementAddButton",
+              null,
+              oObjectButton
+            );
+
             aButtons.push({
               Button: oObjectButton,
               Name: "RowAddButton",
@@ -1867,6 +1970,8 @@ sap.ui.define(
             customData: aCustomDataSurvey,
           });
 
+          that._addUIElement(oElem.RowIid, "SurveyButton", null, oSurveyButton);
+
           aButtons.push({
             Button: oSurveyButton,
             Name: "RowSurveyButton",
@@ -1893,6 +1998,13 @@ sap.ui.define(
             visible: sAttachVisible,
             customData: aCustomDataAtt,
           });
+
+          that._addUIElement(
+            oElem.RowIid,
+            "AttachmentButton",
+            null,
+            oAttButton
+          );
 
           aButtons.push({
             Button: oAttButton,
@@ -1968,6 +2080,13 @@ sap.ui.define(
             customData: aCustomDataAttList,
           });
 
+          that._addUIElement(
+            oElem.RowIid,
+            "AttachmentListButton",
+            null,
+            oAttListButton
+          );
+
           aButtons.push({
             Button: oAttListButton,
             Name: "RowAttListButton",
@@ -1987,6 +2106,8 @@ sap.ui.define(
             }),
             customData: aCustomDataDel,
           });
+
+          that._addUIElement(oElem.RowIid, "RemoveButton", null, oRemoveButton);
 
           aButtons.push({
             Button: oRemoveButton,
@@ -2491,6 +2612,7 @@ sap.ui.define(
       }, //_addNewElementFreeFormCellNew
       _addInputField: function (oCell, sBindingField) {
         var that = this;
+        var oViewModel = this.getModel("formDetailsModel");
         var oIF = new sap.m.Input({
           value: {
             path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/${sBindingField}`,
@@ -2538,7 +2660,13 @@ sap.ui.define(
               var d = oCell.CellValueClass === "ZS" ? 2 : 3;
               v = v.replace(/\./g, "");
               v = v.replace(/\,/g, ".");
-              oIF.setValue(formatter.formatFloat(d, v));
+              var val = formatter.formatFloat(d, v);
+              oIF.setValue(val);
+
+              oViewModel.setProperty(
+                `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/${sBindingField}`,
+                val
+              );
             }
           },
           submit: this._onInputFieldValueChange,
@@ -2915,7 +3043,7 @@ sap.ui.define(
           success: function (oData, oResponse) {
             that.setViewState(false);
             /* Return messages */
-            sHasErrors = that._processReturnMessagesNew(
+            sHasErrors = that._processReturnMessages(
               oData.Return.results,
               true,
               null
@@ -4270,6 +4398,22 @@ sap.ui.define(
         });
       },
 
+      _findActiveTab: function () {
+        var oViewModel = this.getModel("formDetailsModel");
+        var aNavigationData = oViewModel.getProperty("/navigationData");
+        var sActiveElementId = oViewModel.getProperty("/navigationElementId");
+        var oActiveElement;
+        try {
+          oActiveElement = _.find(aNavigationData, [
+            "ElementId",
+            sActiveElementId,
+          ]);
+        } catch (e) {
+          oActiveElement = null;
+        }
+        return oActiveElement;
+      },
+
       _handleSaveAndContinue: function () {
         var oViewModel = this.getModel("formDetailsModel");
         var oModel = this.getModel();
@@ -4315,7 +4459,7 @@ sap.ui.define(
         this._openBusyFragment("formSaved", []);
         oModel.create("/DocumentOperationsSet", oOperation, {
           success: function (oData, oResponse) {
-            sHasErrors = that._processReturnMessagesNew(
+            sHasErrors = that._processReturnMessages(
               oData.Return.results,
               true,
               "SAVE"
@@ -4377,7 +4521,7 @@ sap.ui.define(
         oModel.create("/DocumentOperationsSet", oOperation, {
           success: function (oData, oResponse) {
             /* Return messages */
-            sHasErrors = that._processReturnMessagesNew(
+            sHasErrors = that._processReturnMessages(
               oData.Return.results,
               true,
               "SAVE"
@@ -4557,7 +4701,7 @@ sap.ui.define(
         var oViewModel = this.getModel("formDetailsModel");
         oViewModel.setProperty("/formMessages", []);
       },
-      _processReturnMessagesNew: function (aReturn, bShowMessages, sButtonId) {
+      _processReturnMessagesx: function (aReturn, bShowMessages, sButtonId) {
         var sHasErrors = false;
 
         this._removeAllMessages();
@@ -4597,43 +4741,64 @@ sap.ui.define(
       _processReturnMessages: function (aReturn, bShowMessages) {
         var that = this;
         var sHasErrors = false;
+        var aFormMessages = [];
+        var oViewModel = this.getModel("formDetailsModel");
+
+        this._removeAllMessages();
 
         $.each(aReturn, function (sIndex, oReturn) {
-          var sMessageType = sap.ui.core.MessageType.None;
-
-          switch (oReturn.Type) {
-            case "S":
-              sMessageType = sap.ui.core.MessageType.Success;
-              break;
-            case "W":
-              sMessageType = sap.ui.core.MessageType.Warning;
-              break;
-            case "I":
-              sMessageType = sap.ui.core.MessageType.Information;
-              break;
-            case "E":
-            case "A":
-              sMessageType = sap.ui.core.MessageType.Error;
-              sHasErrors = true;
-              bShowMessages = true;
-              break;
-          }
           if (bShowMessages || oReturn.Type === "E") {
-            that._oMessageManager.addMessages(
-              new sap.ui.core.message.Message({
-                message: oReturn.Message,
-                type: sMessageType,
-                processor: that._oMessageProcessor,
-              })
-            );
+            aFormMessages.push(_.clone(oReturn));
           }
         });
-        if (aReturn.length > 0 && bShowMessages) {
-          that.onMessagesButtonPress(null);
+
+        oViewModel.setProperty("/formMessages", aFormMessages);
+
+        if (aFormMessages.length > 0 && bShowMessages) {
+          that.onOpenFormMessagePopover(null);
         }
 
         return sHasErrors;
       },
+
+      onOpenFormMessagePopover: function (oEvent) {
+        var oMP = this._getFormMessagePopover();
+        var oMB = null;
+        var that = this;
+
+        if (oEvent) {
+          oMB = oEvent.getSource();
+        } else {
+          var oCurrentPage = that._oNavContainer.getCurrentPage();
+          var oMB = oCurrentPage.getFooter().getAggregation("content")[0];
+        }
+
+        if (oMB && oMP) {
+          if (oMB.isActive()) {
+            oMP.openBy(oMB);
+          } else {
+            var oDelegate = {
+              onAfterRendering: function () {
+                oMP.openBy(oMB);
+              },
+            };
+            oMB.addEventDelegate(oDelegate);
+          }
+        }
+      },
+
+      _getFormMessagePopover: function () {
+        if (!this._oFormMessagePopover) {
+          this._oFormMessagePopover = sap.ui.xmlfragment(
+            this.getView().getId(),
+            "hcm.ux.hapv3.fragment.FormMessages",
+            this
+          );
+          this.getView().addDependent(this._oFormMessagePopover);
+        }
+        return this._oFormMessagePopover;
+      },
+
       _doDeleteFormElement: function (sRowIid, sNoMsg) {
         var oViewModel = this.getModel("formDetailsModel");
         var oModel = this.getModel();
@@ -4662,7 +4827,7 @@ sap.ui.define(
         oModel.create("/DocumentOperationsSet", oOperation, {
           success: function (oData, oResponse) {
             /* Return messages */
-            sHasErrors = that._processReturnMessagesNew(
+            sHasErrors = that._processReturnMessages(
               oData.Return.results,
               false
             );
@@ -4927,7 +5092,7 @@ sap.ui.define(
             /* Return messages */
             if (oData.Return !== null) {
               if (oData.Return.hasOwnProperty("results")) {
-                sHasErrors = that._processReturnMessagesNew(
+                sHasErrors = that._processReturnMessages(
                   oData.Return.results,
                   false
                 );
@@ -4949,7 +5114,7 @@ sap.ui.define(
             // /* Return messages */
             // if (oData.Return !== null) {
             //   if (oData.Return.hasOwnProperty("results")) {
-            //     sHasErrors = that._processReturnMessagesNew(
+            //     sHasErrors = that._processReturnMessages(
             //       oData.Return.results,
             //       false
             //     );
@@ -5477,7 +5642,7 @@ sap.ui.define(
             /* Return messages */
             if (oData.Return !== null) {
               if (oData.Return.hasOwnProperty("results")) {
-                sHasErrors = that._processReturnMessagesNew(
+                sHasErrors = that._processReturnMessages(
                   oData.Return.results,
                   false
                 );
@@ -5578,7 +5743,7 @@ sap.ui.define(
             /* Return messages */
             if (oData.Return !== null) {
               if (oData.Return.hasOwnProperty("results")) {
-                sHasErrors = that._processReturnMessagesNew(
+                sHasErrors = that._processReturnMessages(
                   oData.Return.results,
                   false
                 );
@@ -5685,7 +5850,7 @@ sap.ui.define(
             /* Return messages */
             if (oData.Return !== null) {
               if (oData.Return.hasOwnProperty("results")) {
-                sHasErrors = that._processReturnMessagesNew(
+                sHasErrors = that._processReturnMessages(
                   oData.Return.results,
                   false
                 );
@@ -6262,7 +6427,7 @@ sap.ui.define(
             /* Return messages */
             if (oData.Return !== null) {
               if (oData.Return.hasOwnProperty("results")) {
-                sHasErrors = that._processReturnMessagesNew(
+                sHasErrors = that._processReturnMessages(
                   oData.Return.results,
                   true
                 );
@@ -6320,7 +6485,7 @@ sap.ui.define(
             /* Return messages */
             if (oData.Return !== null) {
               if (oData.Return.hasOwnProperty("results")) {
-                sHasErrors = that._processReturnMessagesNew(
+                sHasErrors = that._processReturnMessages(
                   oData.Return.results,
                   true
                 );
