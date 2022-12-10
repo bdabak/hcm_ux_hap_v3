@@ -12,6 +12,7 @@ sap.ui.define(
           radioName: { type: "string", bindable: false },
           nullValue: { type: "string", bindable: true },
           excludedValues: { type: "object", bindable: true },
+          _isRendered: { type: "boolean", bindable: false },
         },
         aggregations: {
           ratingItems: {
@@ -39,11 +40,13 @@ sap.ui.define(
        */
       onAfterRendering: function () {
         var that = this;
-
-        setTimeout(function () {
-          //SVG bug
-          $("#" + that.getId()).removeClass("hidden");
-        }, 300);
+        if (!that.getProperty("_isRendered")) {
+          setTimeout(function () {
+            //SVG bug
+            that.setProperty("_isRendered", true);
+            $("#" + that.getId()).removeClass("hidden");
+          }, 300);
+        }
       },
       renderer: function (oRM, oControl) {
         var items = oControl.getRatingItems();
@@ -82,7 +85,9 @@ sap.ui.define(
         oRM.openStart("div");
         oRM.writeControlData(oControl);
         oRM.class("star-rating-main-container");
-        oRM.class("hidden");
+        if (!oControl.getProperty("_isRendered")) {
+          oRM.class("hidden");
+        }
         oRM.attr("control-id", radioName);
         oRM.openEnd();
 

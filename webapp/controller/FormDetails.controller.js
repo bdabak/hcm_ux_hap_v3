@@ -999,11 +999,7 @@ sap.ui.define(
               }
 
               if (sAvailability === "" || sAvailability === "B") {
-                if (sStatusRelevant) {
-                  return true;
-                } else {
-                  return true;
-                }
+                return true;
               } else {
                 return false;
               }
@@ -1082,6 +1078,8 @@ sap.ui.define(
               switch (sId) {
                 case "SAVE":
                   return "sap-icon://save";
+                case "CHECK":
+                  return "sap-icon://inspection";
                 case "SAVE&KEEP":
                   return "sap-icon://open-command-field";
                 case "NEXT&KEEP":
@@ -1252,7 +1250,7 @@ sap.ui.define(
                   return aFormMessages.length;
                 },
               },
-              icon: "sap-icon://error",
+              icon: "sap-icon://message-popup",
               visible: {
                 path: "formDetailsModel>/formMessages",
                 formatter: function (aFormMessages) {
@@ -1390,7 +1388,14 @@ sap.ui.define(
         var that = this;
 
         var _isFieldVisible = function (sCellValueAvailability, sValue) {
-          return sCellValueAvailability !== "H" && sValue !== "";
+          if (
+            sCellValueAvailability !== null &&
+            sCellValueAvailability !== undefined
+          ) {
+            return sCellValueAvailability !== "H" && sValue !== "";
+          } else {
+            return false;
+          }
         };
 
         return new sap.m.HBox({
@@ -1455,6 +1460,24 @@ sap.ui.define(
                   },
                   {
                     path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinAppColumn}/ValueText`,
+                  },
+                ],
+
+                formatter: _isFieldVisible,
+              },
+            }).addStyleClass("sapUiTinyMarginEnd"),
+            new ResultBoard({
+              icon: "sap-icon://tools-opportunity",
+              status: "Error",
+              tooltip: "2. Yönetici Değerlendirmesi",
+              result: `{formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinOthColumn}/ValueText}`,
+              visible: {
+                parts: [
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinOthColumn}/CellValueAvailability`,
+                  },
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sFinOthColumn}/ValueText`,
                   },
                 ],
 
@@ -2254,6 +2277,7 @@ sap.ui.define(
             return (
               o.RowIid == sRowIid &&
               (o.ColumnIid == that._sFinAppColumn ||
+                o.ColumnIid == that._sFinOthColumn ||
                 o.ColumnIid == that._sEmpAppColumn) &&
               (o.CellValueAvailability !== "H" ||
                 o.CellNoteAvailability !== "H")
@@ -2361,6 +2385,7 @@ sap.ui.define(
                     //oEl = this._addListBox(oCell); /*sap.m.Select*/
                     if (
                       oCell.ColumnIid === that._sFinAppColumn ||
+                      oCell.ColumnIid === that._sFinOthColumn ||
                       oCell.ColumnIid === that._sEmpAppColumn
                     ) {
                       oEl = this._addRatingIndicatorV2(oCell);
@@ -3982,6 +4007,11 @@ sap.ui.define(
             /*Son Değerlendirme*/
           }
 
+          if (oColumn.ColumnId === "ZAPO") {
+            that._sFinOthColumn = oColumn.ColumnIid;
+            /*2. Yönetici Değerlendirme*/
+          }
+
           if (oColumn.ColumnId === "ZAPP") {
             that._sEmpAppColumn = oColumn.ColumnIid;
             /*Son Değerlendirme - Çalışan*/
@@ -4353,6 +4383,9 @@ sap.ui.define(
           case "NEXT&KEEP":
             this._navigateToNextTab();
             break;
+          case "CHECK":
+            this._handleCheckDocument();
+            break;
           default:
             this._handleButtonAction(oButton);
         }
@@ -4414,26 +4447,21 @@ sap.ui.define(
         return oActiveElement;
       },
 
+      _handleReturnError: function (oError) {
+        try {
+          var M = JSON.parse(oError.responseText).error.message.value;
+          MessageBox.error(M);
+        } catch (e) {
+          MessageBox.error(oError.responseText);
+        }
+      },
+
       _handleSaveAndContinue: function () {
         var oViewModel = this.getModel("formDetailsModel");
         var oModel = this.getModel();
         var aFormProp = oViewModel.getProperty("/aFormProp");
         var that = this;
         var sHasErrors = false;
-
-        // var aNavigationData = oViewModel.getProperty("/navigationData");
-
-        // var iIndex = aNavigationData
-        //   .map(function (e) {
-        //     return e.ElementId;
-        //   })
-        //   .indexOf(oViewModel.getProperty("/navigationElementId"));
-        // iIndex++;
-
-        // if (aNavigationData.length - 1 === iIndex) {
-        //   oViewModel.setProperty("/saveAndNextButtonVisibility", false);
-        // }
-        // var sPageId = aNavigationData[iIndex].Page.getId();
 
         this._convertUIData();
 
@@ -4478,12 +4506,54 @@ sap.ui.define(
           },
           error: function (oError) {
             that._closeBusyFragment();
-            try {
-              var M = JSON.parse(oError.responseText).error.message.value;
-              MessageBox.error(M);
-            } catch (e) {
-              MessageBox.error(oError.responseText);
+            that._handleReturnError(oError);
+          },
+          async: true,
+        });
+      },
+
+      _handleCheckDocument: function () {
+        var oViewModel = this.getModel("formDetailsModel");
+        var oModel = this.getModel();
+        var aFormProp = oViewModel.getProperty("/aFormProp");
+        var that = this;
+        var sHasErrors = false;
+
+        this._convertUIData();
+
+        var oOperation = {
+          AppraisalId: oViewModel.getProperty("/appraisalId"),
+          PartApId: "0000",
+          Operation: "CHECK",
+          BodyElements: oViewModel.getProperty("/formData/BodyElements"),
+          BodyCells: oViewModel.getProperty("/formData/BodyCells"),
+          BodyCellValues: oViewModel.getProperty("/formData/BodyCellValues"),
+          HeaderStatus: oViewModel.getProperty("/formData/HeaderStatus"),
+          Return: [],
+        };
+
+        this._removeAllMessages();
+
+        this._openBusyFragment("formCheckInProgress", []);
+        oModel.create("/DocumentOperationsSet", oOperation, {
+          success: function (oData, oResponse) {
+            /* Return messages */
+            sHasErrors = that._processReturnMessages(
+              oData.Return.results,
+              true,
+              "CHECK"
+            );
+
+            /* Close busy indicator*/
+            that._closeBusyFragment();
+
+            if (sHasErrors === false) {
+              MessageToast.show(that.getText("formCheckSuccess"));
             }
+          },
+          error: function (oError) {
+            that._closeBusyFragment();
+            that._handleReturnError(oError);
           },
           async: true,
         });
@@ -4543,9 +4613,7 @@ sap.ui.define(
           },
           error: function (oError) {
             that._closeBusyFragment();
-            //MessageBox.error(that.getText("formSaveError"));
-            var M = JSON.parse(oError.responseText).error.message.value;
-            MessageBox.error(M);
+            that._handleReturnError(oError);
           },
           async: true,
         });
@@ -4655,42 +4723,6 @@ sap.ui.define(
           }
         });
 
-        // for (var i = aRowUIElements.length - 1; i >= 0; i--) {
-        //   if (aRowUIElements[i].RowIid === sRowIid) {
-        //     try {
-        //       if (
-        //         typeof aRowUIElements[i].UIElement.destroyContent === "function"
-        //       ) {
-        //         aRowUIElements[i].UIElement.destroyContent();
-        //       }
-        //     } catch (err) {
-        //       jQuery.sap.log.error(
-        //         sRowIid + " satırının içeriği silinirken hata"
-        //       );
-        //     }
-        //     try {
-        //       if (typeof aRowUIElements[i].UIElement.destroy === "function") {
-        //         aRowUIElements[i].UIElement.destroy();
-        //       }
-        //     } catch (err) {
-        //       jQuery.sap.log.error(sRowIid + " satırı silinirken hata");
-        //     }
-        //     aRowUIElements.splice(i, 1);
-        //   }
-        // }
-
-        // for (var j = aBodyElements.length - 1; j >= 0; j--) {
-        //   if (aBodyElements[j].RowIid === sRowIid) {
-        //     aBodyElements.splice(j, 1);
-        //   }
-        // }
-
-        // for (var k = aBodyCells.length - 1; k >= 0; k--) {
-        //   if (aBodyCells[k].RowIid === sRowIid) {
-        //     aBodyCells.splice(k, 1);
-        //   }
-        // }
-
         oViewModel.setProperty("/formUIElements", aRowUIElements);
         oViewModel.setProperty("/formData/BodyElements", aBodyElements);
         oViewModel.setProperty("/bodyElements", oBodyElements);
@@ -4738,7 +4770,7 @@ sap.ui.define(
 
         return sHasErrors;
       },
-      _processReturnMessages: function (aReturn, bShowMessages) {
+      _processReturnMessages: function (aReturn, bShowMessages, sButtonId) {
         var that = this;
         var sHasErrors = false;
         var aFormMessages = [];
@@ -4747,7 +4779,16 @@ sap.ui.define(
         this._removeAllMessages();
 
         $.each(aReturn, function (sIndex, oReturn) {
-          if (bShowMessages || oReturn.Type === "E") {
+          var isError = false;
+          if (
+            oReturn.Type === "E" ||
+            oReturn.Type === "A" ||
+            oReturn.Type === "X"
+          ) {
+            sHasErrors = true;
+            isError = true;
+          }
+          if (bShowMessages && isError) {
             aFormMessages.push(_.clone(oReturn));
           }
         });
@@ -4755,6 +4796,7 @@ sap.ui.define(
         oViewModel.setProperty("/formMessages", aFormMessages);
 
         if (aFormMessages.length > 0 && bShowMessages) {
+          MessageToast.show(that.getText("formCheckError"));
           that.onOpenFormMessagePopover(null);
         }
 
@@ -5108,35 +5150,6 @@ sap.ui.define(
                 sElementLevel
               );
             }
-
-            //oData, sRowIid, sFromCatalog, sParentName, sObj, sElementLevel;
-
-            // /* Return messages */
-            // if (oData.Return !== null) {
-            //   if (oData.Return.hasOwnProperty("results")) {
-            //     sHasErrors = that._processReturnMessages(
-            //       oData.Return.results,
-            //       false
-            //     );
-            //   }
-            // }
-
-            // if (!sHasErrors) {
-            //   if (oData.ReturnOp.UiDeferred === "X") {
-            //     /*Add from tree or list*/
-            //     that._buildCatalogForSelection(oData, sRowIid);
-            //   } else {
-            //     /*Free enhancement*/
-            //     that._enhanceDocument(
-            //       oData,
-            //       sRowIid,
-            //       false,
-
-            //       false,
-            //       sElementLevel
-            //     );
-            //   }
-            // }
           },
           error: function (oError) {
             that._closeBusyFragment();

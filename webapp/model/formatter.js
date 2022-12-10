@@ -77,5 +77,21 @@ sap.ui.define([], function () {
           return sap.ui.core.MessageType.None;
       }
     },
+    convertMessageTitle: function (sMsgty) {
+      switch (sMsgty) {
+        case "E":
+        case "A":
+        case "X":
+          return "Hata";
+        case "W":
+          return "Uyarı";
+        case "I":
+          return "Bilgi";
+        case "S":
+          return "Başarı";
+        default:
+          return "Mesaj";
+      }
+    },
   };
 });

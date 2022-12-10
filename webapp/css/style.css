@@ -103,6 +103,11 @@
   outline: 0 !important;
 }
 
+.hapPageFooter .sapMBtnDefault {
+  background-color: #f7f9fa;
+  border-color: #0854a0;
+}
+
 .hapHeaderData {
   margin-left: 5px !important;
 }

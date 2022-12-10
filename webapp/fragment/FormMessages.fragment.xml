@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns="sap.m"
     xmlns:core="sap.ui.core">
     <MessagePopover id="formMessagesPopover" items="{formDetailsModel>/formMessages}" initiallyExpanded="true">
-        <MessageItem type="{path:'formDetailsModel>Type', formatter: '.formatter.convertMessageType'}" title="{formDetailsModel>Message}" subtitle="{formDetailsModel>Message}" />
+        <MessageItem type="{path:'formDetailsModel>Type', formatter: '.formatter.convertMessageType'}" title="{path:'formDetailsModel>Type', formatter: '.formatter.convertMessageTitle'}" subtitle="{formDetailsModel>Message}" description="{formDetailsModel>Message}" />
     </MessagePopover>
 </core:FragmentDefinition>
