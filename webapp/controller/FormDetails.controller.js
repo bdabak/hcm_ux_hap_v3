@@ -2014,8 +2014,8 @@ sap.ui.define(
             icon: "sap-icon://add-document",
             text: "{i18n>addAttachmentFile}",
             press: jQuery.proxy(that._handleAddAttachment, that, {
-              rowIid: oRowIid,
-              elementName: oElementName,
+              rowIid: oElem.RowIid,
+              elementName: oElem.Name,
             }),
             enabled: sElementEditable,
             visible: sAttachVisible,
@@ -4981,7 +4981,7 @@ sap.ui.define(
       },
       _handleAddAttachment: function (oEvent) {
         var oViewModel = this.getModel("formDetailsModel");
-        oViewModel.setProperty("/currentRowIid", oEvent.rowIid.getValue());
+        oViewModel.setProperty("/currentRowIid", oEvent.rowIid);
 
         this._openUploadAttachmentDialog();
       },

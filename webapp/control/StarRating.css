@@ -27,7 +27,7 @@
 .star-7:checked ~ .star-rating-container [for*="star-5"] svg,
 .star-7:checked ~ .star-rating-container [for*="star-6"] svg,
 .star-7:checked ~ .star-rating-container [for*="star-7"] svg {
-  transform: scale(0.8);
+  transform: scale(0.75);
 }
 
 .star-null:checked ~ .star-rating-container [for*="star-null"] svg path {
@@ -91,7 +91,7 @@
 
 .star-rating-item-label {
   display: inline-block;
-  width: 50px;
+  width: 35px;
   text-align: center;
   cursor: pointer;
 }
@@ -101,7 +101,7 @@
   height: auto;
   fill: white;
   stroke: rgb(57, 56, 63);
-  transform: scale(0.6);
+  transform: scale(0.5);
   transition: transform 200ms ease-in-out;
 }
 .star-rating-item-label svg path {
@@ -136,7 +136,7 @@
   line-height: 1rem;
   overflow: visible;
   display: flex;
-  bottom: 0;
+  bottom: -10px;
   align-items: center;
   justify-content: center;
   padding: 0.3rem 0.5rem;
@@ -180,6 +180,8 @@
 }
 
 .star-rating-value-text {
+  font-size: 13px;
+  line-height: 1.5rem;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   pointer-events: none;
