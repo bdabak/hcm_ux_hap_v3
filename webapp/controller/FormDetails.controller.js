@@ -108,6 +108,7 @@ sap.ui.define(
             newRowIid: null,
             errorList: [],
           },
+          objectHierarchy: null,
         });
 
         //Set page layout
@@ -861,7 +862,87 @@ sap.ui.define(
           });
         }
       },
+      onShowObjectiveHierarchy: function (oEvent) {
+        var oModel = this.getModel();
+        var oViewModel = this.getModel("formDetailsModel");
+        var that = this;
+        var oButton = oEvent.getSource();
+        var sCurrentNode = oButton.data("cellValue");
+        var oUrlParams = {
+          AppraisalId: oViewModel.getProperty("/appraisalId"),
+          ObjectiveIdentifier: sCurrentNode,
+        };
 
+        /*Initiate hierarchy list*/
+        oViewModel.setProperty("/objectiveHierarchy", {});
+
+        var buildChildren = function (aHiera, sPupOtype, sPupObjid) {
+          var aChildren = _.filter(aHiera, {
+            PupOtype: sPupOtype,
+            PupObjid: sPupObjid,
+          });
+
+          var aReturn = [];
+
+          $.each(aChildren, function (i, oChild) {
+            aReturn.push({
+              id: oChild.Otype + "-" + oChild.Objid,
+              name: oChild.Stext,
+              isCurrent: oChild.Otype + "-" + oChild.Objid === sCurrentNode,
+              children: buildChildren(aHiera, oChild.Otype, oChild.Objid),
+            });
+          });
+          return aReturn;
+        };
+
+        var buildHierarchy = function (aHiera) {
+          var r = _.find(aHiera, ["PupObjid", "00000000"]);
+          var h;
+          if (r) {
+            h = {
+              id: r.Otype + "-" + r.Objid,
+              name: r.Stext,
+              isCurrent: false,
+              children: buildChildren(aHiera, r.Otype, r.Objid),
+            };
+          }
+          return h;
+        };
+        oButton.setBusy(true);
+
+        oModel.callFunction("/GetObjectiveHierarchy", {
+          method: "GET",
+          urlParameters: oUrlParams,
+          success: function (oData, oResponse) {
+            var oHierarchy = buildHierarchy(oData.results);
+            if (oHierarchy) {
+              oViewModel.setProperty("/objectiveHierarchy", oHierarchy);
+              that.openHiearchyPopover(oButton);
+            }
+            oButton.setBusy(false);
+          },
+          error: function (oError) {
+            oButton.setBusy(false);
+          },
+        });
+      },
+      openHiearchyPopover: function (oComp) {
+        // create popover
+        if (!this._oHiearcyhPopover) {
+          Fragment.load({
+            name: "hcm.ux.hapv3.fragment.ObjectiveHierarchy",
+            controller: this,
+          }).then(
+            function (oPopover) {
+              this._oHiearcyhPopover = oPopover;
+              this.getView().addDependent(this._oHiearcyhPopover);
+              this._oHiearcyhPopover.openBy(oComp);
+            }.bind(this)
+          );
+        } else {
+          this._oHiearcyhPopover.openBy(oComp);
+        }
+      },
       _refreshAttachmentList: function () {
         var oModel = this.getModel();
         var oViewModel = this.getModel("formDetailsModel");
@@ -2326,6 +2407,20 @@ sap.ui.define(
 
               //Add cell content
               that._addCellNew(oVB, oCell, oViewData);
+
+              if (oCell.ColumnIid === that._sObjDepColumn) {
+                var oCellValue = new sap.ui.core.CustomData({
+                  key: "cellValue",
+                  value: `{formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString}`,
+                });
+                var oDepInfoButton = new sap.m.Button({
+                  icon: "sap-icon://hint",
+                  tooltip: "Hedef Yolu",
+                  press: that.onShowObjectiveHierarchy.bind(that),
+                });
+                oDepInfoButton.addCustomData(oCellValue);
+                oVB.addItem(oDepInfoButton);
+              }
             }
           }
         });
@@ -3991,6 +4086,22 @@ sap.ui.define(
         var oBodyColumns = {};
         var that = this;
 
+        this._sObjColumn =
+          this._sWeightColumn =
+          this._sFinAppColumn =
+          this._sFinOthColumn =
+          this._sEmpAppColumn =
+          this._sObjDepColumn =
+          this._sObjIndColumn =
+          this._sObjUniColumn =
+          this._sObjCvlColumn =
+          this._sObjStaColumn =
+          this._sObjRvlColumn =
+          this._sObjSccColumn =
+          this._sObjBegColumn =
+          this._sObjEndColumn =
+            null;
+
         $.each(aBodyColumns, function (sIndex, oColumn) {
           if (oColumn.ColumnId === "OBJ0") {
             that._sObjColumn = oColumn.ColumnIid;
@@ -4040,11 +4151,6 @@ sap.ui.define(
           if (oColumn.ColumnId === "ZO04") {
             that._sObjStaColumn = oColumn.ColumnIid;
             /* ZO04	Hedef Durumu */
-          }
-
-          if (oColumn.ColumnId === "ZO05") {
-            that._sObjRvlColumn = oColumn.ColumnIid;
-            /* ZO05 Gerçekleşen Değer */
           }
 
           if (oColumn.ColumnId === "ZO05") {
