@@ -4917,7 +4917,8 @@ sap.ui.define(
           target: "_blank",
           text: "{formDetailsModel>Name}" + "." + "{formDetailsModel>Type}",
           href: oUrlPath,
-          tooltip: oUrlPath,
+          tooltip: "{formDetailsModel>Name}",
+          wrapping: true,
         });
         var oDelButton = new sap.m.Button({
           icon: "sap-icon://delete",
