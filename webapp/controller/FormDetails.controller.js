@@ -99,7 +99,7 @@ sap.ui.define(
           formSections: [],
           allSectionsClicked: false,
           navigationElementId: "",
-          saveAndNextButtonVisibility: true,
+          saveAndNextButtonVisibility: false,
           objectiveWizardSettings: {
             selectedObjective: null,
             dependentObjectives: {
@@ -647,7 +647,7 @@ sap.ui.define(
 
         //Initiate
         oViewModel.setProperty("/navigationData", []);
-        oViewModel.setProperty("/saveAndNextButtonVisibility", true);
+        oViewModel.setProperty("/saveAndNextButtonVisibility", false);
         oViewModel.setProperty("/sidebarData", {
           visible: false,
           appeeInfo: {},
@@ -1461,6 +1461,12 @@ sap.ui.define(
             }
           }
         });
+
+        if (aNavigationData.length > 1) {
+          oViewModel.setProperty("/saveAndNextButtonVisibility", true);
+        } else {
+          oViewModel.setProperty("/saveAndNextButtonVisibility", false);
+        }
 
         oViewModel.setProperty("/navigationData", aNavigationData);
       },
@@ -2425,10 +2431,36 @@ sap.ui.define(
           }
         });
       },
+      _addResultBoard: function (oCell) {
+        var oEl = new ResultBoard({
+          tooltip: {
+            path: `formDetailsModel>/bodyColumns/${oCell.ColumnIid}/ColumnName`,
+          },
+          status: "Warning",
+          result: {
+            path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueText`,
+          },
+          visible: true,
+        });
+        return oEl;
+      },
+
+      _addSwitch: function (oCell) {
+        var that = this;
+        var sBinding = `formDetailsModel>/bodyCells/${oCell.RowIid}/${this._sObjUniColumn}/ValueString`;
+        var oEl = new sap.m.Switch({
+          type: "AcceptReject",
+          state: false,
+          enabled: true,
+          visible: "{= ${" + sBinding + "} === '0005' }",
+        });
+        return oEl;
+      },
 
       _addCellNew: function (oParent, oCell, oViewData) {
         var that = this;
         var oEl = null;
+        var bSwitch = false;
 
         var aBodyElements = oViewData.bodyElements;
         var sLastRow = oViewData.formParameters["RESULT_LINE"];
@@ -2456,7 +2488,12 @@ sap.ui.define(
                     oEl = this._addTextAreaObjective(oCell);
                     break;
                   default:
-                    oEl = this._addInputField(oCell, "ValueNum");
+                    if (oCell.CellValueClass === "ZQ") {
+                      oEl = this._addResultBoard(oCell);
+                    } else {
+                      oEl = this._addInputField(oCell, "ValueNum");
+                      bSwitch = true;
+                    }
                 }
                 break;
 
@@ -2469,7 +2506,12 @@ sap.ui.define(
                 switch (oCell.LayoutType) {
                   case "S":
                     /*String*/
-                    oEl = this._addInputField(oCell, "ValueString");
+                    if (oCell.CellValueClass === "ZQ") {
+                      oEl = this._addResultBoard(oCell);
+                    } else {
+                      oEl = this._addInputField(oCell, "ValueString");
+                      bSwitch = true;
+                    }
                     break;
                   case "R":
                     /*Radiobutton*/
@@ -2516,6 +2558,15 @@ sap.ui.define(
             //   );
             // }
             oParent.addItem(oEl);
+
+            if (
+              (oCell.ColumnIid === that._sObjCvlColumn ||
+                oCell.ColumnIid === that._sObjRvlColumn) &&
+              bSwitch
+            ) {
+              oEl = this._addSwitch(oCell);
+              oParent.addItem(oEl);
+            }
 
             //oParent.addField(oEl);
           }
@@ -2733,6 +2784,7 @@ sap.ui.define(
       _addInputField: function (oCell, sBindingField) {
         var that = this;
         var oViewModel = this.getModel("formDetailsModel");
+        var bSwitch = false;
         var oIF = new sap.m.Input({
           value: {
             path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/${sBindingField}`,
@@ -2802,6 +2854,26 @@ sap.ui.define(
             formatter: that._getCellEditable.bind(that),
           },
           valueLiveUpdate: true,
+          visible: {
+            parts: [
+              {
+                path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ColumnIid`,
+              },
+              {
+                path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${that._sObjUniColumn}/ValueString`,
+              },
+            ],
+            formatter: function (sColIid, sUnit) {
+              if (
+                sColIid === that._sObjCvlColumn ||
+                sColIid === that._sObjRvlColumn
+              ) {
+                return sUnit !== "0005";
+              } else {
+                return true;
+              }
+            },
+          },
           width: {
             parts: [
               {
@@ -2876,8 +2948,8 @@ sap.ui.define(
 
       _getCellEditable: function (sCellValueAvailability, oCell) {
         try {
-          var oViewModel = this.getModel("formDetailsModel");
-          var oBodyCells = oViewModel.getProperty("/bodyCells/" + oCell.RowIid);
+          // var oViewModel = this.getModel("formDetailsModel");
+          // var oBodyCells = oViewModel.getProperty("/bodyCells/" + oCell.RowIid);
 
           if (oCell.ColumnIid === this._sObjDepColumn) {
             return false;
@@ -4102,7 +4174,7 @@ sap.ui.define(
           this._sObjEndColumn =
             null;
 
-        $.each(aBodyColumns, function (sIndex, oColumn) {
+        $.each(aBodyColumns, function (i, oColumn) {
           if (oColumn.ColumnId === "OBJ0") {
             that._sObjColumn = oColumn.ColumnIid;
             /*Hedef Belirleme*/
@@ -4182,7 +4254,7 @@ sap.ui.define(
             $.extend(oBodyColumns, oBodyColumn);
           }
         });
-
+        console.log(aBodyColumns);
         oViewModel.setProperty("/bodyColumns", oBodyColumns);
       },
 

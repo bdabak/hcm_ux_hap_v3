@@ -16,6 +16,7 @@ sap.ui.define(
           tooltip: { type: "string", bindable: true },
           result: { type: "string", bindable: true },
           status: { type: "string", bindable: true, defaultValue: "None" },
+          noValueText: { type: "string", bindable: true, defaultValue: "N/A" },
         },
         aggregations: {},
         events: {
@@ -37,8 +38,13 @@ sap.ui.define(
         }
         //oControl.setAggreagation("_icon", oIcon);
 
+        var sResult = oControl.getResult();
+        if (sResult === null || sResult === undefined || sResult === "") {
+          sResult = oControl.getNoValueText();
+        }
+
         var oResult = new sap.m.Text({
-          text: oControl.getResult(),
+          text: sResult,
         });
 
         //oControl.setAggreagation("_box", oVBox);
