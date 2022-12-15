@@ -970,3 +970,9 @@ html.sapUiMedia-Std-Tablet
 .hapPage .sapMInputBaseContentWrapper {
   border-radius: 0.25rem !important;
 }
+
+.hapPopoverCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

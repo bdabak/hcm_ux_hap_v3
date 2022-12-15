@@ -4,8 +4,7 @@
 	xmlns:footerbar="sap.ushell.ui.footerbar"
 	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.ui.layout.form"
-	xmlns:core="sap.ui.core" controllerName="hcm.ux.hapv3.controller.FormList"
-	xmlns:unical="sap.ui.unified.calendar">
+	xmlns:core="sap.ui.core" controllerName="hcm.ux.hapv3.controller.FormList">
 	<semantic:FullscreenPage id="idFormListPage" semanticRuleSet="Optimized" title="{i18n>formListViewTitle}" showNavButton="true" navButtonPress="onNavHome" showFooter="false" busy="{formListModel>/viewBusy}" busyIndicatorDelay="0">
 		<semantic:content>
 			<VBox>

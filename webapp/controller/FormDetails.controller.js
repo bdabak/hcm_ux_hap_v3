@@ -2447,13 +2447,91 @@ sap.ui.define(
 
       _addSwitch: function (oCell) {
         var that = this;
-        var sBinding = `formDetailsModel>/bodyCells/${oCell.RowIid}/${this._sObjUniColumn}/ValueString`;
+        var sObjUniPath = `formDetailsModel>/bodyCells/${oCell.RowIid}/${this._sObjUniColumn}/ValueString`;
+        var sCellPath = `/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}`;
+        var oViewModel = that.getModel("formDetailsModel");
         var oEl = new sap.m.Switch({
           type: "AcceptReject",
-          state: false,
-          enabled: true,
-          visible: "{= ${" + sBinding + "} === '0005' }",
+          state: {
+            path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString`,
+            formatter: function (sVal) {
+              if (sVal === "") {
+                return false;
+              } else {
+                return true;
+              }
+            },
+          },
+          change: function (oEvent) {
+            var oBodyCell = oViewModel.getProperty(sCellPath);
+            var bState = oEvent.getParameter("state");
+            var iVal = bState ? "1" : "0";
+            var sVal = bState ? "1" : "";
+            oBodyCell.ValueString = sVal;
+            oBodyCell.ValueNnv = sVal;
+            oBodyCell.ValueText = sVal;
+            oBodyCell.ValueTxt = sVal;
+            oBodyCell.ValueNum = parseFloat(iVal).toFixed(3);
+            oViewModel.setProperty(sCellPath, oBodyCell);
+          },
+          enabled: {
+            parts: [
+              {
+                path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/CellValueAvailability`,
+              },
+              {
+                path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}`,
+              },
+            ],
+            formatter: that._getCellEditable.bind(that),
+          },
+          visible: "{= ${" + sObjUniPath + "} === '0005' }",
         });
+
+        var oPopover;
+
+        oEl.addEventDelegate(
+          {
+            onmouseover: function () {
+              if (!oPopover) {
+                oPopover = new sap.m.Popover({
+                  modal: false,
+                  showHeader: false,
+                  placement: "Auto",
+                  content: [
+                    new sap.m.VBox({
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "Center",
+                      justifyContent: "Center",
+                      items: [
+                        new sap.m.Text({
+                          text: {
+                            path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString`,
+                            formatter: function (sVal) {
+                              if (sVal === "") {
+                                return "Gerçekleşmedi";
+                              } else {
+                                return "Gerçekleşti";
+                              }
+                            },
+                          },
+                        }).addStyleClass("sapUiTinyMargin"),
+                      ],
+                    }).addStyleClass("sapUiNoContentPadding"),
+                  ],
+                }).addStyleClass("sapUiNoContentPadding");
+                this.getView().addDependent(oPopover, this);
+              }
+              oPopover.openBy(oEl);
+            },
+            onmouseout: function () {
+              oPopover.destroy();
+              oPopover = null;
+            },
+          },
+          this
+        );
         return oEl;
       },
 
@@ -2619,6 +2697,16 @@ sap.ui.define(
                 scaleValue: {
                   path: sCellNoteStringPath,
                 },
+                binaryScale: {
+                  path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${that._sObjUniColumn}/ValueString`,
+                  formatter: function (sUnit) {
+                    if (sUnit) {
+                      return sUnit === "0005";
+                    } else {
+                      return false;
+                    }
+                  },
+                },
                 editable: {
                   path: sCellNoteEditablePath,
                   formatter: function (sCellNoteAvailability) {
@@ -2739,6 +2827,11 @@ sap.ui.define(
                 typeof oItem.setEditable === "function"
               ) {
                 oItem.setEditable(false);
+              } else if (
+                oItem?.setEnabled &&
+                typeof oItem.setEnabled === "function"
+              ) {
+                oItem.setEnabled(false);
               }
             });
           });
@@ -2784,7 +2877,6 @@ sap.ui.define(
       _addInputField: function (oCell, sBindingField) {
         var that = this;
         var oViewModel = this.getModel("formDetailsModel");
-        var bSwitch = false;
         var oIF = new sap.m.Input({
           value: {
             path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/${sBindingField}`,
@@ -3321,8 +3413,28 @@ sap.ui.define(
               oBodyCell.ValueNnv = aBodyCells[sIndex].ValueNnv = sValueEid;
               oBodyCell.ValueText = aBodyCells[sIndex].ValueText = sValueText;
               oBodyCell.ValueTxt = aBodyCells[sIndex].ValueTxt = sValueEid;
-              oViewModel.setProperty("/formData/BodyCells", aBodyCells);
+
               oViewModel.setProperty(sCellPath, oBodyCell);
+
+              /* Gerçekleşti - Gerçekleşmedi */
+              if (sColumnIid === that._sObjUniColumn && sValueIid === "0005") {
+                var sCrvInd = _.findIndex(aBodyCells, {
+                  RowIid: sRowIid,
+                  ColumnIid: that._sObjCvlColumn,
+                });
+                var sCrvPath = `/bodyCells/${sRowIid}/${that._sObjCvlColumn}`;
+                var oCrvCell = oViewModel.getProperty(sCrvPath);
+                if (sCrvInd && oCrvCell) {
+                  oCrvCell.ValueString = aBodyCells[sCrvInd].ValueString = "";
+                  oCrvCell.ValueNnv = aBodyCells[sCrvInd].ValueNnv = "";
+                  oCrvCell.ValueText = aBodyCells[sCrvInd].ValueText = "";
+                  oCrvCell.ValueTxt = aBodyCells[sCrvInd].ValueTxt = "";
+                  oCrvCell.ValueNum = aBodyCells[sCrvInd].ValueNum = "0.000";
+                  oViewModel.setProperty(sCrvPath, oCrvCell);
+                }
+              }
+
+              oViewModel.setProperty("/formData/BodyCells", aBodyCells);
             }
 
             // if (
@@ -4254,7 +4366,6 @@ sap.ui.define(
             $.extend(oBodyColumns, oBodyColumn);
           }
         });
-        console.log(aBodyColumns);
         oViewModel.setProperty("/bodyColumns", oBodyColumns);
       },
 
@@ -5427,14 +5538,14 @@ sap.ui.define(
         /* Check name and desription */
         if (sObjName.trim().length === 0) {
           aErrorList.push({
-            field: "Hedef Tanımı",
-            error: "Hedef tanımı boş olamaz",
+            field: "Hedef Adı",
+            error: "Hedef adı boş olamaz",
           });
         }
         if (sObjDescr.trim().length === 0) {
           aErrorList.push({
-            field: "Hedef Açıklaması",
-            error: "Hedef açıklaması girmelisiniz",
+            field: "Hedef Tanımı",
+            error: "Hedef tanımı girmelisiniz",
           });
         }
 
@@ -5455,11 +5566,13 @@ sap.ui.define(
         }
 
         /* Scale definition */
-        if (sObjScc.trim().length === 0) {
-          aErrorList.push({
-            field: "Ölçek Tanımı",
-            error: "Ölçek tanımlarını girmelisiniz",
-          });
+        if (sObjUni !== "0005") {
+          if (sObjScc.trim().length === 0) {
+            aErrorList.push({
+              field: "Ölçek Tanımı",
+              error: "Ölçek tanımlarını girmelisiniz",
+            });
+          }
         }
         /* Check begin date and end date */
         if (!sObjBeg) {

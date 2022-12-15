@@ -7,11 +7,16 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
       properties: {
         cellValueList: { type: "object", bindable: true },
         scaleValue: { type: "string", bindable: true },
+        binaryScale: { type: "boolean", bindable: true, defaultValue: false },
         editable: { type: "boolean", bindable: true, defaultValue: true },
       },
       aggregations: {
         scaleCustomizer: {
           type: "sap.m.Table",
+          multiple: false,
+        },
+        binaryScaleBox: {
+          type: "sap.ui.core.Control",
           multiple: false,
         },
       },
@@ -39,12 +44,12 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
             // header: new sap.m.Title({ text: "Ölçek" }),
           }),
           new sap.m.Column({
-            width: "9rem",
+            width: "7rem",
             hAlign: "Center",
             // header: new sap.m.Title({ text: "Min" }),
           }),
           new sap.m.Column({
-            width: "9rem",
+            width: "7rem",
             hAlign: "Center",
             // header: new sap.m.Title({ text: "Max" }),
           }),
@@ -57,6 +62,7 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
         cells: [
           new sap.m.Label({
             text: "{Name}",
+            wrapping: true,
           }),
           new sap.m.Input({
             placeholder: "Min",
@@ -100,8 +106,8 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
             change: function (e) {
               if (isNaN(parseFloat(e.getParameter("value")))) {
                 e.getSource().setValue(null);
-              } else {
-                that._setNextMinValue(e);
+                // } else {
+                //   that._setNextMinValue(e);
               }
               that._updateScaleText();
             }.bind(that),
@@ -115,21 +121,56 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
       });
 
       this.setAggregation("scaleCustomizer", oCustomizer);
+
+      /* Binary Scale */
+      var oBinaryScale = new sap.m.HBox({
+        items: [
+          new sap.m.Text({
+            text: "Beklenen Seviye",
+          }).addStyleClass("smod-scale-entrance-emph-text"),
+          new sap.m.Text({
+            text: "=",
+          })
+            .addStyleClass("sapUiTinyMarginBeginEnd")
+            .addStyleClass("smod-scale-entrance-emph-text"),
+          new sap.m.Text({
+            text: "Gerçekleşti",
+          }).addStyleClass("smod-scale-entrance-emph-text"),
+        ],
+        width: "100%",
+        height: "50px",
+        alignItems: "Center",
+        justifyContent: "Start",
+      });
+
+      this.setAggregation("binaryScaleBox", oBinaryScale);
     },
     renderer: function (oRM, oControl) {
       var oCustomizer = oControl.getAggregation("scaleCustomizer");
+      var oBinaryScaleBox = oControl.getAggregation("binaryScaleBox");
       var oModel = oControl.getModel();
+      var bBinaryScale = oControl.getBinaryScale();
+
       oModel.setProperty("/scaleList", []);
-      //--Generate scaleCustomizer rows
-      oControl._generateTableFromValue();
+
+      if (!bBinaryScale) {
+        //--Generate scaleCustomizer rows
+        oControl._generateTableFromValue();
+      } else {
+        oControl.setScaleValue("");
+      }
+
       oModel.setProperty("/editable", oControl.getEditable());
 
       oRM.openStart("div");
       oRM.writeControlData(oControl);
       oRM.class("smod-scale-entrance");
       oRM.openEnd();
-
-      oRM.renderControl(oCustomizer);
+      if (!bBinaryScale) {
+        oRM.renderControl(oCustomizer);
+      } else {
+        oRM.renderControl(oBinaryScaleBox);
+      }
 
       oRM.close("div");
     },

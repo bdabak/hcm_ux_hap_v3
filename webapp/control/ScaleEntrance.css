@@ -1,3 +1,7 @@
 .smod-scale-entrance {
   zoom: 80%;
 }
+.smod-scale-entrance-emph-text {
+  font-size: 15px;
+  font-weight: bold;
+}
