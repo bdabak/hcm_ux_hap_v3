@@ -17,6 +17,7 @@ sap.ui.define(
     "hcm/ux/hapv3/control/StarRatingItem",
     "hcm/ux/hapv3/control/ScaleEntrance",
     "hcm/ux/hapv3/control/ResultBoard",
+    "hcm/ux/hapv3/control/Switch",
     "hcm/ux/hapv3/model/formatter",
   ],
   function (
@@ -36,6 +37,7 @@ sap.ui.define(
     StarRatingItem,
     ScaleEntrance,
     ResultBoard,
+    Switch,
     formatter
   ) {
     "use strict";
@@ -2450,7 +2452,8 @@ sap.ui.define(
         var sObjUniPath = `formDetailsModel>/bodyCells/${oCell.RowIid}/${this._sObjUniColumn}/ValueString`;
         var sCellPath = `/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}`;
         var oViewModel = that.getModel("formDetailsModel");
-        var oEl = new sap.m.Switch({
+
+        var oSwitch = new sap.m.Switch({
           type: "AcceptReject",
           state: {
             path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString`,
@@ -2473,6 +2476,7 @@ sap.ui.define(
             oBodyCell.ValueTxt = sVal;
             oBodyCell.ValueNum = parseFloat(iVal).toFixed(3);
             oViewModel.setProperty(sCellPath, oBodyCell);
+            that._triggerValueDetermination();
           },
           enabled: {
             parts: [
@@ -2488,50 +2492,38 @@ sap.ui.define(
           visible: "{= ${" + sObjUniPath + "} === '0005' }",
         });
 
-        var oPopover;
-
-        oEl.addEventDelegate(
-          {
-            onmouseover: function () {
-              if (!oPopover) {
-                oPopover = new sap.m.Popover({
-                  modal: false,
-                  showHeader: false,
-                  placement: "Auto",
-                  content: [
-                    new sap.m.VBox({
-                      width: "100%",
-                      height: "100%",
-                      alignItems: "Center",
-                      justifyContent: "Center",
-                      items: [
-                        new sap.m.Text({
-                          text: {
-                            path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString`,
-                            formatter: function (sVal) {
-                              if (sVal === "") {
-                                return "Gerçekleşmedi";
-                              } else {
-                                return "Gerçekleşti";
-                              }
-                            },
-                          },
-                        }).addStyleClass("sapUiTinyMargin"),
-                      ],
-                    }).addStyleClass("sapUiNoContentPadding"),
-                  ],
-                }).addStyleClass("sapUiNoContentPadding");
-                this.getView().addDependent(oPopover, this);
-              }
-              oPopover.openBy(oEl);
-            },
-            onmouseout: function () {
-              oPopover.destroy();
-              oPopover = null;
-            },
-          },
-          this
-        );
+        var oPopover = new sap.m.Popover({
+          modal: false,
+          showHeader: false,
+          placement: "Auto",
+          content: [
+            new sap.m.VBox({
+              width: "100%",
+              height: "100%",
+              alignItems: "Center",
+              justifyContent: "Center",
+              items: [
+                new sap.m.Text({
+                  text: {
+                    path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString`,
+                    formatter: function (sVal) {
+                      if (sVal === "") {
+                        return "Gerçekleşmedi";
+                      } else {
+                        return "Gerçekleşti";
+                      }
+                    },
+                  },
+                }).addStyleClass("sapUiTinyMargin"),
+              ],
+            }).addStyleClass("sapUiNoContentPadding"),
+          ],
+        }).addStyleClass("sapUiNoContentPadding");
+        this.getView().addDependent(oPopover, this);
+        var oEl = new Switch({
+          popover: oPopover,
+          switch: oSwitch,
+        });
         return oEl;
       },
 
@@ -2733,7 +2725,7 @@ sap.ui.define(
                 value: {
                   path: sCellNoteStringPath,
                 },
-                rows: 3, //"{= parseInt(${formDetailsModel>/bodyCells/" + oCell.RowIid + "/" + oCell.ColumnIid + "/NoteLines})}",
+                rows: 3,
                 width: "100%",
                 valueLiveUpdate: true,
                 editable: {
@@ -2746,6 +2738,84 @@ sap.ui.define(
                       return true;
                     } else {
                       return false;
+                    }
+                  },
+                },
+                valueState: {
+                  parts: [
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/CellValueAvailability`,
+                    },
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/CellNoteAvailability`,
+                    },
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString`,
+                    },
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/NoteString`,
+                    },
+                  ],
+                  formatter: function (
+                    sCellValueAvailability,
+                    sCellNoteAvailability,
+                    sCellValue,
+                    sCellNoteValue
+                  ) {
+                    if (
+                      (sCellValueAvailability === "X" ||
+                        sCellValueAvailability === "R") &&
+                      (sCellNoteAvailability === "X" ||
+                        sCellNoteAvailability === "A")
+                    ) {
+                      if (sCellValue === "0003" || sCellValue === "0000") {
+                        return "None";
+                      }
+                      if (sCellNoteValue.trim().length === 0) {
+                        return "Error";
+                      } else {
+                        return "Success";
+                      }
+                    }
+                  },
+                },
+                valueStateText: {
+                  parts: [
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/CellValueAvailability`,
+                    },
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/CellNoteAvailability`,
+                    },
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueString`,
+                    },
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/NoteString`,
+                    },
+                    {
+                      path: `formDetailsModel>/bodyCells/${oCell.RowIid}/${oCell.ColumnIid}/ValueText`,
+                    },
+                  ],
+                  formatter: function (
+                    sCellValueAvailability,
+                    sCellNoteAvailability,
+                    sCellValue,
+                    sCellNoteValue,
+                    sCellValueText
+                  ) {
+                    if (
+                      (sCellValueAvailability === "X" ||
+                        sCellValueAvailability === "R") &&
+                      (sCellNoteAvailability === "X" ||
+                        sCellNoteAvailability === "A")
+                    ) {
+                      if (sCellValue === "0003" || sCellValue === "0000") {
+                        return "";
+                      }
+                      if (sCellNoteValue.trim().length === 0) {
+                        return `"${sCellValueText}" için açıklama girilmeli`;
+                      }
                     }
                   },
                 },
@@ -2933,7 +3003,7 @@ sap.ui.define(
               );
             }
           },
-          submit: this._onInputFieldValueChange,
+          submit: function () {},
           editable: {
             parts: [
               {
@@ -3716,82 +3786,6 @@ sap.ui.define(
 
         oViewModel.setProperty("/footerButtons", aFooterButtons);
         oViewModel.setProperty("/saveButtons", aSaveButtons);
-      },
-      _onInputFieldValueChange: function (oEvent) {},
-      _onSwitchValueChanged: function (oEvent) {
-        var oSource = oEvent.getSource();
-        var oViewModel = this.getModel("formDetailsModel");
-        var sRowIid = oSource.data("elementRowIid");
-        var sColumnIid = oSource.data("elementColumnIid");
-        var sSurveyExists = oViewModel.getProperty(
-          "/bodyElements/" + sRowIid + "/FormExist"
-        );
-        var sState = oEvent.getParameter("state");
-        var sSurveyColumn = oViewModel.getProperty(
-          "/bodyElements/" + sRowIid + "/FormColumnIid"
-        );
-        var that = this;
-        var sFormId = oViewModel.getProperty(
-          "/bodyElements/" + sRowIid + "/FormId"
-        );
-
-        var sBindingReference = oSource.data("bindingReference");
-
-        if (!sState && sSurveyExists && sSurveyColumn === sColumnIid) {
-          this._handleResetSurvey(sRowIid, sFormId, sBindingReference);
-        }
-
-        /* Bireysel gelişim seçilmiş daha önce seçilmemiş olmalı*/
-        if (sState && sColumnIid === this._sEduColumn) {
-          var sCont = this._checkTrainingSelection(sRowIid, sBindingReference);
-
-          if (!sCont) {
-            return;
-          }
-        }
-
-        /* Seçim geri alındı */
-        if (!sState && sColumnIid === this._sEduColumn) {
-          var aFormUIElements = oViewModel.getProperty("/formUIElements");
-          $.each(aFormUIElements, function (sIndex, oFormUIElement) {
-            if (
-              oFormUIElement.ColumnIid !== null &&
-              oFormUIElement.RowIid === sRowIid &&
-              oFormUIElement.ColumnIid !== that._sEduColumn &&
-              oFormUIElement.UIType === "CellValue"
-            ) {
-              try {
-                var sValuePath =
-                  oFormUIElement.UIElement.data("bindingReference");
-
-                oViewModel.setProperty(sValuePath + "ValueString", "0000");
-                oViewModel.setProperty(sValuePath + "ValueNum", "0");
-                oViewModel.setProperty(sValuePath + "ValueTxt", "0");
-                oViewModel.setProperty(sValuePath + "ValueNnv", "");
-              } catch (oErr) {}
-            }
-          });
-        }
-
-        oViewModel.setProperty(
-          sBindingReference + "ValueString",
-          sState ? "0001" : "0000"
-        );
-        oViewModel.setProperty(
-          sBindingReference + "ValueNum",
-          sState ? "1" : "0"
-        );
-        oViewModel.setProperty(
-          sBindingReference + "ValueTxt",
-          sState ? "1" : "0"
-        );
-
-        /*Update bindings to reflect changes*/
-        oViewModel.refresh(true);
-
-        if (sState && sSurveyExists && sSurveyColumn === sColumnIid) {
-          this._handleCallSurvey(sRowIid, sFormId, false);
-        }
       },
 
       _checkTrainingSelection: function (sRowIid, sBindingReference) {

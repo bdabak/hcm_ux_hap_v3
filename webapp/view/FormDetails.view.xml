@@ -13,7 +13,7 @@
 	<!--</custom:CustomSideBar>-->
 	<smod:CustomSideBar id="idCustomSideBar" navItemSelected="onNavItemSelected" navData="{formDetailsModel>/navigationData}" visible="{formDetailsModel>/sidebarData/visible}">
 		<smod:content>
-			<NavContainer id="idPageNavigationContainer" busy="{formDetailsModel>/busy}"></NavContainer>
+			<NavContainer id="idPageNavigationContainer" busy="{formDetailsModel>/busy}" busyIndicatorDelay="300"></NavContainer>
 		</smod:content>
 		<smod:brandImageExpanded>
 			<!--<Image src="/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/MimeInfoSet('%2FSAP%2FPublic%2FCustomImages%2Fbrand_logo.png')/$value" height="30px"/>-->
