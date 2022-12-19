@@ -2814,7 +2814,7 @@ sap.ui.define(
                         return "";
                       }
                       if (sCellNoteValue.trim().length === 0) {
-                        return `"${sCellValueText}" için açıklama girilmeli`;
+                        return `"${sCellValueText}" değerlendirmesi için açıklama girilmeli`;
                       }
                     }
                   },
