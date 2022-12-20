@@ -489,7 +489,8 @@ sap.ui.define(
        */
       _doShowHideSelection: function () {
         var oViewModel = this.getModel("formListModel");
-        var sId = this.byId("idFormSelectionContainer").getId() + "--Grid";
+        var sEl = this.byId("idFormSelection").$().children().children()[1];
+
         var oThis = this;
 
         var doToggleIcon = function (oObj) {
@@ -505,8 +506,8 @@ sap.ui.define(
           oViewModel.setProperty("/selectionToggle", sIcon);
         };
 
-        $("#" + sId).slideToggle({
-          duration: 400,
+        $(sEl).slideToggle({
+          duration: 200,
           easing: "swing",
           done: function () {
             doToggleIcon(this);

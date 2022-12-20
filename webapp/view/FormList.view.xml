@@ -46,10 +46,9 @@
 						</f:FormContainer>
 					</f:formContainers>
 				</f:Form>
-				<IconTabBar id="idFormListTabs" select="onRoleSelect" selectedKey="{formListModel>/selectedTabKey}">
+				<IconTabBar id="idFormListTabs" select="onRoleSelect" selectedKey="{formListModel>/selectedTabKey}" expandable="false">
 					<items>
 						<IconTabFilter id="idFormListFilterME" icon="sap-icon://my-view" iconColor="Positive" text="Formlarım" key="ME" visible="{formListModel>/filterVisibleME}" count="{formListModel>/formCountME}"/>
-						<IconTabSeparator visible="{= ${formListModel>/filterVisibleMA} || ${formListModel>/filterVisibleMB} ? true : false }"/>
 						<IconTabFilter id="idFormListFilterMA" icon="sap-icon://manager" iconColor="Critical" text="1. Yönetici" key="MA" visible="{formListModel>/filterVisibleMA}" count="{formListModel>/formCountMA}"/>
 						<IconTabFilter id="idFormListFilterMB" icon="sap-icon://manager-insight" iconColor="Negative" text="2. Yönetici" key="MB" visible="{formListModel>/filterVisibleMB}" count="{formListModel>/formCountMB}"/>
 					</items>

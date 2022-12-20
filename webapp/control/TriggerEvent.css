@@ -1,0 +1,11 @@
+.smod-trigger-event-container {
+  visibility: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.smod-trigger-event {
+  color: whitesmoke;
+  font-size: 10px;
+}

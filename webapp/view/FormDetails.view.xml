@@ -32,7 +32,10 @@
 			<smod:CustomSideBarStatus statusData="{formDetailsModel>/sidebarData/statusInfo}" tabTitle="Durum" tabCount="4"></smod:CustomSideBarStatus>
 		</smod:infoTabs>
 		<smod:footer>
-			<smod:ComparisonTable dataContent="{formDetailsModel>/sidebarData/footerData}"></smod:ComparisonTable>
+			<VBox>
+				<custom:TriggerEvent id="idTriggerAutoSave" duration="180000" trigger=".onAutoSave" visible="{path:'formDetailsModel>/formEditable'}" />
+				<smod:ComparisonTable dataContent="{formDetailsModel>/sidebarData/footerData}"></smod:ComparisonTable>
+			</VBox>
 		</smod:footer>
 	</smod:CustomSideBar>
 </mvc:View>

@@ -94,6 +94,7 @@ sap.ui.define(
           elementSurveys: {},
           surveyCloseButtonVisible: false,
           headerVisible: false,
+          formEditable: false,
           currentCellValueDescription: [],
           introSteps: [],
           footerButtons: [],
@@ -166,6 +167,10 @@ sap.ui.define(
 
       onExit: function (oEvent) {
         this._initializeViewModel();
+      },
+
+      onAutoSave: function (oEvent) {
+        this._handleSaveDocument(false, true);
       },
 
       onMessagesButtonPress: function (oEvent) {
@@ -277,7 +282,6 @@ sap.ui.define(
 
         this._clearUI().then(function () {
           that._initializeViewModel();
-          $(document).unbind("keypress");
 
           //
           var oHistory = History.getInstance();
@@ -317,6 +321,8 @@ sap.ui.define(
               }
             } catch (e) {}
           });
+
+          that.byId("idTriggerAutoSave").clearInterval();
 
           resolve(true);
         });
@@ -641,6 +647,8 @@ sap.ui.define(
       _initializeViewModel: function () {
         var oViewModel = this.getModel("formDetailsModel");
 
+        this._unregisterSaveShortcut();
+
         this._resetSections();
 
         //this._oNavContainer.destroyPages();
@@ -676,6 +684,7 @@ sap.ui.define(
         oViewModel.setProperty("/surveyCloseButtonVisible", false);
         oViewModel.setProperty("/surveyUIElements", []);
         oViewModel.setProperty("/headerVisible", false);
+        oViewModel.setProperty("/formEditable", false);
         oViewModel.setProperty("/currentCellValueDescription", []);
         oViewModel.setProperty("/introSteps", []);
         oViewModel.setProperty("/footerButtons", []);
@@ -693,16 +702,12 @@ sap.ui.define(
 
         this._removeAllMessages();
       },
-      _onPatternMatched: function (oEvent) {
+      _registerSaveShortcut: function () {
         var that = this;
-        if (sap.ushell.Container) {
-          var oRenderer = sap.ushell.Container.getRenderer("fiori2");
-          oRenderer.setHeaderVisibility(false, false, ["app"]);
-        }
 
         /*Register save */
         $(document).ready(function () {
-          $(document).bind("keypress", function (event) {
+          $(document).bind("keydown", function (event) {
             if (
               ((event.which == 115 || event.which == 83) &&
                 (event.ctrlKey || event.metaKey)) ||
@@ -715,6 +720,15 @@ sap.ui.define(
             return true;
           });
         });
+      },
+      _unregisterSaveShortcut: function () {
+        $(document).unbind("keydown");
+      },
+      _onPatternMatched: function (oEvent) {
+        if (sap.ushell.Container) {
+          var oRenderer = sap.ushell.Container.getRenderer("fiori2");
+          oRenderer.setHeaderVisibility(false, false, ["app"]);
+        }
 
         /*Initiate view data*/
         this._initializeViewModel();
@@ -777,7 +791,7 @@ sap.ui.define(
         );
 
         this._openBusyFragment("formDetailPrepared", []);
-
+        this._unregisterSaveShortcut();
         oModel.read(sQuery, {
           urlParameters: {
             $expand: sExpand,
@@ -796,7 +810,16 @@ sap.ui.define(
             oViewModel.setProperty("/busy", false);
             oViewModel.setProperty("/headerVisible", true);
             oViewModel.setProperty("/formData", oFormData);
-            //console.log(oFormData);
+            if (
+              oFormData.DocProcessing.DocumentMode === "B" ||
+              oFormData.DocProcessing.DocumentMode === "X"
+            ) {
+              oViewModel.setProperty("/formEditable", true);
+              that._registerSaveShortcut();
+              that.byId("idTriggerAutoSave").setInterval();
+            } else {
+              oViewModel.setProperty("/formEditable", false);
+            }
             oViewModel.setProperty("/formProp", aFormProp);
             that._formBodyElementsObject();
             that._formBodyColumnsObject();
@@ -1270,6 +1293,9 @@ sap.ui.define(
             path: "formDetailsModel>/saveButtons",
             template: oMenuItem,
           }),
+          visible: {
+            path: "formDetailsModel>/formEditable",
+          },
         });
 
         /*Add custom data 2 for binding*/
@@ -1521,23 +1547,6 @@ sap.ui.define(
               },
             }).addStyleClass("sapUiTinyMarginEnd"),
             new ResultBoard({
-              icon: "sap-icon://employee",
-              tooltip: "Çalışan Değerlendirmesi",
-              status: "Warning",
-              result: `{formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/ValueText}`,
-              visible: {
-                parts: [
-                  {
-                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/CellValueAvailability`,
-                  },
-                  {
-                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/ValueText`,
-                  },
-                ],
-                formatter: _isFieldVisible,
-              },
-            }).addStyleClass("sapUiTinyMarginEnd"),
-            new ResultBoard({
               icon: "sap-icon://manager",
               status: "Success",
               tooltip: "Yönetici Değerlendirmesi",
@@ -1570,6 +1579,23 @@ sap.ui.define(
                   },
                 ],
 
+                formatter: _isFieldVisible,
+              },
+            }).addStyleClass("sapUiTinyMarginEnd"),
+            new ResultBoard({
+              icon: "sap-icon://employee",
+              tooltip: "Çalışan Değerlendirmesi",
+              status: "Warning",
+              result: `{formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/ValueText}`,
+              visible: {
+                parts: [
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/CellValueAvailability`,
+                  },
+                  {
+                    path: `formDetailsModel>/bodyCells/${oElement.RowIid}/${that._sEmpAppColumn}/ValueText`,
+                  },
+                ],
                 formatter: _isFieldVisible,
               },
             }).addStyleClass("sapUiTinyMarginEnd"),
@@ -3002,6 +3028,9 @@ sap.ui.define(
                 val
               );
             }
+            if (oCell.ColumnIid === that._sObjRvlColumn) {
+              that._triggerValueDetermination();
+            }
           },
           submit: function () {},
           editable: {
@@ -3160,7 +3189,7 @@ sap.ui.define(
             formatter: that._getCellEditable.bind(that),
           },
           type: "AcceptReject",
-          change: that._onSwitchValueChanged.bind(that),
+          change: function (oEvent) {},
         }).addStyleClass("hapCheckBox");
 
         //Binding reference for value set
@@ -3405,7 +3434,7 @@ sap.ui.define(
 
             /* Synchronize UI */
             if (!sHasErrors) {
-              that._synchronizeUIAfterUpdate(oData, false);
+              that._synchronizeUIAfterUpdate(oData, false, false);
             }
           },
           error: function (oError) {
@@ -4557,12 +4586,16 @@ sap.ui.define(
         oViewModel.setProperty("/formData/BodyCells", oBodyCellsTarget);
         oViewModel.setProperty("/formData/BodyElements", oBodyElementsTarget);
       },
-      _synchronizeUIAfterUpdate: function (oData, sUpdateButton) {
-        var oViewModel = this.getModel("formDetailsModel");
+      _synchronizeUIAfterUpdate: function (
+        oData,
+        bUpdateButton,
+        bResetAutoSave = false
+      ) {
         var oBodyCellsSource = oData.BodyCells.results;
         var oBodyCellValuesSource = oData.BodyCellValues.results;
         var oBodyElementsSource = oData.BodyElements.results;
         var oHeaderStatus = oData.HeaderStatus;
+        var oViewModel = this.getModel("formDetailsModel");
         var oSidebarData = oViewModel.getProperty("/sidebarData");
 
         oViewModel.setProperty("/formData/BodyCells", oBodyCellsSource);
@@ -4583,7 +4616,7 @@ sap.ui.define(
           oViewModel.setProperty("/sidebarData", oSidebarData);
         }
 
-        if (sUpdateButton) {
+        if (bUpdateButton) {
           var oBodyButtons = oData.Buttons.results;
           oViewModel.setProperty("/formData/Buttons", oBodyButtons);
         }
@@ -4615,6 +4648,9 @@ sap.ui.define(
         oViewModel.setProperty("/bodyElements", oBodyElementsTarget);
 
         // this._prepareSideBarData();
+        if (bResetAutoSave) {
+          this.byId("idTriggerAutoSave").setInterval();
+        }
 
         this.hasChanges = false;
       },
@@ -4776,7 +4812,7 @@ sap.ui.define(
               "SAVE"
             );
             /* Synchronize UI */
-            that._synchronizeUIAfterUpdate(oData, false);
+            that._synchronizeUIAfterUpdate(oData, false, true);
 
             that._closeBusyFragment();
 
@@ -4842,7 +4878,7 @@ sap.ui.define(
         });
       },
 
-      _handleSaveDocument: function (bExit) {
+      _handleSaveDocument: function (bExit, bAuto = false) {
         var oViewModel = this.getModel("formDetailsModel");
         var oModel = this.getModel();
         var aFormProp = oViewModel.getProperty("/aFormProp");
@@ -4870,7 +4906,8 @@ sap.ui.define(
 
         this._removeAllMessages();
 
-        this._openBusyFragment("formSaved", []);
+        this._openBusyFragment(bAuto ? "formAutoSaved" : "formSaved", []);
+
         oModel.create("/DocumentOperationsSet", oOperation, {
           success: function (oData, oResponse) {
             /* Return messages */
@@ -4881,7 +4918,7 @@ sap.ui.define(
             );
 
             /* Synchronize UI */
-            that._synchronizeUIAfterUpdate(oData, false);
+            that._synchronizeUIAfterUpdate(oData, false, true);
 
             /* Close busy indicator*/
             that._closeBusyFragment();
@@ -5164,7 +5201,7 @@ sap.ui.define(
             that._deleteRowUI(sRowIid);
 
             // /* Synchronize UI */
-            that._synchronizeUIAfterUpdate(oData, false);
+            that._synchronizeUIAfterUpdate(oData, false, false);
 
             /* Close busy indicator*/
             that._closeBusyFragment();
@@ -6793,7 +6830,7 @@ sap.ui.define(
 
             if (!sHasErrors) {
               /* Synchronize UI */
-              that._synchronizeUIAfterUpdate(oData, true);
+              that._synchronizeUIAfterUpdate(oData, true, true);
               that.getUIHelper().setFormListUpdated(false);
               MessageToast.show(that.getText("formStatusChangeSuccessful"));
               if (oData.ReturnOp.DocumentLeave === "X") {
