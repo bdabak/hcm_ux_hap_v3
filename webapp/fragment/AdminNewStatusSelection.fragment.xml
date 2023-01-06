@@ -1,0 +1,23 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core"
+    xmlns="sap.m">
+    <TableSelectDialog id="idAdminNewStatusDialog" title="{i18n>adminNewFormStatusDialog}" confirm=".handleChangeStatus" cancel=".handleCloseChangeStatusDialog" items="{ path: '/ValueHelpSet'}" growing="false" contentWidth="50%" contentHeight="50%">
+        <ColumnListItem vAlign="Middle">
+            <cells>
+                <Text text="{Group}" />
+                <Text text="{Value}" />
+            </cells>
+        </ColumnListItem>
+        <columns>
+            <Column width="5em">
+                <header>
+                    <Text text="Yeni Durum" />
+                </header>
+            </Column>
+            <Column width="5em">
+                <header>
+                    <Text text="Yeni Alt Durum" />
+                </header>
+            </Column>
+        </columns>
+    </TableSelectDialog>
+</core:FragmentDefinition>

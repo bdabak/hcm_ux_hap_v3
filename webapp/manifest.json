@@ -135,6 +135,11 @@
           "target": ["formlist"]
         },
         {
+          "pattern": "AdminList",
+          "name": "adminlist",
+          "target": ["adminlist"]
+        },
+        {
           "pattern": "calibration/{roleId}",
           "name": "calibration",
           "target": ["calibration"]
@@ -151,6 +156,12 @@
           "viewId": "formlist",
           "viewLevel": 1,
           "title": "{i18n>formListViewTitle}"
+        },
+        "adminlist": {
+          "viewName": "AdminList",
+          "viewId": "adminlist",
+          "viewLevel": 1,
+          "title": "{i18n>adminListViewTitle}"
         },
         "calibration": {
           "viewName": "Calibration",
