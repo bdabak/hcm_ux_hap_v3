@@ -130,8 +130,8 @@
 		</semantic:content>
 		<semantic:customFooterContent>
 
-			<Button type="Reject" text="Formları sil" icon="sap-icon://delete" press=".onFormDelete"/>
-			<Button type="Emphasized" text="Durum değiştir" icon="sap-icon://enter-more" press=".onChangeStatus"/>
+			<Button type="Reject" text="{i18n>formDeleteButton}" icon="sap-icon://delete" press=".onFormDelete"/>
+			<Button type="Emphasized" text="{i18n>changeFormStatusButton}" icon="sap-icon://enter-more" press=".onChangeStatus"/>
 
 		</semantic:customFooterContent>
 	</semantic:FullscreenPage>

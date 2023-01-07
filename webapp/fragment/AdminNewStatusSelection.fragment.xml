@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core"
     xmlns="sap.m">
-    <TableSelectDialog id="idAdminNewStatusDialog" title="{i18n>adminNewFormStatusDialog}" confirm=".handleChangeStatus" cancel=".handleCloseChangeStatusDialog" items="{ path: '/ValueHelpSet'}" growing="false" contentWidth="50%" contentHeight="50%">
+    <TableSelectDialog id="idAdminNewStatusDialog" title="{i18n>adminNewFormStatusDialog}" confirm=".confirmChangeStatus" cancel=".handleCloseChangeStatusDialog" items="{ path: '/ValueHelpSet'}" growing="false" contentWidth="50%" contentHeight="50%">
         <ColumnListItem vAlign="Middle">
             <cells>
                 <Text text="{Group}" />

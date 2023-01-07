@@ -219,10 +219,10 @@ sap.ui.define(
         );
 
         if (!sSelectedFormTemplate) {
-          MessageBox.error("Değerlendirme form şablonu seçiniz");
+          MessageBox.error(this.getText("chooseAppraisalTemplate"));
           this.byId("idAdminFormTemplateSelection").setValueState("Error");
           this.byId("idAdminFormTemplateSelection").setValueStateText(
-            "Değerlendirme form şablonu seçiniz"
+            this.getText("chooseAppraisalTemplate")
           );
           return;
         }
@@ -373,6 +373,107 @@ sap.ui.define(
         this._oTable.getBinding("items").refresh();
       },
       /**
+       * Event handler for form delete.
+       * @public
+       */
+      onFormDelete: function () {
+        var oTable = this.byId("idAdminListTable");
+        var that = this;
+        if (!oTable) {
+          return;
+        }
+
+        var oItems = oTable.getSelectedItems() || [];
+
+        if (oItems.length === 0) {
+          return;
+        }
+
+        var sConfirmHeader = this.getText("formDeleteConfirmation");
+        var sConfirmText = this.getText("formDeleteWarning");
+
+        var oBeginButtonProp = {
+          text: this.getText("formDeleteButton"),
+          type: "Reject",
+          icon: "sap-icon://delete",
+          onPressed: jQuery.proxy(that.performFormDelete, that),
+
+          // that.performChangeStatus.bind(that),
+        };
+
+        this.confirmDialog = this._callConfirmDialog(
+          sConfirmHeader,
+          "Message",
+          "Error",
+          sConfirmText,
+          oBeginButtonProp,
+          null
+        );
+
+        this.confirmDialog.open();
+      },
+      performFormDelete: function () {
+        var oModel = this.getModel();
+        var oViewModel = this.getModel("adminListModel");
+        var that = this;
+        var oTable = this.byId("idAdminListTable");
+        var aItems = oTable.getSelectedItems() || [];
+
+        if (aItems.length === 0) {
+          return;
+        }
+
+        var oRequest = {
+          Operation: "ADM_FRMDL",
+          DocumentSet: [],
+          OperationParameterSet: [],
+          ReturnSet: [],
+        };
+
+        $.each(aItems, function (i, oItem) {
+          var oItemData = oViewModel.getProperty(oItem.getBindingContextPath());
+          oRequest.DocumentSet.push({
+            AppraisalId: oItemData.AppraisalId,
+            PartApId: "0000",
+          });
+        });
+
+        this._openBusyFragment("formDeleteInProgress", []);
+        oModel.create("/AdminOperationSet", oRequest, {
+          success: function (oData, oResponse) {
+            that._closeBusyFragment();
+
+            // /* Return messages */
+            var sHasErrors = oData.ReturnSet?.results.length > 0;
+            if (sHasErrors) {
+              var fnArrangeErrorMessage = function (aMessg) {
+                var sMessage = `<p>${that.getText("errorMessages")}:</p><ul>`;
+                $.each(aMessg, function (i, oMessg) {
+                  sMessage = sMessage + `<li>${oMessg.Message}</li>`;
+                });
+
+                sMessage = sMessage + `</ul>`;
+                return sMessage;
+              };
+
+              MessageBox.error(that.getText("errorsOccurredFormDelete"), {
+                title: that.getText("errorsOccurred"),
+                details: fnArrangeErrorMessage(oData.ReturnSet.results),
+              });
+            } else {
+              MessageToast.show(that.getText("formDeleteSuccessful"));
+            }
+
+            that.onRefreshFormList();
+          },
+          error: function (oError) {
+            that._closeBusyFragment();
+            console.log(oError);
+          },
+        });
+      },
+
+      /**
        * Event handler for change status action.
        * @public
        */
@@ -394,6 +495,10 @@ sap.ui.define(
         var oRowData = oViewModel.getProperty(
           oItems[0].getBindingContextPath()
         );
+
+        if (!oRowData) {
+          return;
+        }
         var sExcludeStatus = oRowData?.ApStatus + "-" + oRowData?.ApStatusSub;
 
         var sSelectedFormTemplate = oViewModel.getProperty(
@@ -426,7 +531,94 @@ sap.ui.define(
           }.bind(this)
         );
       },
-      handleChangeStatus: function (oEvent) {
+      performChangeStatus: function (sNewStatusKey) {
+        var oModel = this.getModel();
+        var oViewModel = this.getModel("adminListModel");
+        var that = this;
+        var oTable = this.byId("idAdminListTable");
+        var aItems = oTable.getSelectedItems() || [];
+
+        if (aItems.length === 0) {
+          return;
+        }
+
+        var oRowData = oViewModel.getProperty(
+          aItems[0].getBindingContextPath()
+        );
+
+        var oRequest = {
+          Operation: "ADM_CHNST",
+          DocumentSet: [],
+          OperationParameterSet: [],
+          ReturnSet: [],
+        };
+
+        //--Operation parameter is set
+        var oOld = {
+          Param: "OLD_FORM_STATUS",
+          Value: oRowData.ApStatus + "-" + oRowData.ApStatusSub,
+        };
+        oRequest.OperationParameterSet.push(oOld);
+
+        var oNew = {
+          Param: "NEW_FORM_STATUS",
+          Value: sNewStatusKey,
+        };
+        oRequest.OperationParameterSet.push(oNew);
+
+        var oTemplate = {
+          Param: "TEMPLATE_ID",
+          Value: oRowData.TemplateId,
+        };
+        oRequest.OperationParameterSet.push(oTemplate);
+
+        $.each(aItems, function (i, oItem) {
+          var oItemData = oViewModel.getProperty(oItem.getBindingContextPath());
+          oRequest.DocumentSet.push({
+            AppraisalId: oItemData.AppraisalId,
+            PartApId: "0000",
+          });
+        });
+
+        this._openBusyFragment("changeStatusInProgress", []);
+        oModel.create("/AdminOperationSet", oRequest, {
+          success: function (oData, oResponse) {
+            that._closeBusyFragment();
+
+            // /* Return messages */
+            var sHasErrors = oData.ReturnSet?.results.length > 0;
+            if (sHasErrors) {
+              var fnArrangeErrorMessage = function (aMessg) {
+                var sMessage = `<p>${that.getText("errorMessages")}:</p><ul>`;
+                $.each(aMessg, function (i, oMessg) {
+                  sMessage = sMessage + `<li>${oMessg.Message}</li>`;
+                });
+
+                sMessage = sMessage + `</ul>`;
+                return sMessage;
+              };
+
+              MessageBox.error(
+                that.getText("errorsOccurredDuringStatusChange"),
+                {
+                  title: that.getText("errorsOccurred"),
+                  details: fnArrangeErrorMessage(oData.ReturnSet.results),
+                }
+              );
+            } else {
+              MessageToast.show(that.getText("statusChangeSuccessful"));
+            }
+
+            that.onRefreshFormList();
+          },
+          error: function (oError) {
+            that._closeBusyFragment();
+            console.log(oError);
+          },
+        });
+      },
+
+      confirmChangeStatus: function (oEvent) {
         var oModel = this.getModel();
         var that = this;
         var oSelectedContext = oModel.getProperty(
@@ -439,17 +631,17 @@ sap.ui.define(
             oSelectedContext.Group + " - " + oSelectedContext.Value,
           ]);
 
-          var fnChangeStatus = function () {
-            MessageToast.show("Onaylandı");
-          };
-
-          var oEndButtonProp = null;
-
           var oBeginButtonProp = {
             text: this.getText("changeFormStatusButton"),
             type: "Emphasized",
             icon: "sap-icon://enter-more",
-            onPressed: fnChangeStatus,
+            onPressed: jQuery.proxy(
+              that.performChangeStatus,
+              that,
+              oSelectedContext.Key
+            ),
+
+            // that.performChangeStatus.bind(that),
           };
 
           this.confirmDialog = this._callConfirmDialog(
@@ -465,7 +657,7 @@ sap.ui.define(
         }
       },
       handleCloseChangeStatusDialog: function (oEvent) {
-        MessageToast.show("İşlem iptal edildi");
+        MessageToast.show(this.getText("operationCancelled"));
       },
 
       /* =========================================================== */
