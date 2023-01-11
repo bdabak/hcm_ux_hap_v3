@@ -4,9 +4,10 @@ sap.ui.define(
     "sap/ui/core/mvc/Controller",
     "sap/m/Dialog",
     "hcm/ux/hapv3/utils/UIHelper",
-    "sap/m/MessageBox",
+    "com/smod/smoduxlib/thirdparty/moment",
+    "com/smod/smoduxlib/thirdparty/lodash",
   ],
-  function (Controller, Dialog, UIHelper, MessageBox) {
+  function (Controller, Dialog, UIHelper, momentJS, lodashJS) {
     "use strict";
 
     return Controller.extend("hcm.ux.hapv3.controller.BaseController", {

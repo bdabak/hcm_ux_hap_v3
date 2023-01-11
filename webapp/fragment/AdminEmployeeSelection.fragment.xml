@@ -1,0 +1,8 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <SelectDialog noDataText="{i18n>noEmployeeFound}" title="{i18n>employeeSelection}" search=".onPerformEmployeeSearch" confirm=".onConfirmEmployeeSelection" cancel=".onCancelEmployeeSelection" items="{
+			path: '/EmployeeSearchSet'
+		}">
+        <StandardListItem title="{Ename}" description="{path:'Plstx'} - {path:'Orgtx'}" icon="/sap/opu/odata/sap/ZHCMFAB_MYPROFILE_SRV/EmployeePictureSet('{Pernr}')/$value" iconDensityAware="false" iconInset="false" type="Active" />
+    </SelectDialog>
+</core:FragmentDefinition>

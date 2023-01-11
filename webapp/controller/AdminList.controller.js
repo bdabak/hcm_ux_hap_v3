@@ -20,7 +20,8 @@ sap.ui.define(
     FilterOperator,
     MessageBox,
     MessageToast,
-    Fragment
+    Fragment,
+    momentJS
   ) {
     "use strict";
 
@@ -73,7 +74,7 @@ sap.ui.define(
           selectionToggle: "sap-icon://hide",
           dateSelection: that._initiateYears(),
           selectedDates: (function () {
-            return [new Date().getFullYear(), new Date().getFullYear() + 1];
+            return [new Date().getFullYear()];
           })(),
           formTypes: [
             { Type: "appraisal", Value: "Değerlendirme formları" },
@@ -85,6 +86,8 @@ sap.ui.define(
           selectedFormTemplate: null,
           viewBusy: false,
           showFooter: false,
+          roleChange: {},
+          currentForm: {},
         });
         this.setModel(oViewModel, "adminListModel");
         this.getUIHelper().setListViewModel(oViewModel);
@@ -330,8 +333,6 @@ sap.ui.define(
 
         //Set selected form to the shared model
         this.getUIHelper().setCurrentForm(oViewModel.getProperty(sPath));
-
-        this.getUIHelper().setListViewBusy(true);
 
         this.getRouter().navTo("formdetail", {
           appraisalId: oViewModel.getProperty(sPath + "/AppraisalId"),
@@ -658,6 +659,196 @@ sap.ui.define(
       },
       handleCloseChangeStatusDialog: function (oEvent) {
         MessageToast.show(this.getText("operationCancelled"));
+      },
+
+      onFormAction: function (oEvent) {
+        var oButton = oEvent.getSource();
+        var oCurrentForm = oButton.data("appraisalForm");
+        var oViewModel = this.getModel("adminListModel");
+
+        if (!oCurrentForm) {
+          return;
+        }
+
+        oViewModel.setProperty("/currentForm", _.cloneDeep(oCurrentForm));
+        oViewModel.setProperty("/roleChange", {
+          firstAppraiser: {
+            Id: oCurrentForm.AppraiserId,
+            Name: oCurrentForm.AppraiserName,
+          },
+          secondAppraiser: {
+            Id: oCurrentForm.OtherId,
+            Name: oCurrentForm.OtherName,
+          },
+        });
+
+        // create action sheet only once
+        if (!this._formActionSheet) {
+          this._formActionSheet = sap.ui.xmlfragment(
+            "hcm.ux.hapv3.fragment.AdminFormActions",
+            this
+          );
+          this.getView().addDependent(this._formActionSheet, this);
+        }
+
+        this._formActionSheet.openBy(oButton);
+      },
+      onChangeForm: function () {
+        var oViewModel = this.getModel("adminListModel");
+        var oCurrentForm = oViewModel.getProperty("/currentForm");
+
+        if (!oCurrentForm) {
+          return;
+        }
+
+        this.getRouter().navTo("formdetail", {
+          appraisalId: oCurrentForm.AppraisalId,
+        });
+      },
+
+      onChangeRoles: function () {
+        if (!this._changeRoleFragment) {
+          this._changeRoleFragment = sap.ui.xmlfragment(
+            "hcm.ux.hapv3.fragment.AdminRoleChange",
+            this
+          );
+          this.getView().addDependent(this._changeRoleFragment, this);
+        }
+
+        this._changeRoleFragment.open();
+      },
+      onCloseRoleChangeDialog: function () {
+        this._changeRoleFragment.close();
+      },
+      onAfterCloseRoleChangeDialog: function () {
+        this._changeRoleFragment.destroy();
+        this._changeRoleFragment = null;
+      },
+      onResetAppraiser: function () {
+        var oViewModel = this.getModel("adminListModel");
+        var oRoleChange = oViewModel.getProperty("/roleChange");
+
+        oRoleChange.secondAppraiser = {
+          Id: null,
+          Name: null,
+        };
+
+        oViewModel.setProperty("/roleChange", oRoleChange);
+      },
+      onSaveRoleChange: function () {
+        var oViewModel = this.getModel("adminListModel");
+        var oModel = this.getModel();
+        var that = this;
+        var oCurrentForm = oViewModel.getProperty("/currentForm");
+        var oRoleChange = oViewModel.getProperty("/roleChange");
+        var bChange = false;
+
+        var oRequest = {
+          Operation: "ADM_CHAPR",
+          DocumentSet: [],
+          OperationParameterSet: [],
+          ReturnSet: [],
+        };
+
+        if (oCurrentForm.AppraiserId !== oRoleChange.firstAppraiser.Id) {
+          //--Operation parameter is set
+          var oNew1st = {
+            Param: "NEW_FIRST_APPRAISER",
+            Value: oRoleChange.firstAppraiser.Id,
+          };
+          bChange = true;
+          oRequest.OperationParameterSet.push(oNew1st);
+        }
+
+        if (oCurrentForm.OtherId !== oRoleChange.secondAppraiser.Id) {
+          var oNew2nd = {
+            Param: "NEW_SECOND_APPRAISER",
+            Value: oRoleChange.secondAppraiser.Id,
+          };
+          bChange = true;
+          oRequest.OperationParameterSet.push(oNew2nd);
+        }
+
+        if (!bChange) {
+          MessageToast.show(this.getText("noRoleChangeIsFound"));
+          this._changeRoleFragment.close();
+          return;
+        }
+
+        oRequest.DocumentSet.push({
+          AppraisalId: oCurrentForm.AppraisalId,
+          PartApId: "0000",
+        });
+        this._changeRoleFragment.close();
+        this._openBusyFragment("roleChangeInProgress", []);
+        oModel.create("/AdminOperationSet", oRequest, {
+          success: function (oData, oResponse) {
+            that._closeBusyFragment();
+
+            // /* Return messages */
+            var sHasErrors = oData.ReturnSet?.results.length > 0;
+            if (sHasErrors) {
+              var fnArrangeErrorMessage = function (aMessg) {
+                var sMessage = `<p>${that.getText("errorMessages")}:</p><ul>`;
+                $.each(aMessg, function (i, oMessg) {
+                  sMessage = sMessage + `<li>${oMessg.Message}</li>`;
+                });
+
+                sMessage = sMessage + `</ul>`;
+                return sMessage;
+              };
+
+              MessageBox.error(that.getText("errorsOccurredDuringRoleChange"), {
+                title: that.getText("errorsOccurred"),
+                details: fnArrangeErrorMessage(oData.ReturnSet.results),
+              });
+            } else {
+              MessageToast.show(that.getText("roleChangeSuccessful"));
+            }
+
+            that.onRefreshFormList();
+          },
+          error: function (oError) {
+            that._closeBusyFragment();
+            console.log(oError);
+          },
+        });
+      },
+
+      onSelectAppraiser: function (oEvent) {
+        var oField = oEvent.getSource();
+        var sTargetField = oField.data("targetField");
+        if (!this._selectAppraiserFragment) {
+          this._selectAppraiserFragment = sap.ui.xmlfragment(
+            "hcm.ux.hapv3.fragment.AdminEmployeeSelection",
+            this
+          );
+          this.getView().addDependent(this._selectAppraiserFragment, this);
+        }
+        this._selectAppraiserFragment.data("targetField", sTargetField);
+        this._selectAppraiserFragment.open();
+      },
+      onConfirmEmployeeSelection: function (oEvent) {
+        var oItem = oEvent.getParameter("selectedContexts")[0]?.getObject();
+        var oViewModel = this.getModel("adminListModel");
+        var sPath = this._selectAppraiserFragment.data("targetField");
+        oViewModel.setProperty(sPath, {
+          Id: oItem.Pernr,
+          Name: oItem.Ename,
+        });
+
+        this._selectAppraiserFragment.destroy();
+        this._selectAppraiserFragment = null;
+      },
+      onCancelEmployeeSelection: function () {
+        this._selectAppraiserFragment.destroy();
+        this._selectAppraiserFragment = null;
+      },
+      onPerformEmployeeSearch: function (oEvent) {
+        var sValue = oEvent.getParameter("value");
+        var oFilter = new Filter("Query", FilterOperator.EQ, sValue);
+        var oBinding = oEvent.getSource().getBinding("items");
+        oBinding.filter([oFilter]);
       },
 
       /* =========================================================== */

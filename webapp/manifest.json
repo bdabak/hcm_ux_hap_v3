@@ -72,6 +72,9 @@
         },
         "sap.uxap": {
           "minVersion": ""
+        },
+        "com.smod.smoduxlib": {
+          "minVersion": ""
         }
       }
     },
@@ -104,17 +107,7 @@
           "uri": "./css/style.css"
         }
       ],
-      "js": [
-        {
-          "uri": "./utils/intro.js"
-        },
-        {
-          "uri": "./utils/lodash.js"
-        },
-        {
-          "uri": "./utils/moment.js"
-        }
-      ]
+      "js": []
     },
     "routing": {
       "config": {

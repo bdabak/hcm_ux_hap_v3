@@ -4,7 +4,8 @@
 	xmlns:footerbar="sap.ushell.ui.footerbar"
 	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.ui.layout.form"
-	xmlns:core="sap.ui.core" controllerName="hcm.ux.hapv3.controller.AdminList">
+	xmlns:core="sap.ui.core" controllerName="hcm.ux.hapv3.controller.AdminList"
+	xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
 	<semantic:FullscreenPage id="idAdminListPage" semanticRuleSet="Optimized" title="{i18n>adminListViewTitle}" showNavButton="true" navButtonPress=".onNavHome" showFooter="{adminListModel>/showFooter}" floatingFooter="true" busy="{adminListModel>/viewBusy}" busyIndicatorDelay="0">
 		<semantic:content>
 			<VBox>
@@ -85,7 +86,7 @@
 				<Table id="idAdminListTable" width="auto" items="{ path: 'adminListModel>/currentFormList', sorter: { path: 'ApStartDate', descending: true } }" noDataText="{adminListModel>/tableNoDataText}" busyIndicatorDelay="0" growing="true" growingScrollToLoad="true" mode="MultiSelect" selectionChange=".onSelectionChanged">
 					<headerToolbar>
 						<Toolbar>
-							<Title id="idAdminTableHeader" text="{adminListModel>/formListTableTitle}"/>
+							<Title id="idAdminTableHeader" text="{i18n>formList}"/>
 							<ToolbarSpacer/>
 							<SearchField id="idAdminSearchField" tooltip="{i18n>formListSearchTooltip}" search=".onSearch" width="50%"/>
 						</Toolbar>
@@ -103,28 +104,41 @@
 						<Column id="idAdminColumnAppraisalStatusName" demandPopin="true" hAlign="Center" minScreenWidth="Tablet">
 							<Title text="{i18n>tableAppraisalStatusColumnTitle}"/>
 						</Column>
-						<Column id="idAdminColumnAppraisalStartDate" demandPopin="true" popinDisplay="WithoutHeader" hAlign="Center" minScreenWidth="Tablet">
-							<Title text="{i18n>tableAppraisalStartDateColumnTitle}"/>
+						<Column id="idAdminColumnAppraisalPeriod" demandPopin="true" popinDisplay="WithoutHeader" hAlign="Center" minScreenWidth="Tablet">
+							<Title text="{i18n>tableAppraisalPeriodColumnTitle}"/>
 						</Column>
-						<Column id="idAdminColumnAppraisalEndDate" demandPopin="true" popinDisplay="WithoutHeader" hAlign="Center" minScreenWidth="Tablet">
-							<Title text="{i18n>tableAppraisalEndDateColumnTitle}"/>
+						<Column id="idAdminColumnAppraisalActions" hAlign="Center" width="5rem">
+							<Title text="{i18n>tableAppraisalActionsTitle}"/>
 						</Column>
 					</columns>
 					<items>
-						<ColumnListItem type="Navigation" press=".onFormPress">
+						<ColumnListItem type="Inactive" press=".onFormPress">
 							<cells>
 								<ObjectIdentifier title="{adminListModel>AppraisalName}"/>
 								<Text text="{adminListModel>AppraiseeName}"/>
-								<Text text="{adminListModel>AppraiserName}"/>
-								<Text text="{= ${adminListModel>ApStatusSubName} !== '' ? ${adminListModel>ApStatusName} + ' - ' + ${adminListModel>ApStatusSubName} : ${adminListModel>ApStatusName} }"/>
-								<Text text="{path:'adminListModel>ApStartDate', type : 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"/>
-								<Text text="{path:'adminListModel>ApEndDate', type : 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"/>
+								<VBox >
+									<HBox>
+										<Text text="{adminListModel>AppraiserName}" class="sapUiTinyMarginEnd"/>
+										<ObjectStatus text="1." inverted="true" active="true" state="Success" />
+									</HBox>
+
+									<HBox visible="{=  ${adminListModel>OtherName} !== '' }">
+										<Text text="{adminListModel>OtherName}" class="sapUiTinyMarginEnd"/>
+										<ObjectStatus text="2." inverted="true" active="true" state="Warning" />
+
+									</HBox>
+								</VBox>
+								<VBox>
+									<Text text="{= ${adminListModel>ApStatusSubName} !== '' ? ${adminListModel>ApStatusName} + ' - ' + ${adminListModel>ApStatusSubName} : ${adminListModel>ApStatusName} }"/>
+									<Text text="({adminListModel>StatusOwner})" visible="{=  ${adminListModel>StatusOwner} !== '' }"/>
+								</VBox>
+								<Text text="{path:'adminListModel>ApStartDate', type : 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }} - {path:'adminListModel>ApEndDate', type : 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' }}"/>
+
+								<Button icon="sap-icon://overflow" press=".onFormAction" cd:appraisalForm="{adminListModel>}" />
 							</cells>
 						</ColumnListItem>
 					</items>
 				</Table>
-
-
 
 			</VBox>
 		</semantic:content>
