@@ -20,8 +20,7 @@ sap.ui.define(
     FilterOperator,
     MessageBox,
     MessageToast,
-    Fragment,
-    momentJS
+    Fragment
   ) {
     "use strict";
 
@@ -88,6 +87,12 @@ sap.ui.define(
           showFooter: false,
           roleChange: {},
           currentForm: {},
+          createForm: {
+            BeginDate: null,
+            EndDate: null,
+            TemplateId: null,
+            EmployeeSelection: null,
+          },
         });
         this.setModel(oViewModel, "adminListModel");
         this.getUIHelper().setListViewModel(oViewModel);
@@ -849,6 +854,106 @@ sap.ui.define(
         var oFilter = new Filter("Query", FilterOperator.EQ, sValue);
         var oBinding = oEvent.getSource().getBinding("items");
         oBinding.filter([oFilter]);
+      },
+
+      onCreateNewForm: function () {
+        var oViewModel = this.getModel("adminListModel");
+
+        oViewModel.setProperty("/createForm", {
+          BeginDate: moment().startOf("year").format("YYYYMMDD"),
+          EndDate: moment().endOf("year").format("YYYYMMDD"),
+          TemplateId: null,
+          EmployeeSelection: null,
+        });
+
+        // create dialog
+        if (!this._oCreateNewFormDialog) {
+          this._oCreateNewFormDialog = sap.ui.xmlfragment(
+            "hcm.ux.hapv3.fragment.AdminCreateNewForm",
+            this
+          );
+          this._oCreateNewFormDialog.setEscapeHandler(this.onEscapeDialog);
+          this.getView().addDependent(this._oCreateNewFormDialog, this);
+        }
+
+        this._oCreateNewFormDialog.open();
+      },
+      onApproveCreateNewForm: function () {
+        var oModel = this.getModel();
+        var that = this;
+        var oViewModel = this.getModel("adminListModel");
+        var oCreateForm = oViewModel.getProperty("/createForm");
+
+        var oRequest = {
+          Operation: "ADM_FRMCR",
+          DocumentSet: [],
+          OperationParameterSet: [],
+          ReturnSet: [],
+        };
+
+        //--Operation parameters
+        oRequest.OperationParameterSet.push({
+          Param: "TEMPLATE_ID",
+          Value: oCreateForm.TemplateId,
+        });
+        oRequest.OperationParameterSet.push({
+          Param: "BEGIN_DATE",
+          Value: oCreateForm.BeginDate,
+        });
+        oRequest.OperationParameterSet.push({
+          Param: "END_DATE",
+          Value: oCreateForm.EndDate,
+        });
+        oRequest.OperationParameterSet.push({
+          Param: "EMPLOYEE_LIST",
+          Value: oCreateForm.EmployeeList,
+        });
+
+        this._oCreateNewFormDialog.close();
+        this._openBusyFragment("newFormCreateInProgress", []);
+        oModel.create("/AdminOperationSet", oRequest, {
+          success: function (oData, oResponse) {
+            that._closeBusyFragment();
+
+            // /* Return messages */
+            var sHasErrors = oData.ReturnSet?.results.length > 0;
+            if (sHasErrors) {
+              var fnArrangeErrorMessage = function (aMessg) {
+                var sMessage = `<p>${that.getText("errorMessages")}:</p><ul>`;
+                $.each(aMessg, function (i, oMessg) {
+                  sMessage = sMessage + `<li>${oMessg.Message}</li>`;
+                });
+
+                sMessage = sMessage + `</ul>`;
+                return sMessage;
+              };
+
+              MessageBox.error(that.getText("errorsOccurredNewFormCreate"), {
+                title: that.getText("errorsOccurred"),
+                details: fnArrangeErrorMessage(oData.ReturnSet.results),
+              });
+            } else {
+              MessageToast.show(that.getText("newFormCreateSuccessful"));
+            }
+
+            that.onRefreshFormList();
+          },
+          error: function (oError) {
+            that._closeBusyFragment();
+            console.log(oError);
+          },
+        });
+      },
+      onEscapeDialog: function (oPromise) {
+        oPromise.reject();
+      },
+
+      onAfterCloseCreateNewFormDialog: function () {
+        this._oCreateNewFormDialog.destroy();
+        this._oCreateNewFormDialog = null;
+      },
+      onCloseCreateNewFormDialog: function () {
+        this._oCreateNewFormDialog.close();
       },
 
       /* =========================================================== */

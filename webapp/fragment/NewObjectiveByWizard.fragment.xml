@@ -2,7 +2,6 @@
     xmlns:core="sap.ui.core"
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
-    xmlns:u="sap.ui.unified"
     xmlns:l="sap.ui.layout"
     xmlns:smod="com.smod.ux.lib.controls">
     <Dialog id="newObjectiveWizardDialog" showHeader="false" verticalScrolling="false" contentHeight="70%" contentWidth="80%" class="hapDialog">

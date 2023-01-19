@@ -14,6 +14,7 @@
 						<Toolbar id="idAdminFormSelectionToolbar">
 							<Title id="idAdminFormSelectionTitle" text="{i18n>formSelectionTitle}" level="H4" titleStyle="H4"/>
 							<ToolbarSpacer/>
+							<Button icon="sap-icon://add" press=".onCreateNewForm" id="idNewFormButton"/>
 							<Button icon="{adminListModel>/selectionToggle}" press=".onFormShowHide" id="idAdminToggleSelectionButton"/>
 						</Toolbar>
 					</f:toolbar>

@@ -1,0 +1,52 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout">
+    <Dialog id="idCreateNewFormDialog" showHeader="false" verticalScrolling="false" contentWidth="500px" class="hapDialog" afterClose=".onAfterCloseCreateNewFormDialog">
+        <content>
+            <f:Form id="idCreateNewFormDialogForm" editable="true">
+                <f:layout>
+                    <f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false"/>
+                </f:layout>
+                <f:formContainers>
+                    <f:FormContainer id="idCreateNewFormDialogFormContainer">
+                        <f:formElements>
+                            <f:FormElement label="{i18n>formTemplateSelection}">
+                                <f:fields>
+                                    <Select id="idCreateNewFormTemplateSelection" forceSelection="false" selectedKey="{adminListModel>/createForm/TemplateId}" showSecondaryValues= "true" items="{ path: '/ValueHelpSet', filters: [{path: 'Id',operator: 'EQ', value1: 'AppraisalTemplate'}]}" change=".onTemplateSelected">
+                                        <core:ListItem key="{Key}" text="{Value} " additionalText="{Key}"/>
+                                    </Select>
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement label="{i18n>appraisalPeriod}">
+                                <f:fields>
+                                    <DatePicker id="idCreateNewFormBeginDate" value="{adminListModel>/createForm/BeginDate}" valueFormat="yyyy-MM-dd">
+                                        <layoutData>
+                                            <l:GridData span="XL6 L6 M6 S6" />
+                                        </layoutData>
+                                    </DatePicker>
+
+                                    <DatePicker id="idCreateNewFormEndDate" value="{adminListModel>/createForm/EndDate}" valueFormat="yyyy-MM-dd">
+                                        <layoutData>
+                                            <l:GridData span="XL6 L6 M6 S6" />
+                                        </layoutData>
+                                    </DatePicker>
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement label="{i18n>employeeList}">
+                                <f:fields>
+                                    <TextArea rows="5" value="{adminListModel>/createForm/EmployeeList}" liveChange="true"/>
+                                </f:fields>
+                            </f:FormElement>
+                        </f:formElements>
+                    </f:FormContainer>
+                </f:formContainers>
+            </f:Form>
+
+        </content>
+        <buttons>
+            <Button icon="sap-icon://save" text="{i18n>createFormAction}" type="Emphasized" press=".onApproveCreateNewForm" />
+            <Button icon="sap-icon://sys-cancel" type="Reject" press=".onCloseCreateNewFormDialog" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>
