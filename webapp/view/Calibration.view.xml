@@ -4,7 +4,7 @@
 	xmlns:semantic="sap.f.semantic"
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	xmlns:smod="hcm.ux.hapv3.control"
-	xmlns:smod_controls="smod.ui5.controls.src.controls">
+	xmlns:smod_controls="com.smod.ux.lib.controls">
 	<Page showHeader="false" floatingFooter="false" title="" id="idCalibrationMainPage">
 		<content>
 			<smod:SmodCalibrationGrid blockList="{calibrationModel>/calibrationData/blockList}" gridTitle="{i18n>CALIBRATION_VIEW_TITLE}" busy="{calibrationModel>/busy}" busyIndicatorDelay="0" dragdrop="onBlockItemDragDrop">

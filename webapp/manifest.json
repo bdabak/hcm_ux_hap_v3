@@ -73,7 +73,7 @@
         "sap.uxap": {
           "minVersion": ""
         },
-        "com.smod.smoduxlib": {
+        "com.smod.ux.lib": {
           "minVersion": ""
         }
       }

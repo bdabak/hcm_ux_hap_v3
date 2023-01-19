@@ -1,9 +1,9 @@
-(function () {
-  jQuery.sap.registerModulePath(
-    "smod.ui5.controls",
-    "/sap/bc/ui5_ui5/sap/zsmod_controls"
-  );
-})();
+// (function () {
+//   jQuery.sap.registerModulePath(
+//     "smod.ui5.controls",
+//     "/sap/bc/ui5_ui5/sap/zsmod_controls"
+//   );
+// })();
 sap.ui.define(
   [
     "sap/ui/core/UIComponent",

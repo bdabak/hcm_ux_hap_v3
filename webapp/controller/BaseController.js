@@ -4,8 +4,8 @@ sap.ui.define(
     "sap/ui/core/mvc/Controller",
     "sap/m/Dialog",
     "hcm/ux/hapv3/utils/UIHelper",
-    "com/smod/smoduxlib/thirdparty/moment",
-    "com/smod/smoduxlib/thirdparty/lodash",
+    "com/smod/ux/lib/thirdparty/moment",
+    "com/smod/ux/lib/thirdparty/lodash",
   ],
   function (Controller, Dialog, UIHelper, momentJS, lodashJS) {
     "use strict";

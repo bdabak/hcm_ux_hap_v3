@@ -8,16 +8,16 @@ sap.ui.define(
     "sap/m/MessageBox",
     "sap/m/MessagePopover",
     "sap/m/MessageItem",
-    "smod/ui5/controls/src/controls/HapMessageStrip",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/format/DateFormat",
     "sap/ui/core/Fragment",
-    "hcm/ux/hapv3/control/StarRating",
-    "hcm/ux/hapv3/control/StarRatingItem",
-    "hcm/ux/hapv3/control/ScaleEntrance",
-    "hcm/ux/hapv3/control/ResultBoard",
-    "hcm/ux/hapv3/control/Switch",
+    "com/smod/ux/lib/controls/HapMessageStrip",
+    "com/smod/ux/lib/controls/StarRating",
+    "com/smod/ux/lib/controls/StarRatingItem",
+    "com/smod/ux/lib/controls/ScaleEntrance",
+    "com/smod/ux/lib/controls/ResultBoard",
+    "com/smod/ux/lib/controls/Switch",
     "hcm/ux/hapv3/model/formatter",
   ],
   function (
@@ -28,11 +28,11 @@ sap.ui.define(
     MessageBox,
     MessagePopover,
     MessageItem,
-    HapMessageStrip,
     Filter,
     FilterOperator,
     DateFormat,
     Fragment,
+    HapMessageStrip,
     StarRating,
     StarRatingItem,
     ScaleEntrance,
@@ -786,9 +786,7 @@ sap.ui.define(
           "FeAlreadyChosen,FeFlatAvailable,FeSelectableOtype,FeStrucAvailable," +
           "FeBodyElementsAdd,ReturnOp,FormQuestions,FormAnswers,Competencies,Objectives,FormParameters,ResultTable,StatusNotes";
 
-        aFilters.push(
-          new sap.ui.model.Filter("Mode", sap.ui.model.FilterOperator.EQ, "X")
-        );
+        aFilters.push(new Filter("Mode", FilterOperator.EQ, "X"));
 
         this._openBusyFragment("formDetailPrepared", []);
         this._unregisterSaveShortcut();
@@ -7451,7 +7449,7 @@ sap.ui.define(
         var sValue = oEvent.getParameter("query");
         var oFilter = new Filter(
           "Description",
-          sap.ui.model.FilterOperator.Contains,
+          FilterOperator.Contains,
           sValue
         );
         var oBinding = oEvent

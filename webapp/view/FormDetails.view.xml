@@ -1,8 +1,7 @@
 <mvc:View controllerName="hcm.ux.hapv3.controller.FormDetails"
 	xmlns="sap.m"
-	xmlns:custom="hcm.ux.hapv3.control"
 	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:smod="smod.ui5.controls.src.controls">
+	xmlns:smod="com.smod.ux.lib.controls">
 	<!--<custom:CustomSideBar id="idCustomSideBar" navItemSelected="onNavItemSelected" navData="{formDetailsModel>/navigationData}"-->
 	<!-- appraiseeInfo="{formDetailsModel>/formData/HeaderAppraisee/0}" appraiser1stInfo="{formDetailsModel>/formData/HeaderAppraiser/0}"-->
 	<!-- appraiser2ndInfo="{formDetailsModel>/formData/HeaderOthers/0}" formStatusInfo="{formDetailsModel>/formData/HeaderStatus}"-->
@@ -33,7 +32,7 @@
 		</smod:infoTabs>
 		<smod:footer>
 			<VBox>
-				<custom:TriggerEvent id="idTriggerAutoSave" duration="180000" trigger=".onAutoSave" visible="{path:'formDetailsModel>/formEditable'}" />
+				<smod:TriggerEvent id="idTriggerAutoSave" duration="180000" trigger=".onAutoSave" visible="{path:'formDetailsModel>/formEditable'}" />
 				<smod:ComparisonTable dataContent="{formDetailsModel>/sidebarData/footerData}"></smod:ComparisonTable>
 			</VBox>
 		</smod:footer>
