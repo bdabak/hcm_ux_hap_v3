@@ -444,6 +444,8 @@ sap.ui.define(
       /* internal methods                                            */
       /* =========================================================== */
       _onListPatternMatched: function () {
+        this.getUIHelper().setMode("X");
+
         if (sap.ushell.Container) {
           var oRenderer = sap.ushell.Container.getRenderer("fiori2");
           oRenderer.setHeaderVisibility(false, false, ["app"]);

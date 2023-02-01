@@ -141,6 +141,11 @@
           "pattern": "GetDetail/{appraisalId}",
           "name": "formdetail",
           "target": ["formdetail"]
+        },
+        {
+          "pattern": "AdminDetail/{appraisalId}/{mode}",
+          "name": "admindetail",
+          "target": ["admindetail"]
         }
       ],
       "targets": {
@@ -167,6 +172,12 @@
           "viewId": "formdetail",
           "viewLevel": 2,
           "title": "{i18n>formDetailViewTitle}"
+        },
+        "admindetail": {
+          "viewName": "AdminDetails",
+          "viewId": "admindetail",
+          "viewLevel": 2,
+          "title": "{i18n>adminDetailViewTitle}"
         },
         "objectNotFound": {
           "viewName": "ObjectNotFound",

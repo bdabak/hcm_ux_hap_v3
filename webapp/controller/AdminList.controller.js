@@ -91,14 +91,14 @@ sap.ui.define(
             BeginDate: null,
             EndDate: null,
             TemplateId: null,
-            EmployeeSelection: null,
+            EmployeeList: [],
           },
         });
         this.setModel(oViewModel, "adminListModel");
         this.getUIHelper().setListViewModel(oViewModel);
 
         this.getRouter()
-          .getRoute("formlist")
+          .getRoute("adminlist")
           .attachPatternMatched(this._onListPatternMatched, this);
 
         // Make sure, busy indication is showing immediately so there is no
@@ -169,6 +169,16 @@ sap.ui.define(
         this._doShowHideSelection();
       },
 
+      onNewFormTemplateSelected: function (oEvent) {
+        var oViewModel = this.getModel("adminListModel");
+        oViewModel.setProperty(
+          "/selectedFormTemplate",
+          oEvent.getParameter("selectedItem").getBindingContext().getObject()
+            .Key
+        );
+
+        this.onTemplateSelected();
+      },
       onTemplateSelected: function () {
         var oViewModel = this.getModel("adminListModel");
         oViewModel.setProperty("/selectedFormStatuses", []);
@@ -330,18 +340,6 @@ sap.ui.define(
 
           oViewModel.setProperty("/currentFormList", aCurrentForms);
         }
-      },
-
-      onFormPress: function (oEvent) {
-        var oViewModel = this.getModel("adminListModel");
-        var sPath = oEvent.getSource().getBindingContextPath();
-
-        //Set selected form to the shared model
-        this.getUIHelper().setCurrentForm(oViewModel.getProperty(sPath));
-
-        this.getRouter().navTo("formdetail", {
-          appraisalId: oViewModel.getProperty(sPath + "/AppraisalId"),
-        });
       },
 
       onSearch: function (oEvent) {
@@ -706,8 +704,22 @@ sap.ui.define(
           return;
         }
 
-        this.getRouter().navTo("formdetail", {
+        this.getRouter().navTo("admindetail", {
           appraisalId: oCurrentForm.AppraisalId,
+          mode: "X",
+        });
+      },
+      onDisplayForm: function () {
+        var oViewModel = this.getModel("adminListModel");
+        var oCurrentForm = oViewModel.getProperty("/currentForm");
+
+        if (!oCurrentForm) {
+          return;
+        }
+
+        this.getRouter().navTo("admindetail", {
+          appraisalId: oCurrentForm.AppraisalId,
+          mode: "D",
         });
       },
 
@@ -740,6 +752,25 @@ sap.ui.define(
 
         oViewModel.setProperty("/roleChange", oRoleChange);
       },
+      onPrintForm: function () {
+        var oModel = this.getModel();
+        var oViewModel = this.getModel("adminListModel");
+        var oCurrentForm = oViewModel.getProperty("/currentForm");
+
+        if (!oCurrentForm) {
+          return;
+        }
+
+        var oEntity = oModel.createKey("/DocumentSet", {
+          AppraisalId: oCurrentForm.AppraisalId,
+          PartApId: oCurrentForm?.PartApId || "0000",
+        });
+
+        var sUrl = "/sap/opu/odata/sap/ZHCM_UX_HAP_SRV" + oEntity + "/$value";
+
+        sap.m.URLHelper.redirect(sUrl, true);
+      },
+
       onSaveRoleChange: function () {
         var oViewModel = this.getModel("adminListModel");
         var oModel = this.getModel();
@@ -860,10 +891,10 @@ sap.ui.define(
         var oViewModel = this.getModel("adminListModel");
 
         oViewModel.setProperty("/createForm", {
-          BeginDate: moment().startOf("year").format("YYYYMMDD"),
-          EndDate: moment().endOf("year").format("YYYYMMDD"),
+          BeginDate: new Date(moment().startOf("year").format("YYYY-MM-DD")),
+          EndDate: new Date(moment().endOf("year").format("YYYY-MM-DD")),
           TemplateId: null,
-          EmployeeSelection: null,
+          EmployeeList: [],
         });
 
         // create dialog
@@ -883,6 +914,17 @@ sap.ui.define(
         var that = this;
         var oViewModel = this.getModel("adminListModel");
         var oCreateForm = oViewModel.getProperty("/createForm");
+        var sEmployeeSelection = "";
+
+        if (oCreateForm.EmployeeList.length === 0) {
+          MessageToast.show(this.getText("employeeShouldBeSelected"));
+          return;
+        }
+
+        if (!oCreateForm.TemplateId) {
+          MessageToast.show(this.getText("templateIsObligatory"));
+          return;
+        }
 
         var oRequest = {
           Operation: "ADM_FRMCR",
@@ -898,15 +940,22 @@ sap.ui.define(
         });
         oRequest.OperationParameterSet.push({
           Param: "BEGIN_DATE",
-          Value: oCreateForm.BeginDate,
+          Value: moment(oCreateForm.BeginDate).format("YYYYMMDD"),
         });
         oRequest.OperationParameterSet.push({
           Param: "END_DATE",
-          Value: oCreateForm.EndDate,
+          Value: moment(oCreateForm.EndDate).format("YYYYMMDD"),
+        });
+        $.each(oCreateForm.EmployeeList, function (i, oEmp) {
+          if (sEmployeeSelection === "") {
+            sEmployeeSelection = oEmp.Pernr;
+          } else {
+            sEmployeeSelection = sEmployeeSelection + ";" + oEmp.Pernr;
+          }
         });
         oRequest.OperationParameterSet.push({
           Param: "EMPLOYEE_LIST",
-          Value: oCreateForm.EmployeeList,
+          Value: sEmployeeSelection,
         });
 
         this._oCreateNewFormDialog.close();
@@ -955,17 +1004,68 @@ sap.ui.define(
       onCloseCreateNewFormDialog: function () {
         this._oCreateNewFormDialog.close();
       },
+      onNewFormEmployeeSearch: function (oEvent) {
+        var sValue = oEvent.getSource().getValue() || "";
+        if (!sValue.trim().length > 0) {
+          return;
+        }
+        var oFilter = new Filter("Query", FilterOperator.EQ, sValue);
+        var oBinding = oEvent.getSource().getBinding("suggestionItems");
+        oBinding.filter([oFilter]);
+      },
+
+      onNewFormEmployeeSelected: function (oEvent) {
+        var oObject = oEvent
+          .getParameter("selectedItem")
+          ?.getBindingContext()
+          ?.getObject();
+
+        oEvent.getSource().setValue("");
+
+        if (oObject) {
+          var oViewModel = this.getModel("adminListModel");
+          var aEmpList = oViewModel.getProperty("/createForm/EmployeeList");
+
+          var bFound = _.find(aEmpList, ["Pernr", oObject.Pernr]);
+
+          if (bFound) {
+            MessageToast.show(this.getText("employeeAlreadyInTheList"));
+            return;
+          }
+          aEmpList.unshift({
+            Pernr: oObject.Pernr,
+            Ename: oObject.Ename,
+          });
+
+          oViewModel.setProperty("/createForm/EmployeeList", aEmpList);
+        }
+      },
+      onNewFormEmployeeDeleted: function (oEvent) {
+        var oObject = oEvent
+          .getParameter("token")
+          .getBinding("key")
+          .getContext()
+          .getObject();
+        if (oObject) {
+          var oViewModel = this.getModel("adminListModel");
+          var aEmpList = oViewModel.getProperty("/createForm/EmployeeList");
+
+          var aNewList = _.remove(aEmpList, function (oEmp) {
+            return oEmp.Pernr !== oObject.Pernr;
+          });
+          oViewModel.setProperty("/createForm/EmployeeList", aNewList);
+        }
+      },
 
       /* =========================================================== */
       /* internal methods                                            */
       /* =========================================================== */
       _onListPatternMatched: function () {
+        this.getUIHelper().setMode("A");
+
         if (sap.ushell.Container) {
           var oRenderer = sap.ushell.Container.getRenderer("fiori2");
           oRenderer.setHeaderVisibility(false, false, ["app"]);
-        }
-        if (!this.getUIHelper().getFormListUpdated()) {
-          this.onRefreshFormList();
         }
       },
 

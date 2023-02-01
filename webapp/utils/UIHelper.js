@@ -4,6 +4,7 @@ sap.ui.define([], function () {
   var oListViewModel = null;
   var sFormListUpdated = false;
   var sShowHint = true;
+  var sMode = "";
   return {
     setCurrentForm: function (a) {
       oCurrentForm = a;
@@ -39,6 +40,12 @@ sap.ui.define([], function () {
     },
     getShowHint: function () {
       return sShowHint;
+    },
+    setMode: function (mode) {
+      sMode = mode;
+    },
+    getMode: function (mode) {
+      return sMode;
     },
   };
 });

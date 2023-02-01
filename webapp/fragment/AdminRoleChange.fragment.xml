@@ -17,12 +17,12 @@
                         <f:formElements>
                             <f:FormElement label="{i18n>firstAppraiser}">
                                 <f:fields>
-                                    <Input textFormatMode="Value" value="{adminListModel>/roleChange/firstAppraiser/Name}" showValueHelp="true" valueHelpRequest=".onSelectAppraiser" cd:targetField="/roleChange/firstAppraiser" />
+                                    <Input textFormatMode="Value" valueHelpOnly="true" value="{adminListModel>/roleChange/firstAppraiser/Name}" showValueHelp="true" valueHelpRequest=".onSelectAppraiser" cd:targetField="/roleChange/firstAppraiser" />
                                 </f:fields>
                             </f:FormElement>
                             <f:FormElement label="{i18n>secondAppraiser}">
                                 <f:fields>
-                                    <Input textFormatMode="Value" value="{adminListModel>/roleChange/secondAppraiser/Name}" showValueHelp="true" valueHelpRequest=".onSelectAppraiser" cd:targetField="/roleChange/secondAppraiser">
+                                    <Input textFormatMode="Value" valueHelpOnly="true" value="{adminListModel>/roleChange/secondAppraiser/Name}" showValueHelp="true" valueHelpRequest=".onSelectAppraiser" cd:targetField="/roleChange/secondAppraiser">
                                         <layoutData>
                                             <l:GridData span="{= ${adminListModel>/roleChange/secondAppraiser/Id} !== '' &amp;&amp; ${adminListModel>/roleChange/secondAppraiser/Id} !== null ? 'XL11 L11 M10 S10' : 'XL12 L12 M12 S12' }" />
                                         </layoutData>

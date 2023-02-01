@@ -72,7 +72,7 @@
 
 								<f:FormElement>
 									<f:fields>
-										<Button id="idAdminButtonGetForms" icon="sap-icon://menu" text="{i18n>getFormListButton}" press=".onRefreshFormList" type="Accept">
+										<Button id="idAdminButtonGetForms" icon="sap-icon://search" text="{i18n>getFormListButton}" press=".onRefreshFormList" type="Accept">
 											<layoutData>
 												<l:GridData span="XL4 L4 M4 S12" indentXL="4" indentL="4" indentM="4"/>
 											</layoutData>
@@ -123,7 +123,7 @@
 										<ObjectStatus text="1." inverted="true" active="true" state="Success" />
 									</HBox>
 
-									<HBox visible="{=  ${adminListModel>OtherName} !== '' }">
+									<HBox visible="{=  ${adminListModel>OtherName} !== '' }" class="sapUiTinyMarginTop">
 										<Text text="{adminListModel>OtherName}" class="sapUiTinyMarginEnd"/>
 										<ObjectStatus text="2." inverted="true" active="true" state="Warning" />
 

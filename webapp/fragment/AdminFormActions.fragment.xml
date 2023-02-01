@@ -2,7 +2,8 @@
     xmlns:core="sap.ui.core">
     <ActionSheet title="{i18n>chooseAppraisalFormAction}" showCancelButton="true" placement="Auto">
         <Button text="{i18n>changeRolesAction}" icon="sap-icon://role" press=".onChangeRoles" type="Accept"/>
+        <Button text="{i18n>displayAction}" icon="sap-icon://display" press=".onDisplayForm" />
         <Button text="{i18n>editAction}" icon="sap-icon://edit" press=".onChangeForm" />
-        <!-- <Button text="{i18n>displayAction}" icon="sap-icon://display" press=".onDisplayForm" type="Unstyled" /> -->
+        <Button text="{i18n>printAction}" icon="sap-icon://print" press=".onPrintForm" />
     </ActionSheet>
 </core:FragmentDefinition>
