@@ -1,40 +1,5 @@
 <mvc:View controllerName="hcm.ux.hapv3.controller.FormDetails"
-	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:smod="com.smod.ux.lib.controls">
-	<!--<custom:CustomSideBar id="idCustomSideBar" navItemSelected="onNavItemSelected" navData="{formDetailsModel>/navigationData}"-->
-	<!-- appraiseeInfo="{formDetailsModel>/formData/HeaderAppraisee/0}" appraiser1stInfo="{formDetailsModel>/formData/HeaderAppraiser/0}"-->
-	<!-- appraiser2ndInfo="{formDetailsModel>/formData/HeaderOthers/0}" formStatusInfo="{formDetailsModel>/formData/HeaderStatus}"-->
-	<!-- formDatesInfo="{formDetailsModel>/formData/HeaderDates}">-->
-	<!--	<custom:content>-->
-	<!--		<NavContainer id="idPageNavigationContainer"></NavContainer>-->
-	<!--	</custom:content>-->
-	<!--</custom:CustomSideBar>-->
-	<smod:CustomSideBar id="idCustomSideBar" navItemSelected="onNavItemSelected" navData="{formDetailsModel>/navigationData}" visible="{formDetailsModel>/sidebarData/visible}">
-		<smod:content>
-			<NavContainer id="idPageNavigationContainer" busy="{formDetailsModel>/busy}" busyIndicatorDelay="300"></NavContainer>
-		</smod:content>
-		<smod:brandImageExpanded>
-			<!--<Image src="/sap/opu/odata/sap/ZHCM_UX_HAP_SRV/MimeInfoSet('%2FSAP%2FPublic%2FCustomImages%2Fbrand_logo.png')/$value" height="30px"/>-->
-			<Image src="/sap/opu/odata/sap/ZHCM_GENERIC_SRV/MimeInfoSet('%2FSAP%2FPublic%2FCustom_Images%2Fbrand_logo.png')/$value" height="30px"/>
-		</smod:brandImageExpanded>
-		<smod:brandImageCollapsed>
-			<Image src="/sap/opu/odata/sap/ZHCM_GENERIC_SRV/MimeInfoSet('%2FSAP%2FPublic%2FCustom_Images%2Fbrand_emblem.png')/$value" height="25px"/>
-		</smod:brandImageCollapsed>
-		<smod:mainProfileInfo>
-			<smod:CustomSideBarProfile profileData="{formDetailsModel>/sidebarData/appeeInfo}"></smod:CustomSideBarProfile>
-		</smod:mainProfileInfo>
-		<smod:infoTabs>
-			<smod:CustomSideBarProfile profileData="{formDetailsModel>/sidebarData/apper1stInfo}" tabTitle="1. Yönetici" tabCount="1"></smod:CustomSideBarProfile>
-			<smod:CustomSideBarProfile profileData="{formDetailsModel>/sidebarData/apper2ndInfo}" tabTitle="2. Yönetici" tabCount="2" visible="{= ${formDetailsModel>/sidebarData/apper2ndInfo/Id} ? true : false }"></smod:CustomSideBarProfile>
-			<smod:CustomSideBarProfile profileData="{formDetailsModel>/sidebarData/apper3rdInfo}" tabTitle="3. Yönetici" tabCount="3" visible="{= ${formDetailsModel>/sidebarData/apper3rdInfo/Id} ? true : false }"></smod:CustomSideBarProfile>
-			<smod:CustomSideBarStatus statusData="{formDetailsModel>/sidebarData/statusInfo}" tabTitle="Durum" tabCount="4"></smod:CustomSideBarStatus>
-		</smod:infoTabs>
-		<smod:footer>
-			<VBox>
-				<smod:TriggerEvent id="idTriggerAutoSave" duration="180000" trigger=".onAutoSave" visible="{path:'formDetailsModel>/formEditable'}" />
-				<smod:ComparisonTable dataContent="{formDetailsModel>/sidebarData/footerData}"></smod:ComparisonTable>
-			</VBox>
-		</smod:footer>
-	</smod:CustomSideBar>
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc">
+	<core:Fragment fragmentName="hcm.ux.hapv3.fragment.FormDetails" type="XML" />
 </mvc:View>

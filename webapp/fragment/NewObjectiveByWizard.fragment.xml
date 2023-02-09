@@ -4,7 +4,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:l="sap.ui.layout"
     xmlns:smod="com.smod.ux.lib.controls">
-    <Dialog id="newObjectiveWizardDialog" showHeader="false" verticalScrolling="false" contentHeight="70%" contentWidth="80%" class="hapDialog">
+    <Dialog id="newObjectiveWizardDialog" showHeader="false" verticalScrolling="false" contentHeight="70%" contentWidth="80%" class="hapDialog" draggable="true">
         <f:DynamicPage stickySubheaderProvider="newObjectiveWizard" toggleHeaderOnTitleClick="false" class="sapUiNoContentPadding" showFooter="true">
             <f:title>
                 <f:DynamicPageTitle>
@@ -14,7 +14,7 @@
                 </f:DynamicPageTitle>
             </f:title>
             <f:content>
-                <Wizard id="newObjectiveWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" showNextButton="false" stepActivate=".onObjectiveWizardStepChanged">
+                <Wizard id="newObjectiveWizard" class="hapObjectiveWizard" showNextButton="false" stepActivate=".onObjectiveWizardStepChanged">
                     <WizardStep id="dependentObjectiveSelection" title="{i18n>dependentObjectiveSelection}" validated="true">
                         <smod:HapMessageStrip class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom" htmlContent="{i18n>selectDependentObjectiveHint}" messageType="Warning" showIcon="true" />
                         <core:Fragment fragmentName="hcm.ux.hapv3.fragment.NewObjectiveByWizardDependentCatalog" type="XML" />

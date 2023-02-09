@@ -113,6 +113,7 @@ sap.ui.define(
             errorList: [],
           },
           objectHierarchy: null,
+          pauseAutoSave: false,
         });
 
         //Set page layout
@@ -302,7 +303,7 @@ sap.ui.define(
             } catch (e) {}
           });
 
-          that.byId("idTriggerAutoSave").clearInterval();
+          that.byId("idTriggerAutoSave").clearTriggerInterval();
 
           resolve(true);
         });
@@ -804,7 +805,7 @@ sap.ui.define(
             ) {
               oViewModel.setProperty("/formEditable", true);
               that._registerSaveShortcut();
-              that.byId("idTriggerAutoSave").setInterval();
+              that.byId("idTriggerAutoSave").setTriggerInterval();
             } else {
               oViewModel.setProperty("/formEditable", false);
             }
@@ -4637,7 +4638,7 @@ sap.ui.define(
 
         // this._prepareSideBarData();
         if (bResetAutoSave) {
-          this.byId("idTriggerAutoSave").setInterval();
+          this.byId("idTriggerAutoSave").setTriggerInterval();
         }
 
         this.hasChanges = false;
@@ -5496,6 +5497,7 @@ sap.ui.define(
           );
         }
         that._objWizardDialogPromise.then(function (oDialog) {
+          that._setPauseAutoSave(true);
           oDialog.open();
         });
       },
@@ -7161,6 +7163,7 @@ sap.ui.define(
             oEnhanceData,
             false
           );
+          this._setPauseAutoSave(true);
           this._oAddNewElementFreeFormDialog.open();
         } catch (oErr) {
           console.log(oErr);
@@ -7297,6 +7300,7 @@ sap.ui.define(
           PlaceHolder: null,
           ParentName: null,
         });
+        this._setPauseAutoSave(false);
       },
       onApplyAddElementFree: function () {
         var oViewModel = this.getModel("formDetailsModel");
@@ -7480,6 +7484,7 @@ sap.ui.define(
           oBinding.filter([]);
         }
       },
+
       _openUploadAttachmentDialog: function () {
         // create dialog lazily
         if (!this._oUploadAttachmentDialog) {
@@ -7606,6 +7611,18 @@ sap.ui.define(
       onCloseUploadFormDialog: function () {
         MessageToast.show(this.getText("fileUploadCancelled"));
         this._oUploadAttachmentDialog.close();
+      },
+      /**
+       * Set Auto Save State
+       * @function
+       * @private
+       */
+      _setPauseAutoSave: function (bState) {
+        if (bState) {
+          this.byId("idTriggerAutoSave").pauseCounter();
+        } else {
+          this.byId("idTriggerAutoSave").unpauseCounter();
+        }
       },
     });
   }

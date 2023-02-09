@@ -976,3 +976,20 @@ html.sapUiMedia-Std-Tablet
   align-items: center;
   justify-content: center;
 }
+
+/*  Make the wizard header sticky solution  */
+.hapObjectiveWizard {
+  overflow: unset !important;
+}
+
+.hapObjectiveWizard .sapMWizardProgressNav {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0;
+  z-index: 1;
+}
+
+.hapObjectiveWizard .sapMWizardStepContainer {
+  margin-top: 1rem !important;
+  height: calc(100% - 1rem) !important;
+}
